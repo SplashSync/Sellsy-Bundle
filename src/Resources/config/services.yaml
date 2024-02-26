@@ -1,0 +1,26 @@
+services:
+    _defaults:
+        autowire:       true
+        autoconfigure:  true
+
+    ################################################################################
+    # SPLASH Sellsy Connector Service
+    splash.connectors.sellsy:
+        class:      Splash\Connectors\Sellsy\Connector\SellsyConnector
+        shared:     false
+        calls:
+          - setMetaDir: ["%kernel.cache_dir%"]
+        tags:
+          - { name: "splash.connector" }
+
+    ################################################################################
+    # Auto-wiring for Actions
+#    Splash\Connectors\Sellsy\Bundle\Actions\:
+#        resource:   '../../Bundle/Actions'
+#        tags:
+#          - { name: 'controller.service_arguments' }
+
+    ################################################################################
+    # Auto-wiring for Services
+#    Splash\Connectors\Sellsy\Bundle\Services\:
+#        resource:   '../../Bundle/Services'

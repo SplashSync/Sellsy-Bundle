@@ -1,0 +1,10 @@
+/.env
+/vendor/
+/.gh-pages/
+/public/
+/.php-cs-fixer.cache
+/.idea/
+/tests/config/parameters.yml
+/var/
+/test-report.xml
+/tests/public/bundles/

@@ -1,0 +1,99 @@
+################################################################################
+#
+#  This file is part of SplashSync Project.
+# 
+#  Copyright (C) Splash Sync <www.splashsync.com>
+# 
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# 
+#  For the full copyright and license information, please view the LICENSE
+#  file that was distributed with this source code.
+# 
+#  @author Bernard Paquier <contact@splashsync.com>
+#
+################################################################################
+
+################################################################################
+# Docker Compose File
+#
+# This Docker File intend to Create a Complete Dev Environnement
+# for Splash Optilog Connector
+#
+# For a faster access to you container, you can add this IP to /etc/hosts
+# 
+#    172.118.0.100       toolkit.sellsy.local
+#    172.118.0.200       sandbox.sellsy.local
+#
+################################################################################
+
+version: '2.2'
+
+services:
+    
+    ################################################################################
+    # Splash Toolkit Container   
+    toolkit:
+        image: 'splashsync/toolkit:alpine'
+        container_name: toolkit.sellsy.local
+        volumes:
+            # Specify Local Configuration File
+            - './config/packages/splash.yaml:/app/config/packages/splash.yaml:ro'
+            # Uncomment to use Local Sources instead of Release
+            - './src:/app/connectors/Sellsy/:ro'
+#            - '/mnt/data/WebDesign/GitHub/Splash/Php-Oauth2:/app/vendor/splash/oauth2/:ro'
+#            - './vendor/league/oauth2-client:/app/vendor/league/oauth2-client/:ro'
+#            - './tests/Controller:/app/tests/Controller/:ro'
+#            - './phpunit.xml.dist:/app/phpunit.xml.dist:ro'
+        env_file:
+            - .env
+        hostname:           toolkit.sellsy.local
+        networks:
+            shippingbo:     { ipv4_address: 172.118.0.100, aliases: [ toolkit.sellsy.local ] }
+            splashsync:     { aliases: [ toolkit.sellsy.local ] }
+
+    ################################################################################
+    # Splash OpenApi Faker
+    openapi:
+        image: 'splashsync/openapi-sandbox'
+        container_name: sandbox.sellsy.local
+        volumes:
+#             # Specify API Entities to Use
+            - './docker/sandbox/Controller:/srv/api/src/Controller:ro'
+            - './docker/sandbox/Serializer:/srv/api/src/Serializer:ro'
+            - './docker/sandbox/Entity:/srv/api/src/Entity:ro'
+            - './docker/sandbox/sellsy.yaml:/srv/api/config/packages/sellsy.yaml:ro'
+        hostname:           sandbox.sellsy.local
+        environment:
+            - 'OAUTH2_CLIENT_ID=SellsySandbox'
+            - 'OAUTH2_CLIENT_SECRET=SellsySandboxSecret'
+            - 'OAUTH2_CLIENT_REDIRECT_URI=http://toolkit.sellsy.local/ws/sellsy'
+        networks:
+            shippingbo:     { ipv4_address: 172.118.0.200, aliases: [ sandbox.sellsy.local ] }
+            splashsync:     { aliases: [ sandbox.sellsy.local ] }
+
+    ################################################################################
+    # PHP 8.1
+    php-8.1:
+        image:          splashsync/php-sdk:php-8.1
+        container_name: sellsy-8.1
+        volumes:
+            - ./:/var/www/html
+            - vendor-php81:/var/www/html/vendor
+
+networks:
+    ################################################################################
+    # Default Private Network    
+    shippingbo:
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 172.118.0.0/24
+    ################################################################################
+    # External Splash Network
+    splashsync:
+        external: true
+
+volumes:
+    vendor-php81: ~

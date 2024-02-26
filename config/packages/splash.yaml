@@ -1,0 +1,61 @@
+parameters:
+    env(SELLSY_STAGING_API_USER):  'none'
+    env(SELLSY_STAGING_API_KEY):   'none'
+
+splash:
+
+################################################################################    
+# Configure Splash Bundle Parameters Cache    
+# Cache is Enabled by Default to Store Custom Connectors Configuration
+# If disabled, configuration must be store in Static, on connections section
+################################################################################    
+#    cache: 
+#        enabled: false    
+#        lifetime: 10
+
+    # Allow Notifications for Generic Users   
+    notify: ["ROLE_USER"]
+    
+################################################################################    
+# List of Available Connector Connections
+################################################################################    
+
+    connections:
+        
+        ########################################################################
+        # Sellsy SandBox
+        Sellsy-SandBox:
+            id:                 ThisIsSandBoxWsId
+            key:                ThisIsNotASecretKeyForSandBox
+            name:               Sellsy Sandbox
+            connector:          sellsy
+            ########################################################################
+            # FAKE CREDENTIALS : ASK YOURS TO YOUR MAIN SHIPPING BO CONTACT
+            ########################################################################
+            config:
+                WsHost:             http://sandbox.sellsy.local
+                apiKey:             SellsySandbox
+                apiSecret:          SellsySandboxSecret
+                timezone:           UTC
+                isSandbox:          true
+
+        ########################################################################
+        # Sellsy Staging
+        Sellsy-Staging:
+            id:                 ThisIsStagingWsId
+            key:                ThisIsNotASecretKeyForStaging
+            name:               Sellsy Staging
+            connector:          sellsy
+            ########################################################################
+            # FAKE CREDENTIALS : ASK YOURS TO YOUR MAIN SHIPPING BO CONTACT
+            ########################################################################
+            config:
+                WsHost:         https://app.sellsy.com
+                apiKey:         '%env(resolve:SELLSY_STAGING_CLIENT_ID)%'
+                apiSecret:      '%env(resolve:SELLSY_STAGING_CLIENT_SECRET)%'
+                timezone:       'Europe/Paris'
+
+#    test:
+#        VAT: 0
+#        DoublesPrecision:   1
+#        PricesPrecision:    2

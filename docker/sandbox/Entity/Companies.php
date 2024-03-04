@@ -67,4 +67,49 @@ class Companies extends AbstractSellsyObject
         ORM\Column(),
     ]
     public string $name;
+
+    /**
+     * Company email
+     */
+    #[
+        Assert\Type("string"),
+        ORM\Column(nullable: true),
+    ]
+    public ?string $email = null;
+
+    /**
+     * Company website
+     */
+    #[
+        Assert\Type("string"),
+        ORM\Column(nullable: true),
+    ]
+    public ?string $website = null;
+
+    /**
+     * Company phone number
+     */
+    #[
+        Assert\Type("string"),
+        ORM\Column(nullable: true),
+    ]
+    public ?string $phone_number = null;
+
+    /**
+     * Company mobile number
+     */
+    #[
+        Assert\Type("string"),
+        ORM\Column(nullable: true),
+    ]
+    public ?string $mobile_number = null;
+
+    /**
+     * Company fax number
+     */
+    #[
+        Assert\Type("string"),
+        ORM\Column(nullable: true),
+    ]
+    public ?string $fax_number = null;
 }

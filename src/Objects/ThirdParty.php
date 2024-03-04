@@ -1,17 +1,27 @@
 <?php
 
+/*
+ *  This file is part of SplashSync Project.
+ *
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
+
 namespace Splash\Connectors\Sellsy\Objects;
 
 use Exception;
-use Splash\Client\Splash;
 use Splash\Connectors\Sellsy\Connector\SellsyConnector;
 use Splash\Connectors\Sellsy\Models\Actions\SellsyListAction;
 use Splash\Connectors\Sellsy\Models\Metadata as ApiModels;
-use Splash\Metadata\Services\MetadataAdapter;
+use Splash\OpenApi\Action\Json;
 use Splash\OpenApi\Models\Metadata\AbstractApiMetadataObject;
 use Splash\OpenApi\Visitor\AbstractVisitor as Visitor;
-use Splash\OpenApi\Visitor\JsonVisitor;
-use Splash\OpenApi\Action\Json;
 
 /**
  * OpenApi Implementation for Sellsy Companies Object
@@ -36,8 +46,7 @@ class ThirdParty extends AbstractApiMetadataObject
      */
     public function __construct(
         protected SellsyConnector $connector
-    )
-    {
+    ) {
         parent::__construct(
             $connector->getMetadataAdapter(),
             $connector->getConnexion(),
@@ -62,35 +71,31 @@ class ThirdParty extends AbstractApiMetadataObject
                 "offsetKey" => "offset"
             )
         );
-
-
     }
 
     //====================================================================//
     // DEBUG
     //====================================================================//
 
+    //    public function load(string $objectId): ?object
+    //    {
+    //        //====================================================================//
+    //        // Load Remote Object
+    //        $loadResponse = $this->visitor->load($objectId);
+    //        if (!$loadResponse->isSuccess()) {
+    //            return null;
+    //        }
+    //        dd(json_decode($this->visitor->getLastResponse()->body));
+    //
+    //        return null;
+    //    }
 
-//    public function load(string $objectId): ?object
-//    {
-//        //====================================================================//
-//        // Load Remote Object
-//        $loadResponse = $this->visitor->load($objectId);
-//        if (!$loadResponse->isSuccess()) {
-//            return null;
-//        }
-//        dd(json_decode($this->visitor->getLastResponse()->body));
-//
-//        return null;
-//    }
-
-//    public function objectsList(?string $filter = null, array $params = array()): array
-//    {
-//        $this->visitor->list($filter, $params)->getArrayResults();
-//        dd(json_decode($this->visitor->getLastResponse()->body));
-//        dd($this->visitor->list($filter, $params)->getArrayResults());
-//
-//        return $this->visitor->list($filter, $params)->getArrayResults() ?? array();
-//    }
-
+    //    public function objectsList(?string $filter = null, array $params = array()): array
+    //    {
+    //        $this->visitor->list($filter, $params)->getArrayResults();
+    //        dd(json_decode($this->visitor->getLastResponse()->body));
+    //        dd($this->visitor->list($filter, $params)->getArrayResults());
+    //
+    //        return $this->visitor->list($filter, $params)->getArrayResults() ?? array();
+    //    }
 }

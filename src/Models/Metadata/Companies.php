@@ -33,7 +33,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Companies
 {
     #[
-        Assert\NotNull(),
+        Assert\NotNull,
         Assert\Type("string"),
         JMS\SerializedName("id"),
         JMS\Groups(array("Read", "List")),
@@ -42,7 +42,7 @@ class Companies
     public string $id;
 
     #[
-        Assert\NotNull(),
+        Assert\NotNull,
         Assert\Type("string"),
         JMS\SerializedName("type"),
         JMS\Type("string"),
@@ -54,7 +54,7 @@ class Companies
     public string $type;
 
     #[
-        Assert\NotNull(),
+        Assert\NotNull,
         Assert\Type("string"),
         JMS\SerializedName("name"),
         JMS\Type("string"),
@@ -109,138 +109,170 @@ class Companies
     ]
     public ?string $faxNumber = null;
 
-//
-//    /**
-//     * Client's phone.
-//     */
-//    #[
-//        Assert\Type("string"),
-//        JMS\SerializedName("phone"),
-//        JMS\Type("string"),
-//        SPL\Field(type: SPL_T_PHONE, desc: "This is User Phone"),
-//    ]
-//    public ?string $phone = null;
-//
-//    /**
-//     * Just a Bool Flag.
-//     */
-//    #[
-//        Assert\Type("bool"),
-//        JMS\SerializedName("bool"),
-//        JMS\Type("bool"),
-//        SPL\Field(),
-//    ]
-//    public ?bool $bool = null;
-//
-//    /**
-//     * Just an integer.
-//     */
-//    #[
-//        Assert\Type("int"),
-//        JMS\SerializedName("int"),
-//        JMS\Type("int"),
-//        SPL\Field(),
-//    ]
-//    public ?int $int = null;
-//
-//    /**
-//     * Client's website Url.
-//     */
-//    #[
-//        Assert\Type("string"),
-//        JMS\SerializedName("website"),
-//        JMS\Type("string"),
-//        SPL\Field(type: SPL_T_URL)
-//    ]
-//    public ?string $website = null;
-//
-//    /**
-//     * ISO Language
-//     */
-//    #[
-//        Assert\Type("string"),
-//        JMS\SerializedName("language"),
-//        JMS\Type("string"),
-//        SPL\Field(type: SPL_T_LANG)
-//    ]
-//    public ?string $language = null;
-//
-//    /**
-//     * ISO Currency
-//     */
-//    #[
-//        Assert\Type("string"),
-//        JMS\SerializedName("currency"),
-//        JMS\Type("string"),
-//        SPL\Field(type: SPL_T_CURRENCY)
-//    ]
-//    public ?string $currency = null;
-//
-//    /**
-//     * Address country as ISO_3166-1 alpha-3.
-//     */
-//    #[
-//        Assert\Type("string"),
-//        JMS\SerializedName("countryId"),
-//        JMS\Type("string"),
-//        SPL\Field(type: SPL_T_COUNTRY)
-//    ]
-//    public ?string $countryId = null;
-//
-//    /**
-//     * Date Field
-//     */
-//    #[
-//        Assert\Type("datetime"),
-//        JMS\SerializedName("date"),
-//        JMS\Type("DateTime"),
-//        SPL\Field(type: SPL_T_DATE)
-//    ]
-//    public ?DateTime $date = null;
-//
-//    /**
-//     * Datetime Field
-//     */
-//    #[
-//        Assert\Type("datetime"),
-//        JMS\SerializedName("datetime"),
-//        JMS\Type("DateTime"),
-//        SPL\Field(type: SPL_T_DATETIME)
-//    ]
-//    public ?DateTime $datetime = null;
-//
-//    /**
-//     * Splash Price Field
-//     */
-//    #[
-//        Assert\Type("array"),
-//        JMS\SerializedName("price"),
-//        JMS\Type("array"),
-//        SPL\Field(type: SPL_T_PRICE)
-//    ]
-//    public ?array $price = null;
-//
-//    /**
-//     * Splash Image Field
-//     */
-//    #[
-//        Assert\Type("array"),
-//        JMS\SerializedName("image"),
-//        JMS\Type("array"),
-//        SPL\Field(type: SPL_T_IMG),
-//        SPL\IsReadOnly,
-//    ]
-//    public ?array $image = null;
-//
-//    /**
-//     * Splash File Field
-//     */
-//    #[
-//        Assert\Type("array"),
-//        JMS\SerializedName("file"),
-//        JMS\Type("array"),
-//        SPL\Field(type: SPL_T_FILE),
-//        SPL\IsReadOnly,
-//    ]
-//    public ?array $file = null;
+    #[
+        Assert\Type("array<string>"),
+        JMS\SerializedName("social"),
+        JMS\Type("array<string>"),
+        SPL\Field(type: SPL_T_INLINE, desc: "Company social networks"),
+    ]
+    public ?array $social = array(
+        "twitter" => null,
+        "facebook" => null,
+        "linkedin" => null,
+        "viadeo" => null,
+    );
+
+    public function getFaxNumberInt(): string
+    {
+        return "+33".$this->faxNumber;
+    }
+
+    //    #[
+    //        Assert\Type("array"),
+    //        JMS\SerializedName("legal_france"),
+    //        JMS\Type("array"),
+    //        SPL\Field(type: SPL_T_INLINE, desc: "Company legal information for France"),
+    //    ]
+    //    public ?array $legalFrance = [
+    //        "siret" => null,
+    //        "siren" => null,
+    //        "vat" => null,
+    //        "ape_naf_code" => null,
+    //        "company_type" => null,
+    //        "rcs_immatriculation" => null,
+    //    ];
+    //
+    //    /**
+    //     * Client's phone.
+    //     */
+    //    #[
+    //        Assert\Type("string"),
+    //        JMS\SerializedName("phone"),
+    //        JMS\Type("string"),
+    //        SPL\Field(type: SPL_T_PHONE, desc: "This is User Phone"),
+    //    ]
+    //    public ?string $phone = null;
+    //
+    //    /**
+    //     * Just a Bool Flag.
+    //     */
+    //    #[
+    //        Assert\Type("bool"),
+    //        JMS\SerializedName("bool"),
+    //        JMS\Type("bool"),
+    //        SPL\Field(),
+    //    ]
+    //    public ?bool $bool = null;
+    //
+    //    /**
+    //     * Just an integer.
+    //     */
+    //    #[
+    //        Assert\Type("int"),
+    //        JMS\SerializedName("int"),
+    //        JMS\Type("int"),
+    //        SPL\Field(),
+    //    ]
+    //    public ?int $int = null;
+    //
+    //    /**
+    //     * Client's website Url.
+    //     */
+    //    #[
+    //        Assert\Type("string"),
+    //        JMS\SerializedName("website"),
+    //        JMS\Type("string"),
+    //        SPL\Field(type: SPL_T_URL)
+    //    ]
+    //    public ?string $website = null;
+    //
+    //    /**
+    //     * ISO Language
+    //     */
+    //    #[
+    //        Assert\Type("string"),
+    //        JMS\SerializedName("language"),
+    //        JMS\Type("string"),
+    //        SPL\Field(type: SPL_T_LANG)
+    //    ]
+    //    public ?string $language = null;
+    //
+    //    /**
+    //     * ISO Currency
+    //     */
+    //    #[
+    //        Assert\Type("string"),
+    //        JMS\SerializedName("currency"),
+    //        JMS\Type("string"),
+    //        SPL\Field(type: SPL_T_CURRENCY)
+    //    ]
+    //    public ?string $currency = null;
+    //
+    //    /**
+    //     * Address country as ISO_3166-1 alpha-3.
+    //     */
+    //    #[
+    //        Assert\Type("string"),
+    //        JMS\SerializedName("countryId"),
+    //        JMS\Type("string"),
+    //        SPL\Field(type: SPL_T_COUNTRY)
+    //    ]
+    //    public ?string $countryId = null;
+    //
+    //    /**
+    //     * Date Field
+    //     */
+    //    #[
+    //        Assert\Type("datetime"),
+    //        JMS\SerializedName("date"),
+    //        JMS\Type("DateTime"),
+    //        SPL\Field(type: SPL_T_DATE)
+    //    ]
+    //    public ?DateTime $date = null;
+    //
+    //    /**
+    //     * Datetime Field
+    //     */
+    //    #[
+    //        Assert\Type("datetime"),
+    //        JMS\SerializedName("datetime"),
+    //        JMS\Type("DateTime"),
+    //        SPL\Field(type: SPL_T_DATETIME)
+    //    ]
+    //    public ?DateTime $datetime = null;
+    //
+    //    /**
+    //     * Splash Price Field
+    //     */
+    //    #[
+    //        Assert\Type("array"),
+    //        JMS\SerializedName("price"),
+    //        JMS\Type("array"),
+    //        SPL\Field(type: SPL_T_PRICE)
+    //    ]
+    //    public ?array $price = null;
+    //
+    //    /**
+    //     * Splash Image Field
+    //     */
+    //    #[
+    //        Assert\Type("array"),
+    //        JMS\SerializedName("image"),
+    //        JMS\Type("array"),
+    //        SPL\Field(type: SPL_T_IMG),
+    //        SPL\IsReadOnly,
+    //    ]
+    //    public ?array $image = null;
+    //
+    //    /**
+    //     * Splash File Field
+    //     */
+    //    #[
+    //        Assert\Type("array"),
+    //        JMS\SerializedName("file"),
+    //        JMS\Type("array"),
+    //        SPL\Field(type: SPL_T_FILE),
+    //        SPL\IsReadOnly,
+    //    ]
+    //    public ?array $file = null;
 }

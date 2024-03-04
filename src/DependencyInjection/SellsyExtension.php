@@ -20,9 +20,9 @@ use Splash\Connectors\Sellsy\Oauth2\PrivateClient;
 use Splash\Connectors\Sellsy\Oauth2\SandboxClient;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 
 /**
  * Loads and manages bundle configuration
@@ -76,5 +76,4 @@ class SellsyExtension extends Extension implements PrependExtensionInterface
             )
         );
     }
-
 }

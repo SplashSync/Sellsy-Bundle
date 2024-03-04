@@ -36,7 +36,9 @@
         "splash/openapi":                               "dev-master",
         "splash/metadata":                              "dev-master",
         "splash/oauth2":                                "dev-main",
-        "burgov/key-value-form-bundle":                 "@stable"
+        "burgov/key-value-form-bundle":                 "@stable",
+        "doctrine/annotations": "*",
+        "symfony/validator": "*"
     },
     
     "require-dev": {

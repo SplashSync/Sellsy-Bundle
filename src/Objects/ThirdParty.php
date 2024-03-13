@@ -77,25 +77,26 @@ class ThirdParty extends AbstractApiMetadataObject
     // DEBUG
     //====================================================================//
 
-    //    public function load(string $objectId): ?object
-    //    {
-    //        //====================================================================//
-    //        // Load Remote Object
-    //        $loadResponse = $this->visitor->load($objectId);
-    //        if (!$loadResponse->isSuccess()) {
+    //        public function load(string $objectId): ?object
+    //        {
+    //            //====================================================================//
+    //            // Load Remote Object
+    //            $loadResponse = $this->visitor->load($objectId);
+    //            if (!$loadResponse->isSuccess()) {
+    //                return null;
+    //            }
+    //
+    //            dd(json_decode($this->visitor->getLastResponse()->body));
+    //
     //            return null;
     //        }
-    //        dd(json_decode($this->visitor->getLastResponse()->body));
-    //
-    //        return null;
-    //    }
 
-    //    public function objectsList(?string $filter = null, array $params = array()): array
-    //    {
-    //        $this->visitor->list($filter, $params)->getArrayResults();
-    //        dd(json_decode($this->visitor->getLastResponse()->body));
-    //        dd($this->visitor->list($filter, $params)->getArrayResults());
+    //        public function objectsList(?string $filter = null, array $params = array()): array
+    //        {
+    //            $this->visitor->list($filter, $params)->getArrayResults();
+    //            dd(json_decode($this->visitor->getLastResponse()->body));
+    //            dd($this->visitor->list($filter, $params)->getArrayResults());
     //
-    //        return $this->visitor->list($filter, $params)->getArrayResults() ?? array();
-    //    }
+    //            return $this->visitor->list($filter, $params)->getArrayResults() ?? array();
+    //        }
 }

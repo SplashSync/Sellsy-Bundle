@@ -112,4 +112,214 @@ class Companies extends AbstractSellsyObject
         ORM\Column(nullable: true),
     ]
     public ?string $fax_number = null;
+
+    /**
+     * Company capital
+     */
+    #[
+        Assert\Type("string"),
+        ORM\Column(nullable: true),
+    ]
+    public ?string $capital = null;
+
+    /**
+     * Company reference
+     */
+    #[
+        Assert\Type("string"),
+        ORM\Column(nullable: true),
+    ]
+    public ?string $reference = null;
+
+    /**
+     * Company note
+     */
+    #[
+        Assert\Type("string"),
+        ORM\Column(nullable: true),
+    ]
+    public ?string $note = null;
+
+    /**
+     * Company accounting code id
+     */
+    #[
+        Assert\Type("integer"),
+        ORM\Column(type: Types::INTEGER, nullable: true),
+    ]
+    public ?int $accounting_code_id = null;
+
+    /**
+     * Company accounting purchase code id
+     */
+    #[
+        Assert\Type("integer"),
+        ORM\Column(type: Types::INTEGER, nullable: true),
+    ]
+    public ?int $accounting_purchase_code_id = null;
+
+    /**
+     * Company auxiliary code
+     */
+    #[
+        Assert\Type("string"),
+        ORM\Column(nullable: true),
+    ]
+    public ?string $auxiliary_code = null;
+
+    /**
+     * Company main contact id
+     */
+    #[
+        Assert\Type("integer"),
+        ORM\Column(nullable: true),
+    ]
+    public ?int $main_contact_id = null;
+
+    /**
+     * Company invoicing contact id
+     */
+    #[
+        Assert\Type("integer"),
+        ORM\Column(nullable: true),
+    ]
+    public ?int $invoicing_contact_id = null;
+
+    /**
+     * Company dunning contact id
+     */
+    #[
+        Assert\Type("integer"),
+        ORM\Column(nullable: true),
+    ]
+    public ?int $dunning_contact_id = null;
+
+    /**
+     * Company invoicing address id
+     */
+    #[
+        Assert\Type("integer"),
+        ORM\Column(nullable: true),
+    ]
+    public ?int $invoicing_address_id = null;
+
+    /**
+     * Company delivery address id
+     */
+    #[
+        Assert\Type("integer"),
+        ORM\Column(nullable: true),
+    ]
+    public ?int $delivery_address_id = null;
+
+    /**
+     * Company rate category id
+     */
+    #[
+        Assert\Type("integer"),
+        ORM\Column(nullable: true),
+    ]
+    public ?int $rate_category_id = null;
+
+    /**
+     * Company creation date
+     */
+    #[
+        Assert\Type("datetime"),
+        ORM\Column(nullable: false),
+    ]
+    public int $created;
+
+    /**
+     * Last Update Date
+     */
+    #[
+        Assert\Type("datetime"),
+        ORM\Column(nullable: false),
+    ]
+    public int $updated_at;
+
+    /**
+     * Is Company Archived
+     */
+    #[
+        Assert\Type("boolean"),
+        ORM\Column(nullable: false),
+    ]
+    public bool $is_archived = false;
+
+    /**
+     * Company social networks links
+     */
+    #[
+        Assert\Type("array"),
+        ORM\Column(type: Types::JSON, nullable: true)
+    ]
+    public ?array $social = array(
+        "facebook" => null,
+        "twitter" => null,
+        "linkedin" => null,
+        "viadeo" => null
+    );
+
+    /**
+     * Company legal information for France
+     */
+    #[
+        Assert\Type("array"),
+        ORM\Column(type: Types::JSON, nullable: true)
+    ]
+    public ?array $legal_france = array(
+        "siret" => null,
+        "siren" => null,
+        "vat" => null,
+        "ape_naf_code" => null,
+        "company_type" => null,
+        "rcs_immatriculation" => null
+    );
+
+    /**
+     * Company owner
+     */
+    #[
+        Assert\Type("array"),
+        ORM\Column(type: Types::JSON, nullable: true)
+    ]
+    public ?array $owner = array(
+        "id" => null,
+        "type" => null
+    );
+
+    /**
+     * Company business segment
+     */
+    #[
+        Assert\Type("array"),
+        ORM\Column(type: Types::JSON, nullable: true)
+    ]
+    public ?array $business_segment = array(
+        "id" => null,
+        "label" => null
+    );
+
+    /**
+     * Company number of employees
+     */
+    #[
+        Assert\Type("array"),
+        ORM\Column(type: Types::JSON, nullable: true)
+    ]
+    public ?array $number_of_employees = array(
+        "id" => null,
+        "label" => null
+    );
+
+    /**
+     * Company marketing campaigns subscriptions
+     */
+    #[
+        Assert\Type("array"),
+        ORM\Column(type: Types::JSON, nullable: true)
+    ]
+    public ?array $marketing_campaigns_subscriptions = null;
 }

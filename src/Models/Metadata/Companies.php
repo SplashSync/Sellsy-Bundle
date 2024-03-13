@@ -17,7 +17,10 @@ namespace Splash\Connectors\Sellsy\Models\Metadata;
 
 use DateTime;
 use JMS\Serializer\Annotation as JMS;
+use Splash\Client\Splash;
 use Splash\Metadata\Attributes as SPL;
+use Splash\Models\Helpers\ObjectsHelper;
+use Splash\Models\Objects\ObjectsTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -32,6 +35,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 class Companies
 {
+    //    use ObjectsTrait;
+
     #[
         Assert\NotNull,
         Assert\Type("string"),
@@ -98,6 +103,7 @@ class Companies
         JMS\SerializedName("mobile_number"),
         JMS\Type("string"),
         SPL\Field(type: SPL_T_PHONE, desc: "Company mobile number"),
+        SPL\Microdata("http://schema.org/Person", "telephone")
     ]
     public ?string $mobileNumber = null;
 
@@ -106,41 +112,244 @@ class Companies
         JMS\SerializedName("fax_number"),
         JMS\Type("string"),
         SPL\Field(type: SPL_T_PHONE, desc: "Company fax number"),
+        SPL\Microdata("http://schema.org/faxNumber", "telephone")
     ]
     public ?string $faxNumber = null;
 
+    /**
+     * Company's capital.
+     *
+     * @var null|string
+     */
     #[
-        Assert\Type("array<string>"),
-        JMS\SerializedName("social"),
-        JMS\Type("array<string>"),
-        SPL\Field(type: SPL_T_INLINE, desc: "Company social networks"),
+        Assert\Type("string"),
+        JMS\SerializedName("capital"),
+        JMS\Type("string"),
+        SPL\Field(type: SPL_T_VARCHAR, desc: "Company's capital"),
     ]
-    public ?array $social = array(
-        "twitter" => null,
-        "facebook" => null,
-        "linkedin" => null,
-        "viadeo" => null,
-    );
+    public ?string $capital = null;
+
+    /**
+     * Company's reference.
+     *
+     * @var null|string
+     */
+    #[
+        Assert\Type("string"),
+        JMS\SerializedName("reference"),
+        JMS\Type("string"),
+        SPL\Field(type: SPL_T_VARCHAR, desc: "Company's reference"),
+    ]
+    public ?string $reference = null;
+
+    /**
+     * Note about the company.
+     *
+     * @var null|string
+     */
+    #[
+        Assert\Type("string"),
+        JMS\SerializedName("note"),
+        JMS\Type("string"),
+        SPL\Field(type: SPL_T_VARCHAR, desc: "Note about the company"),
+    ]
+    public ?string $note = null;
+
+    /**
+     * Company's accounting code id
+     *
+     * @var null|int
+     */
+    #[
+        Assert\Type("integer"),
+        JMS\SerializedName("accounting_code_id"),
+        JMS\Groups(array("Read")),
+        JMS\Type("integer"),
+        SPL\Field(type: SPL_T_INT, desc: "Company's accounting code id"),
+        SPL\IsReadOnly()
+    ]
+    public ?int $accountingCodeId = null;
+
+    /**
+     * Company's accounting purchase code id
+     *
+     * @var null|int
+     */
+    #[
+        Assert\Type("integer"),
+        JMS\SerializedName("accounting_purchase_code_id"),
+        JMS\Groups(array("Read")),
+        JMS\Type("integer"),
+        SPL\Field(type: SPL_T_INT, desc: "Company's accounting purchase code id"),
+        SPL\IsReadOnly()
+    ]
+    public ?int $accountingPurchaseCodeId = null;
+
+    /**
+     * Company's auxiliary code.
+     *
+     * @var null|string
+     */
+    #[
+        Assert\Type("string"),
+        JMS\SerializedName("auxiliary_code"),
+        JMS\Type("string"),
+        SPL\Field(type: SPL_T_VARCHAR, desc: "Company's auxiliary code"),
+    ]
+    public ?string $auxiliaryCode = null;
+
+    /**
+     * Company's main contact id
+     *
+     * @var null|int
+     */
+    #[
+        Assert\Type("integer"),
+        JMS\SerializedName("main_contact_id"),
+        JMS\Groups(array("Read")),
+        JMS\Type("integer"),
+        SPL\IsReadOnly(),
+        SPL\Field(type: SPL_T_INT, desc: "Company's main contact id")
+    ]
+    public ?int $mainContactId = null;
+
+    /**
+     * Company's invoicing contact id
+     *
+     * @var null|int
+     */
+    #[
+        Assert\Type("integer"),
+        JMS\SerializedName("invoicing_contact_id"),
+        JMS\Groups(array("Read")),
+        JMS\Type("integer"),
+        SPL\IsReadOnly(),
+        SPL\Field(type: SPL_T_INT, desc: "Company's main contact id")
+    ]
+    public ?int $invoicingContactId = null;
+
+    /**
+     * Company's dunning contact id
+     *
+     * @var null|int
+     */
+    #[
+        Assert\Type("integer"),
+        JMS\SerializedName("dunning_contact_id"),
+        JMS\Groups(array("Read")),
+        JMS\Type("integer"),
+        SPL\IsReadOnly(),
+        SPL\Field(type: SPL_T_INT, desc: "Company's dunning contact id")
+    ]
+    public ?int $dunningContactId = null;
+
+    /**
+     * Company's invoicing address id
+     *
+     * @var null|int
+     */
+    #[
+        Assert\Type("integer"),
+        JMS\SerializedName("invoicing_address_id"),
+        JMS\Groups(array("Read")),
+        SPL\Field(type: SPL_T_INT, desc: "Company's invoicing address id"),
+        SPL\IsReadOnly()
+    ]
+    public ?int $invoicingAddressId = null;
+
+    /**
+     * Company's delivery address id
+     *
+     * @var null|int
+     */
+    #[
+        Assert\Type("integer"),
+        JMS\SerializedName("delivery_address_id"),
+        JMS\Groups(array("Read")),
+        SPL\Field(type: SPL_T_INT, desc: "Company's delivery address id"),
+        SPL\IsReadOnly()
+    ]
+    public ?int $deliveryAddressId = null;
+
+    /**
+     * Company's rate category id
+     *
+     * @var null|int
+     */
+    #[
+        Assert\Type("integer"),
+        JMS\SerializedName("rate_category_id"),
+        JMS\Groups(array("Read")),
+        SPL\Field(type: SPL_T_INT, desc: "Company's rate category id"),
+        SPL\IsReadOnly()
+    ]
+    public ?int $rateCategoryId = null;
+
+    #[
+        Assert\Type("boolean"),
+        JMS\SerializedName("is_archived"),
+        JMS\Type("boolean"),
+        SPL\Field(type: SPL_T_BOOL, desc: "Is Company Archived"),
+    ]
+    public bool $isArchived;
+
+    /**
+     * Social media information for the company.
+     *
+     * @var null|SocialUrls
+     */
+    #[
+        Assert\Type(SocialUrls::class),
+        JMS\SerializedName("social"),
+        JMS\Type(SocialUrls::class),
+        SPL\SubResource(),
+        SPL\Accessor(factory: "createItem"),
+    ]
+    public ?SocialUrls $social = null;
+
+    /**
+     * Legal information for France about the company.
+     *
+     * @var null|LegalFrance
+     */
+    #[
+        Assert\Type(LegalFrance::class),
+        JMS\SerializedName("legal_france"),
+        JMS\Type(LegalFrance::class),
+        SPL\SubResource(),
+        SPL\Accessor(factory: "createItem"),
+    ]
+    public ?LegalFrance $legalFrance = null;
+
+    /**
+     * Social media information for the company.
+     *
+     * @var null|RGPDConsent
+     */
+    #[
+        Assert\Type(RGPDConsent::class),
+        JMS\SerializedName("rgpd_consent"),
+        JMS\Type(RGPDConsent::class),
+        SPL\SubResource(),
+        SPL\Accessor(factory: "createItem"),
+    ]
+    public ?RGPDConsent $rgpdConsent = null;
 
     public function getFaxNumberInt(): string
     {
         return "+33".$this->faxNumber;
     }
 
-    //    #[
-    //        Assert\Type("array"),
-    //        JMS\SerializedName("legal_france"),
-    //        JMS\Type("array"),
-    //        SPL\Field(type: SPL_T_INLINE, desc: "Company legal information for France"),
-    //    ]
-    //    public ?array $legalFrance = [
-    //        "siret" => null,
-    //        "siren" => null,
-    //        "vat" => null,
-    //        "ape_naf_code" => null,
-    //        "company_type" => null,
-    //        "rcs_immatriculation" => null,
-    //    ];
+    public function getInvoicingAddressId(): ?string
+    {
+        if ($this->invoicingAddressId) {
+            // "1234::Address"
+            return ObjectsHelper::encode("Address", (string) $this->invoicingAddressId);
+        }
+
+        return null;
+    }
+
     //
     //    /**
     //     * Client's phone.
@@ -275,4 +484,13 @@ class Companies
     //        SPL\IsReadOnly,
     //    ]
     //    public ?array $file = null;
+
+    #[
+        JMS\PostDeserialize(),
+    ]
+    public function getMyDebug(): void
+    {
+        dump($this);
+        //            dd($this);
+    }
 }

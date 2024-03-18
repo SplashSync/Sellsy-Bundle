@@ -16,6 +16,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata as API;
+use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -24,7 +25,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Class representing the Companies model.
  */
 #[
-    ORM\Entity(),
+    ORM\Entity,
     API\ApiResource(
         operations: array(
             new API\GetCollection(),
@@ -54,7 +55,8 @@ class Companies extends AbstractSellsyObject
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        ORM\Column(),
+//        Assert\Choice(array("prospect", "client", "supplier")),
+        ORM\Column,
     ]
     public string $type;
 
@@ -64,7 +66,7 @@ class Companies extends AbstractSellsyObject
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        ORM\Column(),
+        ORM\Column,
     ]
     public string $name;
 
@@ -228,7 +230,7 @@ class Companies extends AbstractSellsyObject
         Assert\Type("datetime"),
         ORM\Column(nullable: false),
     ]
-    public int $created;
+    public DateTime $created;
 
     /**
      * Last Update Date
@@ -237,7 +239,7 @@ class Companies extends AbstractSellsyObject
         Assert\Type("datetime"),
         ORM\Column(nullable: false),
     ]
-    public int $updated_at;
+    public DateTime $updated_at;
 
     /**
      * Is Company Archived
@@ -322,4 +324,18 @@ class Companies extends AbstractSellsyObject
         ORM\Column(type: Types::JSON, nullable: true)
     ]
     public ?array $marketing_campaigns_subscriptions = null;
+
+
+    #[ORM\PrePersist()]
+    public function onPrePersist(): void
+    {
+        $this->created = new \DateTime();
+        $this->updated_at = new \DateTime();
+    }
+
+    #[ORM\PreUpdate()]
+    public function onPreUpdate(): void
+    {
+        $this->updated_at = new \DateTime();
+    }
 }

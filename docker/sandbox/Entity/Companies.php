@@ -55,7 +55,7 @@ class Companies extends AbstractSellsyObject
     #[
         Assert\NotNull,
         Assert\Type("string"),
-//        Assert\Choice(array("prospect", "client", "supplier")),
+        //        Assert\Choice(array("prospect", "client", "supplier")),
         ORM\Column,
     ]
     public string $type;
@@ -325,17 +325,16 @@ class Companies extends AbstractSellsyObject
     ]
     public ?array $marketing_campaigns_subscriptions = null;
 
-
     #[ORM\PrePersist()]
     public function onPrePersist(): void
     {
-        $this->created = new \DateTime();
-        $this->updated_at = new \DateTime();
+        $this->created = new DateTime();
+        $this->updated_at = new DateTime();
     }
 
     #[ORM\PreUpdate()]
     public function onPreUpdate(): void
     {
-        $this->updated_at = new \DateTime();
+        $this->updated_at = new DateTime();
     }
 }

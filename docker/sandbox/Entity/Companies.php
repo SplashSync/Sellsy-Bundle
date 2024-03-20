@@ -55,7 +55,7 @@ class Companies extends AbstractSellsyObject
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        //        Assert\Choice(array("prospect", "client", "supplier")),
+        Assert\Choice(array("prospect", "client", "supplier")),
         ORM\Column,
     ]
     public string $type;
@@ -142,86 +142,86 @@ class Companies extends AbstractSellsyObject
     ]
     public ?string $note = null;
 
-    /**
-     * Company accounting code id
-     */
-    #[
-        Assert\Type("integer"),
-        ORM\Column(type: Types::INTEGER, nullable: true),
-    ]
-    public ?int $accounting_code_id = null;
-
-    /**
-     * Company accounting purchase code id
-     */
-    #[
-        Assert\Type("integer"),
-        ORM\Column(type: Types::INTEGER, nullable: true),
-    ]
-    public ?int $accounting_purchase_code_id = null;
-
-    /**
-     * Company auxiliary code
-     */
-    #[
-        Assert\Type("string"),
-        ORM\Column(nullable: true),
-    ]
-    public ?string $auxiliary_code = null;
-
-    /**
-     * Company main contact id
-     */
-    #[
-        Assert\Type("integer"),
-        ORM\Column(nullable: true),
-    ]
-    public ?int $main_contact_id = null;
-
-    /**
-     * Company invoicing contact id
-     */
-    #[
-        Assert\Type("integer"),
-        ORM\Column(nullable: true),
-    ]
-    public ?int $invoicing_contact_id = null;
-
-    /**
-     * Company dunning contact id
-     */
-    #[
-        Assert\Type("integer"),
-        ORM\Column(nullable: true),
-    ]
-    public ?int $dunning_contact_id = null;
-
-    /**
-     * Company invoicing address id
-     */
-    #[
-        Assert\Type("integer"),
-        ORM\Column(nullable: true),
-    ]
-    public ?int $invoicing_address_id = null;
-
-    /**
-     * Company delivery address id
-     */
-    #[
-        Assert\Type("integer"),
-        ORM\Column(nullable: true),
-    ]
-    public ?int $delivery_address_id = null;
-
-    /**
-     * Company rate category id
-     */
-    #[
-        Assert\Type("integer"),
-        ORM\Column(nullable: true),
-    ]
-    public ?int $rate_category_id = null;
+    //    /**
+    //     * Company accounting code id
+    //     */
+    //    #[
+    //        Assert\Type("integer"),
+    //        ORM\Column(type: Types::INTEGER, nullable: true),
+    //    ]
+    //    public ?int $accounting_code_id = null;
+    //
+    //    /**
+    //     * Company accounting purchase code id
+    //     */
+    //    #[
+    //        Assert\Type("integer"),
+    //        ORM\Column(type: Types::INTEGER, nullable: true),
+    //    ]
+    //    public ?int $accounting_purchase_code_id = null;
+    //
+    //    /**
+    //     * Company auxiliary code
+    //     */
+    //    #[
+    //        Assert\Type("string"),
+    //        ORM\Column(nullable: true),
+    //    ]
+    //    public ?string $auxiliary_code = null;
+    //
+    //    /**
+    //     * Company main contact id
+    //     */
+    //    #[
+    //        Assert\Type("integer"),
+    //        ORM\Column(nullable: true),
+    //    ]
+    //    public ?int $main_contact_id = null;
+    //
+    //    /**
+    //     * Company invoicing contact id
+    //     */
+    //    #[
+    //        Assert\Type("integer"),
+    //        ORM\Column(nullable: true),
+    //    ]
+    //    public ?int $invoicing_contact_id = null;
+    //
+    //    /**
+    //     * Company dunning contact id
+    //     */
+    //    #[
+    //        Assert\Type("integer"),
+    //        ORM\Column(nullable: true),
+    //    ]
+    //    public ?int $dunning_contact_id = null;
+    //
+    //    /**
+    //     * Company invoicing address id
+    //     */
+    //    #[
+    //        Assert\Type("integer"),
+    //        ORM\Column(nullable: true),
+    //    ]
+    //    public ?int $invoicing_address_id = null;
+    //
+    //    /**
+    //     * Company delivery address id
+    //     */
+    //    #[
+    //        Assert\Type("integer"),
+    //        ORM\Column(nullable: true),
+    //    ]
+    //    public ?int $delivery_address_id = null;
+    //
+    //    /**
+    //     * Company rate category id
+    //     */
+    //    #[
+    //        Assert\Type("integer"),
+    //        ORM\Column(nullable: true),
+    //    ]
+    //    public ?int $rate_category_id = null;
 
     /**
      * Company creation date
@@ -281,55 +281,68 @@ class Companies extends AbstractSellsyObject
     );
 
     /**
-     * Company owner
+     * Company legal information for France
      */
     #[
         Assert\Type("array"),
         ORM\Column(type: Types::JSON, nullable: true)
     ]
-    public ?array $owner = array(
-        "id" => null,
-        "type" => null
+    public ?array $rgpd_consent = array(
+        "email" => false,
+        "sms" => false,
+        "phone" => false,
+        "postal_mail" => false,
+        "custom" => false
     );
 
-    /**
-     * Company business segment
-     */
-    #[
-        Assert\Type("array"),
-        ORM\Column(type: Types::JSON, nullable: true)
-    ]
-    public ?array $business_segment = array(
-        "id" => null,
-        "label" => null
-    );
+    //    /**
+    //     * Company owner
+    //     */
+    //    #[
+    //        Assert\Type("array"),
+    //        ORM\Column(type: Types::JSON, nullable: true)
+    //    ]
+    //    public ?array $owner = array(
+    //        "id" => null,
+    //        "type" => null
+    //    );
+    //
+    //    /**
+    //     * Company business segment
+    //     */
+    //    #[
+    //        Assert\Type("array"),
+    //        ORM\Column(type: Types::JSON, nullable: true)
+    //    ]
+    //    public ?array $business_segment = array(
+    //        "id" => null,
+    //        "label" => null
+    //    );
+    //
+    //    /**
+    //     * Company number of employees
+    //     */
+    //    #[
+    //        Assert\Type("array"),
+    //        ORM\Column(type: Types::JSON, nullable: true)
+    //    ]
+    //    public ?array $number_of_employees = array(
+    //        "id" => null,
+    //        "label" => null
+    //    );
+    //
+    //    /**
+    //     * Company marketing campaigns subscriptions
+    //     */
+    //    #[
+    //        Assert\Type("array"),
+    //        ORM\Column(type: Types::JSON, nullable: true)
+    //    ]
+    //    public ?array $marketing_campaigns_subscriptions = null;
 
-    /**
-     * Company number of employees
-     */
-    #[
-        Assert\Type("array"),
-        ORM\Column(type: Types::JSON, nullable: true)
-    ]
-    public ?array $number_of_employees = array(
-        "id" => null,
-        "label" => null
-    );
-
-    /**
-     * Company marketing campaigns subscriptions
-     */
-    #[
-        Assert\Type("array"),
-        ORM\Column(type: Types::JSON, nullable: true)
-    ]
-    public ?array $marketing_campaigns_subscriptions = null;
-
-    #[ORM\PrePersist()]
-    public function onPrePersist(): void
+    public function __construct()
     {
-        $this->created = new DateTime();
-        $this->updated_at = new DateTime();
+        $this->created = $this->updated_at = new DateTime();
     }
 
     #[ORM\PreUpdate()]

@@ -23,6 +23,7 @@ use Splash\Bundle\Models\Connectors\GenericWidgetMapperTrait;
 use Splash\Connectors\Sellsy\Oauth2\PrivateClient;
 use Splash\Connectors\Sellsy\Oauth2\SandboxClient;
 use Splash\Connectors\Sellsy\Objects;
+use Splash\Connectors\Sellsy\Widgets;
 use Splash\Core\SplashCore as Splash;
 use Splash\Metadata\Services\MetadataAdapter;
 use Splash\OpenApi\Action;
@@ -35,8 +36,6 @@ use Splash\Security\Oauth2\Model\Oauth2AwareConnector;
 use Splash\Security\Oauth2\Services\Oauth2ClientManager;
 //use Splash\Connectors\ReCommerce\Actions\Master;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-
-//use Splash\Connectors\ReCommerce\Widgets;
 
 /**
  * Sellsy REST API Connector for Splash
@@ -55,6 +54,9 @@ class SellsyConnector extends AbstractOauth2Connector
      */
     protected static array $objectsMap = array(
         "ThirdParty" => Objects\ThirdParty::class,
+        //        "Address" => Objects\ThirdParty::class,
+        //        "Product" => Objects\ThirdParty::class,
+        //        "Invoice" => Objects\ThirdParty::class,
     );
 
     /**
@@ -63,7 +65,7 @@ class SellsyConnector extends AbstractOauth2Connector
      * @var array
      */
     protected static array $widgetsMap = array(
-        //        "SelfTest" => Widgets\SelfTest::class,
+        "SelfTest" => Widgets\SelfTest::class,
     );
 
     /**
@@ -180,7 +182,7 @@ class SellsyConnector extends AbstractOauth2Connector
         $informations->country = "France";
         $informations->www = "https://sellsy.com/";
         $informations->email = "contact@sellsy.com";
-        $informations->phone = "";
+        $informations->phone = "&nbsp;";
         //====================================================================//
         // Server Logo & Ico
         $informations->icoraw = Splash::file()->readFileContents(

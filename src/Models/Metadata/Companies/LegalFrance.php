@@ -13,7 +13,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Connectors\Sellsy\Models\Metadata;
+namespace Splash\Connectors\Sellsy\Models\Metadata\Companies;
 
 use JMS\Serializer\Annotation as JMS;
 use Splash\Metadata\Attributes as SPL;

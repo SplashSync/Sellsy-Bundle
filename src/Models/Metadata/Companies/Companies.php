@@ -13,14 +13,12 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Connectors\Sellsy\Models\Metadata;
+namespace Splash\Connectors\Sellsy\Models\Metadata\Companies;
 
 use DateTime;
 use JMS\Serializer\Annotation as JMS;
-use Splash\Client\Splash;
 use Splash\Metadata\Attributes as SPL;
 use Splash\Models\Helpers\ObjectsHelper;
-use Splash\Models\Objects\ObjectsTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -35,8 +33,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 class Companies
 {
-    //    use ObjectsTrait;
-
     #[
         Assert\NotNull,
         Assert\Type("string"),
@@ -51,9 +47,14 @@ class Companies
         Assert\Type("string"),
         JMS\SerializedName("type"),
         JMS\Type("string"),
-        JMS\Groups(array("Read", "List", "Required")),
+        JMS\Groups(array("Read", "Write", "List", "Required")),
         SPL\Field(desc: "Company type"),
         SPL\Flags(listed: true),
+        SPL\Choices(array(
+            "prospect" => "Prospect",
+            "client" => "Client",
+            "supplier" => "Supplier",
+        )),
         SPL\IsRequired,
     ]
     public string $type;
@@ -155,141 +156,141 @@ class Companies
     ]
     public ?string $note = null;
 
-    /**
-     * Company's accounting code id
-     *
-     * @var null|int
-     */
-    #[
-        Assert\Type("integer"),
-        JMS\SerializedName("accounting_code_id"),
-        JMS\Groups(array("Read")),
-        JMS\Type("integer"),
-        SPL\Field(type: SPL_T_INT, desc: "Company's accounting code id"),
-        SPL\IsReadOnly()
-    ]
-    public ?int $accountingCodeId = null;
-
-    /**
-     * Company's accounting purchase code id
-     *
-     * @var null|int
-     */
-    #[
-        Assert\Type("integer"),
-        JMS\SerializedName("accounting_purchase_code_id"),
-        JMS\Groups(array("Read")),
-        JMS\Type("integer"),
-        SPL\Field(type: SPL_T_INT, desc: "Company's accounting purchase code id"),
-        SPL\IsReadOnly()
-    ]
-    public ?int $accountingPurchaseCodeId = null;
-
-    /**
-     * Company's auxiliary code.
-     *
-     * @var null|string
-     */
-    #[
-        Assert\Type("string"),
-        JMS\SerializedName("auxiliary_code"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Company's auxiliary code"),
-    ]
-    public ?string $auxiliaryCode = null;
-
-    /**
-     * Company's main contact id
-     *
-     * @var null|int
-     */
-    #[
-        Assert\Type("integer"),
-        JMS\SerializedName("main_contact_id"),
-        JMS\Groups(array("Read")),
-        JMS\Type("integer"),
-        SPL\IsReadOnly(),
-        SPL\Field(type: SPL_T_INT, desc: "Company's main contact id")
-    ]
-    public ?int $mainContactId = null;
-
-    /**
-     * Company's invoicing contact id
-     *
-     * @var null|int
-     */
-    #[
-        Assert\Type("integer"),
-        JMS\SerializedName("invoicing_contact_id"),
-        JMS\Groups(array("Read")),
-        JMS\Type("integer"),
-        SPL\IsReadOnly(),
-        SPL\Field(type: SPL_T_INT, desc: "Company's main contact id")
-    ]
-    public ?int $invoicingContactId = null;
-
-    /**
-     * Company's dunning contact id
-     *
-     * @var null|int
-     */
-    #[
-        Assert\Type("integer"),
-        JMS\SerializedName("dunning_contact_id"),
-        JMS\Groups(array("Read")),
-        JMS\Type("integer"),
-        SPL\IsReadOnly(),
-        SPL\Field(type: SPL_T_INT, desc: "Company's dunning contact id")
-    ]
-    public ?int $dunningContactId = null;
-
-    /**
-     * Company's invoicing address id
-     *
-     * @var null|int
-     */
-    #[
-        Assert\Type("integer"),
-        JMS\SerializedName("invoicing_address_id"),
-        JMS\Groups(array("Read")),
-        SPL\Field(type: SPL_T_INT, desc: "Company's invoicing address id"),
-        SPL\IsReadOnly()
-    ]
-    public ?int $invoicingAddressId = null;
-
-    /**
-     * Company's delivery address id
-     *
-     * @var null|int
-     */
-    #[
-        Assert\Type("integer"),
-        JMS\SerializedName("delivery_address_id"),
-        JMS\Groups(array("Read")),
-        SPL\Field(type: SPL_T_INT, desc: "Company's delivery address id"),
-        SPL\IsReadOnly()
-    ]
-    public ?int $deliveryAddressId = null;
-
-    /**
-     * Company's rate category id
-     *
-     * @var null|int
-     */
-    #[
-        Assert\Type("integer"),
-        JMS\SerializedName("rate_category_id"),
-        JMS\Groups(array("Read")),
-        SPL\Field(type: SPL_T_INT, desc: "Company's rate category id"),
-        SPL\IsReadOnly()
-    ]
-    public ?int $rateCategoryId = null;
+    //    /**
+    //     * Company's accounting code id
+    //     *
+    //     * @var null|int
+    //     */
+    //    #[
+    //        Assert\Type("integer"),
+    //        JMS\SerializedName("accounting_code_id"),
+    //        JMS\Groups(array("Read")),
+    //        JMS\Type("integer"),
+    //        SPL\Field(type: SPL_T_INT, desc: "Company's accounting code id"),
+    //        SPL\IsReadOnly()
+    //    ]
+    //    public ?int $accountingCodeId = null;
+    //
+    //    /**
+    //     * Company's accounting purchase code id
+    //     *
+    //     * @var null|int
+    //     */
+    //    #[
+    //        Assert\Type("integer"),
+    //        JMS\SerializedName("accounting_purchase_code_id"),
+    //        JMS\Groups(array("Read")),
+    //        JMS\Type("integer"),
+    //        SPL\Field(type: SPL_T_INT, desc: "Company's accounting purchase code id"),
+    //        SPL\IsReadOnly()
+    //    ]
+    //    public ?int $accountingPurchaseCodeId = null;
+    //
+    //    /**
+    //     * Company's auxiliary code.
+    //     *
+    //     * @var null|string
+    //     */
+    //    #[
+    //        Assert\Type("string"),
+    //        JMS\SerializedName("auxiliary_code"),
+    //        JMS\Type("string"),
+    //        SPL\Field(type: SPL_T_VARCHAR, desc: "Company's auxiliary code"),
+    //    ]
+    //    public ?string $auxiliaryCode = null;
+    //
+    //    /**
+    //     * Company's main contact id
+    //     *
+    //     * @var null|int
+    //     */
+    //    #[
+    //        Assert\Type("integer"),
+    //        JMS\SerializedName("main_contact_id"),
+    //        JMS\Groups(array("Read")),
+    //        JMS\Type("integer"),
+    //        SPL\IsReadOnly(),
+    //        SPL\Field(type: SPL_T_INT, desc: "Company's main contact id")
+    //    ]
+    //    public ?int $mainContactId = null;
+    //
+    //    /**
+    //     * Company's invoicing contact id
+    //     *
+    //     * @var null|int
+    //     */
+    //    #[
+    //        Assert\Type("integer"),
+    //        JMS\SerializedName("invoicing_contact_id"),
+    //        JMS\Groups(array("Read")),
+    //        JMS\Type("integer"),
+    //        SPL\IsReadOnly(),
+    //        SPL\Field(type: SPL_T_INT, desc: "Company's main contact id")
+    //    ]
+    //    public ?int $invoicingContactId = null;
+    //
+    //    /**
+    //     * Company's dunning contact id
+    //     *
+    //     * @var null|int
+    //     */
+    //    #[
+    //        Assert\Type("integer"),
+    //        JMS\SerializedName("dunning_contact_id"),
+    //        JMS\Groups(array("Read")),
+    //        JMS\Type("integer"),
+    //        SPL\IsReadOnly(),
+    //        SPL\Field(type: SPL_T_INT, desc: "Company's dunning contact id")
+    //    ]
+    //    public ?int $dunningContactId = null;
+    //
+    //    /**
+    //     * Company's invoicing address id
+    //     *
+    //     * @var null|int
+    //     */
+    //    #[
+    //        Assert\Type("integer"),
+    //        JMS\SerializedName("invoicing_address_id"),
+    //        JMS\Groups(array("Read")),
+    //        SPL\Field(type: SPL_T_INT, desc: "Company's invoicing address id"),
+    //        SPL\IsReadOnly()
+    //    ]
+    //    public ?int $invoicingAddressId = null;
+    //
+    //    /**
+    //     * Company's delivery address id
+    //     *
+    //     * @var null|int
+    //     */
+    //    #[
+    //        Assert\Type("integer"),
+    //        JMS\SerializedName("delivery_address_id"),
+    //        JMS\Groups(array("Read")),
+    //        SPL\Field(type: SPL_T_INT, desc: "Company's delivery address id"),
+    //        SPL\IsReadOnly()
+    //    ]
+    //    public ?int $deliveryAddressId = null;
+    //
+    //    /**
+    //     * Company's rate category id
+    //     *
+    //     * @var null|int
+    //     */
+    //    #[
+    //        Assert\Type("integer"),
+    //        JMS\SerializedName("rate_category_id"),
+    //        JMS\Groups(array("Read")),
+    //        SPL\Field(type: SPL_T_INT, desc: "Company's rate category id"),
+    //        SPL\IsReadOnly()
+    //    ]
+    //    public ?int $rateCategoryId = null;
 
     #[
         Assert\Type("boolean"),
         JMS\SerializedName("is_archived"),
         JMS\Type("boolean"),
-        SPL\Field(type: SPL_T_BOOL, desc: "Is Company Archived"),
+        SPL\Field(type: SPL_T_BOOL, desc: "Is Company Archived", group: "Meta"),
     ]
     public bool $isArchived;
 
@@ -335,20 +336,51 @@ class Companies
     ]
     public ?RGPDConsent $rgpdConsent = null;
 
+    #[
+        Assert\Type("datetime"),
+        JMS\SerializedName("created"),
+        JMS\Type("DateTime"),
+        SPL\Field(type: SPL_T_DATETIME, desc: "Company creation date", group: "Meta"),
+        SPL\IsReadOnly,
+
+    ]
+    public DateTime $created;
+
+    #[
+        Assert\Type("datetime"),
+        JMS\SerializedName("updated_at"),
+        JMS\Type("DateTime"),
+        SPL\Field(type: SPL_T_DATETIME, desc: "Last Update Date", group: "Meta"),
+        SPL\IsReadOnly,
+    ]
+    public DateTime $updatedAt;
+
+    public function __construct()
+    {
+        $this->created = new DateTime();
+        $this->updatedAt = new DateTime();
+    }
+
+    #[JMS\PreSerialize]
+    public function onPreUpdate(): void
+    {
+        $this->updatedAt = new DateTime();
+    }
+
     public function getFaxNumberInt(): string
     {
         return "+33".$this->faxNumber;
     }
 
-    public function getInvoicingAddressId(): ?string
-    {
-        if ($this->invoicingAddressId) {
-            // "1234::Address"
-            return ObjectsHelper::encode("Address", (string) $this->invoicingAddressId);
-        }
-
-        return null;
-    }
+    //    public function getInvoicingAddressId(): ?string
+    //    {
+    //        if ($this->invoicingAddressId) {
+    //            // "1234::Address"
+    //            return ObjectsHelper::encode("Address", (string) $this->invoicingAddressId);
+    //        }
+    //
+    //        return null;
+    //    }
 
     //
     //    /**
@@ -490,7 +522,7 @@ class Companies
     ]
     public function getMyDebug(): void
     {
-        dump($this);
+        //        dump($this);
         //            dd($this);
     }
 }

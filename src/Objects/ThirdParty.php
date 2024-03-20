@@ -21,7 +21,6 @@ use Splash\Connectors\Sellsy\Models\Actions\SellsyListAction;
 use Splash\Connectors\Sellsy\Models\Metadata as ApiModels;
 use Splash\OpenApi\Action\Json;
 use Splash\OpenApi\Models\Metadata\AbstractApiMetadataObject;
-use Splash\OpenApi\Visitor\AbstractVisitor as Visitor;
 
 /**
  * OpenApi Implementation for Sellsy Companies Object
@@ -33,7 +32,7 @@ class ThirdParty extends AbstractApiMetadataObject
     //====================================================================//
 
     /**
-     * @var ApiModels\Companies
+     * @var ApiModels\Companies\Companies
      */
     protected object $object;
 
@@ -51,13 +50,13 @@ class ThirdParty extends AbstractApiMetadataObject
             $connector->getMetadataAdapter(),
             $connector->getConnexion(),
             $connector->getHydrator(),
-            ApiModels\Companies::class
+            ApiModels\Companies\Companies::class
         );
         $this->visitor->setTimezone("UTC");
         //====================================================================//
         // Prepare Api Visitor
         $this->visitor->setModel(
-            ApiModels\Companies::class,
+            ApiModels\Companies\Companies::class,
             "/companies",
             "/companies/{id}",
             array("id")
@@ -99,4 +98,28 @@ class ThirdParty extends AbstractApiMetadataObject
     //
     //            return $this->visitor->list($filter, $params)->getArrayResults() ?? array();
     //        }
+
+    //        /**
+    //     * Update Request Object
+    //     *
+    //     * @param bool $needed Is This Update Needed
+    //     *
+    //     * @return null|string Object ID of False if Failed to Update
+    //     */
+    //    public function update(bool $needed): ?string
+    //    {
+    //        //====================================================================//
+    //        // Update Remote Object
+    //        $updateResponse = $this->visitor->update((string) $this->getObjectIdentifier(), $this->object);
+    //
+    //        dd(json_decode($this->visitor->getLastResponse()->body));
+    //        //====================================================================//
+    //        // Return Object Id or False
+    //        return $updateResponse->isSuccess()
+    //            ? $this->getObjectIdentifier()
+    //            : Splash::log()->errNull(
+    //                "Unable to Update Object (".$this->getObjectIdentifier().")."
+    //            )
+    //        ;
+    //    }
 }

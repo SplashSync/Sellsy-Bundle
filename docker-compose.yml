@@ -19,7 +19,7 @@
 # Docker Compose File
 #
 # This Docker File intend to Create a Complete Dev Environnement
-# for Splash Optilog Connector
+# for Splash Sellsy Connector
 #
 # For a faster access to you container, you can add this IP to /etc/hosts
 #
@@ -45,7 +45,7 @@ services:
 #            - '/mnt/data/WebDesign/GitHub/Splash/Php-Oauth2:/app/vendor/splash/oauth2/:ro'
 #            - './vendor/league/oauth2-client:/app/vendor/league/oauth2-client/:ro'
 #            - './tests/Controller:/app/tests/Controller/:ro'
-#            - './phpunit.xml.dist:/app/phpunit.xml.dist:ro'
+            - './phpunit.xml.dist:/app/phpunit.xml.dist:ro'
         env_file:
             - .env
         hostname:           toolkit.sellsy.local

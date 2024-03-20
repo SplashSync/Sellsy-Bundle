@@ -13,7 +13,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Connectors\Sellsy\Models\Metadata;
+namespace Splash\Connectors\Sellsy\Models\Metadata\Companies;
 
 use JMS\Serializer\Annotation as JMS;
 use Splash\Metadata\Attributes as SPL;
@@ -36,6 +36,7 @@ class SocialUrls
         JMS\Type("string"),
         SPL\Field(type: SPL_T_URL, desc: "[Social] Company Facebook Page"),
         //        SPL\Microdata("http://schema.org/URL", "facebook")
+        SPL\IsReadOnly,
     ]
     public ?string $facebook = null;
 

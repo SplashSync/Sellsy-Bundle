@@ -44,6 +44,19 @@ class Addresses
     public string $id;
 
     /**
+     * Id of the Company.
+     *
+     * @var string
+     */
+    #[
+        Assert\NotNull,
+        Assert\Type("string"),
+        JMS\SerializedName("companyId"),
+        JMS\Type("string"),
+    ]
+    public string $companyId;
+
+    /**
      * Name of the Address.
      *
      * @var string
@@ -122,6 +135,7 @@ class Addresses
         JMS\SerializedName("postal_code"),
         JMS\Type("string"),
         SPL\Field(type: SPL_T_VARCHAR, desc: "Address's postal code"),
+        SPL\Flags(listed: true),
     ]
     public ?string $postalCode = null;
 
@@ -135,6 +149,7 @@ class Addresses
         JMS\SerializedName("city"),
         JMS\Type("string"),
         SPL\Field(type: SPL_T_VARCHAR, desc: "Address's city"),
+        SPL\Flags(listed: true),
     ]
     public ?string $city = null;
 
@@ -148,6 +163,7 @@ class Addresses
         JMS\SerializedName("country"),
         JMS\Type("string"),
         SPL\Field(type: SPL_T_VARCHAR, desc: "Address's country"),
+        SPL\Flags(listed: true),
     ]
     public ?string $country = null;
 
@@ -170,10 +186,10 @@ class Addresses
      * @var bool
      */
     #[
-        Assert\Type("string"),
+        Assert\Type("bool"),
         JMS\SerializedName("is_invoicing_address"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Is address invoicing address ?"),
+        JMS\Type("boolean"),
+        SPL\Field(type: SPL_T_BOOL, desc: "Is address invoicing address ?"),
     ]
     public bool $isInvoicingAddress = false;
 
@@ -183,10 +199,10 @@ class Addresses
      * @var bool
      */
     #[
-        Assert\Type("string"),
+        Assert\Type("bool"),
         JMS\SerializedName("is_delivery_address"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Is address delivery address ?"),
+        JMS\Type("boolean"),
+        SPL\Field(type: SPL_T_BOOL, desc: "Is address delivery address ?"),
     ]
     public bool $isDeliveryAddress = false;
 

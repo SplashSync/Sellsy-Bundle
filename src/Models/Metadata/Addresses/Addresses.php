@@ -29,6 +29,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 class Addresses
 {
+    use GeocodeAwareTrait;
+
     /**
      * Id of the Address.
      *
@@ -170,10 +172,10 @@ class Addresses
      * @var bool
      */
     #[
-        Assert\Type("string"),
+        Assert\Type("bool"),
         JMS\SerializedName("is_invoicing_address"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Is address invoicing address ?"),
+        JMS\Type("bool"),
+        SPL\Field(type: SPL_T_BOOL, desc: "Is address invoicing address ?"),
     ]
     public bool $isInvoicingAddress = false;
 
@@ -183,24 +185,10 @@ class Addresses
      * @var bool
      */
     #[
-        Assert\Type("string"),
+        Assert\Type("bool"),
         JMS\SerializedName("is_delivery_address"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Is address delivery address ?"),
+        JMS\Type("bool"),
+        SPL\Field(type: SPL_T_BOOL, desc: "Is address delivery address ?"),
     ]
     public bool $isDeliveryAddress = false;
-
-    /**
-     * Latitude and longitude of the Address.
-     *
-     * @var null|Geocode
-     */
-    #[
-        Assert\Type(Geocode::class),
-        JMS\SerializedName("geocode"),
-        JMS\Type(Geocode::class),
-        SPL\SubResource(),
-        SPL\Accessor(factory: "createItem"),
-    ]
-    public ?Geocode $geocode = null;
 }

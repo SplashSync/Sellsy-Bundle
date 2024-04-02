@@ -25,16 +25,29 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[
     ORM\Entity,
-    API\ApiResource(
-        operations: array(
-            new API\GetCollection(),
-            new API\Post(),
-            new API\Get(),
-            new API\Put(),
-            new API\Delete(),
-        )
-    )
 ]
+#[API\ApiResource(
+    uriTemplate: '/companies/{companyId}/addresses',
+    operations: array(
+        new API\GetCollection(),
+        new API\Post()
+    ),
+    uriVariables: [
+        'companyId' => new API\Link(fromClass: Companies::class, toProperty: 'company'),
+    ]
+)]
+#[API\ApiResource(
+    uriTemplate: '/companies/{companyId}/addresses/{id}',
+    operations: array(
+        new API\Get(),
+        new API\Put(),
+        new API\Delete(),
+    ),
+    uriVariables: [
+        'companyId' => new API\Link(toProperty: 'company', fromClass: Companies::class),
+        'id' => new API\Link(fromClass: Addresses::class),
+    ]
+)]
 class Addresses extends AbstractSellsyObject
 {
     /**
@@ -134,7 +147,7 @@ class Addresses extends AbstractSellsyObject
      * Is address invoicing address
      */
     #[
-        Assert\Type("string"),
+        Assert\Type("bool"),
         ORM\Column(nullable: true),
     ]
     public ?string $is_invoicing_address = null;
@@ -143,7 +156,7 @@ class Addresses extends AbstractSellsyObject
      * Is address delivery address
      */
     #[
-        Assert\Type("string"),
+        Assert\Type("bool"),
         ORM\Column(nullable: true),
     ]
     public ?string $is_delivery_address = null;

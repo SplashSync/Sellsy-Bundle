@@ -22,30 +22,22 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Geocode
 {
     /**
-     * Address Longitude
-     *
-     * @var null|string
+     * Address Latitude
      */
     #[
         Assert\Type("string"),
         JMS\SerializedName("lat"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "[Geocode] Address Latitude"),
-        //        SPL\Microdata("http://schema.org/", "")
+        JMS\Type("double"),
     ]
-    public ?string $lat = null;
+    public ?float $lat = null;
 
     /**
      * Address Longitude
-     *
-     * @var null|string
      */
     #[
         Assert\Type("string"),
         JMS\SerializedName("lng"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "[Geocode] Address Longitude"),
-        //        SPL\Microdata("http://schema.org/", "")
+        JMS\Type("double"),
     ]
-    public ?string $lng = null;
+    public ?float $lng = null;
 }

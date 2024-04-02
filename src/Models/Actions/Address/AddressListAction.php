@@ -66,8 +66,7 @@ class AddressListAction extends AbstractListAction
         $results = array();
 
         foreach ($rawResponse['data'] as $company) {
-            if (!empty($company['_embed']['invoicing_address']))
-            {
+            if (!empty($company['_embed']['invoicing_address'])) {
                 $addressId = $company['_embed']['invoicing_address']['id'];
                 $company['_embed']['invoicing_address']['id'] = sprintf("%s", $addressId);
                 $company['_embed']['invoicing_address']['companyId'] = sprintf("%s", $company['id']);
@@ -76,8 +75,7 @@ class AddressListAction extends AbstractListAction
                     ->hydrate($company['_embed']['invoicing_address'], $this->visitor->getModel())
                 ;
             }
-            if (!empty($company['_embed']['delivery_address']))
-            {
+            if (!empty($company['_embed']['delivery_address'])) {
                 $addressId = $company['_embed']['delivery_address']['id'];
                 $company['_embed']['delivery_address']['id'] = sprintf("%s", $addressId);
                 $company['_embed']['delivery_address']['companyId'] = sprintf("%s", $company['id']);
@@ -85,9 +83,9 @@ class AddressListAction extends AbstractListAction
                     ->getHydrator()
                     ->hydrate($company['_embed']['delivery_address'], $this->visitor->getModel())
                 ;
-
             }
         }
+
         return $results;
     }
 

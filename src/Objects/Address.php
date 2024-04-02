@@ -19,11 +19,9 @@ use Exception;
 use Splash\Client\Splash;
 use Splash\Connectors\Sellsy\Connector\SellsyConnector;
 use Splash\Connectors\Sellsy\Models\Actions\Address\AddressListAction;
-use Splash\Connectors\Sellsy\Models\Actions\SellsyListAction;
 use Splash\Connectors\Sellsy\Models\Metadata as ApiModels;
 use Splash\OpenApi\Action\Json;
 use Splash\OpenApi\Models\Metadata\AbstractApiMetadataObject;
-use Splash\Connectors\Sellsy\Oauth2\PrivateClient;
 
 class Address extends AbstractApiMetadataObject
 {
@@ -75,50 +73,50 @@ class Address extends AbstractApiMetadataObject
     // DEBUG
     //====================================================================//
 
-//            public function load(string $objectId): ?object
-//            {
-//                //====================================================================//
-//                // Load Remote Object
-//                $loadResponse = $this->visitor->load($objectId);
-//                if (!$loadResponse->isSuccess()) {
-//                    return null;
-//                }
-//
-//                dd(json_decode($this->visitor->getLastResponse()->body));
-//
-//                return null;
-//            }
-//
-//            public function objectsList(?string $filter = null, array $params = array()): array
-//            {
-//                $this->visitor->list($filter, $params)->getArrayResults();
-//                dd(json_decode($this->visitor->getLastResponse()->body));
-//                dd($this->visitor->list($filter, $params)->getArrayResults());
-//
-//                return $this->visitor->list($filter, $params)->getArrayResults() ?? array();
-//            }
-//
-//            /**
-//         * Update Request Object
-//         *
-//         * @param bool $needed Is This Update Needed
-//         *
-//         * @return null|string Object ID of False if Failed to Update
-//         */
-//        public function update(bool $needed): ?string
-//        {
-//            //====================================================================//
-//            // Update Remote Object
-//            $updateResponse = $this->visitor->update((string) $this->getObjectIdentifier(), $this->object);
-//
-//            dd(json_decode($this->visitor->getLastResponse()->body));
-//            //====================================================================//
-//            // Return Object Id or False
-//            return $updateResponse->isSuccess()
-//                ? $this->getObjectIdentifier()
-//                : Splash::log()->errNull(
-//                    "Unable to Update Object (".$this->getObjectIdentifier().")."
-//                )
-//            ;
-//        }
+    //            public function load(string $objectId): ?object
+    //            {
+    //                //====================================================================//
+    //                // Load Remote Object
+    //                $loadResponse = $this->visitor->load($objectId);
+    //                if (!$loadResponse->isSuccess()) {
+    //                    return null;
+    //                }
+    //
+    //                dd(json_decode($this->visitor->getLastResponse()->body));
+    //
+    //                return null;
+    //            }
+    //
+    //            public function objectsList(?string $filter = null, array $params = array()): array
+    //            {
+    //                $this->visitor->list($filter, $params)->getArrayResults();
+    //                dd(json_decode($this->visitor->getLastResponse()->body));
+    //                dd($this->visitor->list($filter, $params)->getArrayResults());
+    //
+    //                return $this->visitor->list($filter, $params)->getArrayResults() ?? array();
+    //            }
+    //
+    //            /**
+    //         * Update Request Object
+    //         *
+    //         * @param bool $needed Is This Update Needed
+    //         *
+    //         * @return null|string Object ID of False if Failed to Update
+    //         */
+    //        public function update(bool $needed): ?string
+    //        {
+    //            //====================================================================//
+    //            // Update Remote Object
+    //            $updateResponse = $this->visitor->update((string) $this->getObjectIdentifier(), $this->object);
+    //
+    //            dd(json_decode($this->visitor->getLastResponse()->body));
+    //            //====================================================================//
+    //            // Return Object Id or False
+    //            return $updateResponse->isSuccess()
+    //                ? $this->getObjectIdentifier()
+    //                : Splash::log()->errNull(
+    //                    "Unable to Update Object (".$this->getObjectIdentifier().")."
+    //                )
+    //            ;
+    //        }
 }

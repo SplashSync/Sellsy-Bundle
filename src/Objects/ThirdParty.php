@@ -58,7 +58,7 @@ class ThirdParty extends AbstractApiMetadataObject
         $this->visitor->setModel(
             ApiModels\Companies\Companies::class,
             "/companies",
-            "/companies/{id}",
+            "/companies/{id}".ApiModels\Companies\CompanyEmbed::getUriQuery(),
             array("id")
         );
         $this->visitor->setUpdateAction(Json\PutAction::class);
@@ -76,19 +76,48 @@ class ThirdParty extends AbstractApiMetadataObject
     // DEBUG
     //====================================================================//
 
-    //        public function load(string $objectId): ?object
-    //        {
-    //            //====================================================================//
-    //            // Load Remote Object
-    //            $loadResponse = $this->visitor->load($objectId);
-    //            if (!$loadResponse->isSuccess()) {
-    //                return null;
-    //            }
-    //
-    //            dd(json_decode($this->visitor->getLastResponse()->body));
-    //
-    //            return null;
-    //        }
+    /**
+     * Update Request Object
+     *
+     * @param bool $needed Is This Update Needed
+     *
+     * @return null|string Object ID of False if Failed to Update
+     */
+    public function update(bool $needed): ?string
+    {
+        //====================================================================//
+        // Execute Generic Save
+        $objectId = parent::update($needed);
+
+        //====================================================================//
+        // Update Invoicing Address
+        if ($objectId && $this->isToUpdate("InvoicingAddress")) {
+
+//            dd($this->object->invoicingAddress);
+//            dd($this->visitor->getHydrator()->extract($this->object->invoicingAddress));
+
+            $this->visitor->getConnexion()->put(
+                sprintf("/companies/%d/addresses/%d", $this->getObjectIdentifier(),  $this->object->invoicingAddress->id),
+                $this->visitor->getHydrator()->extract($this->object->invoicingAddress)
+            );
+        }
+
+        return $objectId;
+    }
+//            public function load(string $objectId): ?object
+//            {
+//                //====================================================================//
+//                // Load Remote Object
+//                $loadResponse = $this->visitor->load($objectId);
+//                if (!$loadResponse->isSuccess()) {
+//                    return null;
+//                }
+//
+//                dd(json_decode($this->visitor->getLastResponse()->body));
+//                dd($this->visitor->getLastResponse());
+//
+//                return null;
+//            }
 
     //        public function objectsList(?string $filter = null, array $params = array()): array
     //        {

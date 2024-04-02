@@ -17,6 +17,7 @@ namespace Splash\Connectors\Sellsy\Models\Metadata\Companies;
 
 use DateTime;
 use JMS\Serializer\Annotation as JMS;
+use Splash\Connectors\Sellsy\Models\Metadata\Addresses\Addresses;
 use Splash\Metadata\Attributes as SPL;
 use Splash\Models\Helpers\ObjectsHelper;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -47,7 +48,7 @@ class Companies
         Assert\Type("string"),
         JMS\SerializedName("type"),
         JMS\Type("string"),
-        JMS\Groups(array("Read", "Write", "List", "Required")),
+        JMS\Groups(array("Read", "List", "Required")),
         SPL\Field(desc: "Company type"),
         SPL\Flags(listed: true),
         SPL\Choices(array(
@@ -331,6 +332,7 @@ class Companies
         Assert\Type(RGPDConsent::class),
         JMS\SerializedName("rgpd_consent"),
         JMS\Type(RGPDConsent::class),
+        JMS\Groups(array("Read")),
         SPL\SubResource(),
         SPL\Accessor(factory: "createItem"),
     ]
@@ -340,6 +342,7 @@ class Companies
         Assert\Type("datetime"),
         JMS\SerializedName("created"),
         JMS\Type("DateTime"),
+        JMS\Groups(array("Read")),
         SPL\Field(type: SPL_T_DATETIME, desc: "Company creation date", group: "Meta"),
         SPL\IsReadOnly,
 
@@ -350,10 +353,12 @@ class Companies
         Assert\Type("datetime"),
         JMS\SerializedName("updated_at"),
         JMS\Type("DateTime"),
+        JMS\Groups(array("Read")),
         SPL\Field(type: SPL_T_DATETIME, desc: "Last Update Date", group: "Meta"),
         SPL\IsReadOnly,
     ]
     public DateTime $updatedAt;
+
 
     public function __construct()
     {
@@ -517,12 +522,43 @@ class Companies
     //    ]
     //    public ?array $file = null;
 
+
+//    public ?\Splash\Connectors\Sellsy\Models\Metadata\Addresses\Addresses $invoicing_address = null;
+
+    #[
+        JMS\SerializedName("_embed"),
+        JMS\Type(CompanyEmbed::class),
+        JMS\Groups(array("Read")),
+    ]
+    public CompanyEmbed $embed;
+
+    #[
+        JMS\Exclude,
+        SPL\SubResource(Addresses::class, write: false),
+    ]
+    public ?Addresses $invoicingAddress = null;
+
+    #[
+        JMS\Exclude,
+        SPL\SubResource(Addresses::class, write: false),
+    ]
+    public ?Addresses $deliveryAddress = null;
+
+    #[JMS\PostDeserialize()]
+    public function onPostSerialize(): void
+    {
+        //====================================================================//
+        // Transfer Addresses from Embedded to Object
+        $this->invoicingAddress = $this->embed->invoicingAddress ?? null;
+        $this->deliveryAddress = $this->embed->deliveryAddress ?? null;
+    }
+
     #[
         JMS\PostDeserialize(),
     ]
     public function getMyDebug(): void
     {
-        //        dump($this);
-        //            dd($this);
+//                dump($this);
+//                    dd($this);
     }
 }

@@ -359,24 +359,6 @@ class Companies
     ]
     public DateTime $updatedAt;
 
-
-    public function __construct()
-    {
-        $this->created = new DateTime();
-        $this->updatedAt = new DateTime();
-    }
-
-    #[JMS\PreSerialize]
-    public function onPreUpdate(): void
-    {
-        $this->updatedAt = new DateTime();
-    }
-
-    public function getFaxNumberInt(): string
-    {
-        return "+33".$this->faxNumber;
-    }
-
     //    public function getInvoicingAddressId(): ?string
     //    {
     //        if ($this->invoicingAddressId) {
@@ -522,8 +504,7 @@ class Companies
     //    ]
     //    public ?array $file = null;
 
-
-//    public ?\Splash\Connectors\Sellsy\Models\Metadata\Addresses\Addresses $invoicing_address = null;
+    //    public ?\Splash\Connectors\Sellsy\Models\Metadata\Addresses\Addresses $invoicing_address = null;
 
     #[
         JMS\SerializedName("_embed"),
@@ -544,6 +525,23 @@ class Companies
     ]
     public ?Addresses $deliveryAddress = null;
 
+    public function __construct()
+    {
+        $this->created = new DateTime();
+        $this->updatedAt = new DateTime();
+    }
+
+    #[JMS\PreSerialize]
+    public function onPreUpdate(): void
+    {
+        $this->updatedAt = new DateTime();
+    }
+
+    public function getFaxNumberInt(): string
+    {
+        return "+33".$this->faxNumber;
+    }
+
     #[JMS\PostDeserialize()]
     public function onPostSerialize(): void
     {
@@ -558,7 +556,7 @@ class Companies
     ]
     public function getMyDebug(): void
     {
-//                dump($this);
-//                    dd($this);
+        //                dump($this);
+        //                    dd($this);
     }
 }

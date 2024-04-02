@@ -32,9 +32,9 @@ use Symfony\Component\Validator\Constraints as Assert;
         new API\GetCollection(),
         new API\Post()
     ),
-    uriVariables: [
+    uriVariables: array(
         'companyId' => new API\Link(fromClass: Companies::class, toProperty: 'company'),
-    ]
+    )
 )]
 #[API\ApiResource(
     uriTemplate: '/companies/{companyId}/addresses/{id}',
@@ -43,10 +43,10 @@ use Symfony\Component\Validator\Constraints as Assert;
         new API\Put(),
         new API\Delete(),
     ),
-    uriVariables: [
+    uriVariables: array(
         'companyId' => new API\Link(toProperty: 'company', fromClass: Companies::class),
         'id' => new API\Link(fromClass: Addresses::class),
-    ]
+    )
 )]
 class Addresses extends AbstractSellsyObject
 {

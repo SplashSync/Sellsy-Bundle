@@ -92,32 +92,31 @@ class ThirdParty extends AbstractApiMetadataObject
         //====================================================================//
         // Update Invoicing Address
         if ($objectId && $this->isToUpdate("InvoicingAddress")) {
-
-//            dd($this->object->invoicingAddress);
-//            dd($this->visitor->getHydrator()->extract($this->object->invoicingAddress));
+            //            dd($this->object->invoicingAddress);
+            //            dd($this->visitor->getHydrator()->extract($this->object->invoicingAddress));
 
             $this->visitor->getConnexion()->put(
-                sprintf("/companies/%d/addresses/%d", $this->getObjectIdentifier(),  $this->object->invoicingAddress->id),
+                sprintf("/companies/%d/addresses/%d", $this->getObjectIdentifier(), $this->object->invoicingAddress->id),
                 $this->visitor->getHydrator()->extract($this->object->invoicingAddress)
             );
         }
 
         return $objectId;
     }
-//            public function load(string $objectId): ?object
-//            {
-//                //====================================================================//
-//                // Load Remote Object
-//                $loadResponse = $this->visitor->load($objectId);
-//                if (!$loadResponse->isSuccess()) {
-//                    return null;
-//                }
-//
-//                dd(json_decode($this->visitor->getLastResponse()->body));
-//                dd($this->visitor->getLastResponse());
-//
-//                return null;
-//            }
+    //            public function load(string $objectId): ?object
+    //            {
+    //                //====================================================================//
+    //                // Load Remote Object
+    //                $loadResponse = $this->visitor->load($objectId);
+    //                if (!$loadResponse->isSuccess()) {
+    //                    return null;
+    //                }
+    //
+    //                dd(json_decode($this->visitor->getLastResponse()->body));
+    //                dd($this->visitor->getLastResponse());
+    //
+    //                return null;
+    //            }
 
     //        public function objectsList(?string $filter = null, array $params = array()): array
     //        {

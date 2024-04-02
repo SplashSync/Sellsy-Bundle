@@ -32,7 +32,6 @@ use Splash\OpenApi\Hydrator\Hydrator;
 use Splash\OpenApi\Models\Connexion\ConnexionInterface;
 use Splash\Security\Oauth2\Form\PrivateAppConfigurationForm;
 use Splash\Security\Oauth2\Model\AbstractOauth2Connector;
-use Splash\Security\Oauth2\Model\Oauth2AwareConnector;
 use Splash\Security\Oauth2\Services\Oauth2ClientManager;
 //use Splash\Connectors\ReCommerce\Actions\Master;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;

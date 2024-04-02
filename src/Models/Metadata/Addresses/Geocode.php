@@ -16,7 +16,6 @@
 namespace Splash\Connectors\Sellsy\Models\Metadata\Addresses;
 
 use JMS\Serializer\Annotation as JMS;
-use Splash\Metadata\Attributes as SPL;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Geocode

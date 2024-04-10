@@ -19,7 +19,7 @@ use JMS\Serializer\Annotation as JMS;
 use Splash\Connectors\Sellsy\Models\Metadata\Addresses\Addresses;
 
 /**
- * Virtual/Temporary Storage for Companies Embedded Data
+ * Virtual/Temporary Storage for Company Embedded Data
  */
 class CompanyEmbed
 {

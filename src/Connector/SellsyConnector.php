@@ -23,6 +23,7 @@ use Splash\Bundle\Models\Connectors\GenericWidgetMapperTrait;
 use Splash\Connectors\Sellsy\Oauth2\PrivateClient;
 use Splash\Connectors\Sellsy\Oauth2\SandboxClient;
 use Splash\Connectors\Sellsy\Objects;
+use Splash\Connectors\Sellsy\Services\AddressUpdater;
 use Splash\Connectors\Sellsy\Widgets;
 use Splash\Core\SplashCore as Splash;
 use Splash\Metadata\Services\MetadataAdapter;
@@ -33,8 +34,9 @@ use Splash\OpenApi\Models\Connexion\ConnexionInterface;
 use Splash\Security\Oauth2\Form\PrivateAppConfigurationForm;
 use Splash\Security\Oauth2\Model\AbstractOauth2Connector;
 use Splash\Security\Oauth2\Services\Oauth2ClientManager;
-//use Splash\Connectors\ReCommerce\Actions\Master;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+
+//use Splash\Connectors\ReCommerce\Actions\Master;
 
 /**
  * Sellsy REST API Connector for Splash
@@ -53,7 +55,7 @@ class SellsyConnector extends AbstractOauth2Connector
      */
     protected static array $objectsMap = array(
         "ThirdParty" => Objects\ThirdParty::class,
-        "Address" => Objects\Address::class,
+//        "Address" => Objects\Address::class,
         //        "Product" => Objects\ThirdParty::class,
         //        "Invoice" => Objects\ThirdParty::class,
     );
@@ -85,6 +87,7 @@ class SellsyConnector extends AbstractOauth2Connector
     private string $metaDir;
 
     public function __construct(
+        private readonly AddressUpdater $addressUpdater,
         protected readonly MetadataAdapter   $metadataAdapter,
         Oauth2ClientManager $oauth2ClientManager,
         EventDispatcherInterface $eventDispatcher,
@@ -385,5 +388,16 @@ class SellsyConnector extends AbstractOauth2Connector
     public function getMetadataAdapter(): MetadataAdapter
     {
         return $this->metadataAdapter;
+    }
+
+    /**
+     * Get Sellsy Address Updater
+     */
+    public function getAddressUpdater(): AddressUpdater
+    {
+        return $this
+            ->addressUpdater
+            ->configure($this->getConnexion(), $this->getHydrator())
+        ;
     }
 }

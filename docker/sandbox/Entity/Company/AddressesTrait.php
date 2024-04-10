@@ -19,7 +19,7 @@ use App\Entity\Addresses;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Companies / Contacts links with Invoicing & Delivery Addresses
+ * Company / Contacts links with Invoicing & Delivery Addresses
  */
 trait AddressesTrait
 {

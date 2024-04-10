@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Class representing the Companies model.
+ * Class representing the Company model.
  */
 #[
     ORM\Entity,

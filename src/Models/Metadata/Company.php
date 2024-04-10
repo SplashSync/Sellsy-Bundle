@@ -13,13 +13,16 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Connectors\Sellsy\Models\Metadata\Companies;
+namespace Splash\Connectors\Sellsy\Models\Metadata;
 
 use DateTime;
 use JMS\Serializer\Annotation as JMS;
 use Splash\Connectors\Sellsy\Models\Metadata\Addresses\Addresses;
+use Splash\Connectors\Sellsy\Models\Metadata\Companies\CompanyEmbed;
+use Splash\Connectors\Sellsy\Models\Metadata\Companies\LegalFrance;
+use Splash\Connectors\Sellsy\Models\Metadata\Companies\RGPDConsent;
+use Splash\Connectors\Sellsy\Models\Metadata\Companies\SocialUrls;
 use Splash\Metadata\Attributes as SPL;
-use Splash\Models\Helpers\ObjectsHelper;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -32,7 +35,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     description: "Sellsy Company API Object",
     ico: "fa fa-user"
 )]
-class Companies
+class Company
 {
     #[
         Assert\NotNull,
@@ -515,13 +518,13 @@ class Companies
 
     #[
         JMS\Exclude,
-        SPL\SubResource(Addresses::class, write: false),
+        SPL\SubResource(Addresses::class, write: true),
     ]
     public ?Addresses $invoicingAddress = null;
 
     #[
         JMS\Exclude,
-        SPL\SubResource(Addresses::class, write: false),
+        SPL\SubResource(Addresses::class, write: true),
     ]
     public ?Addresses $deliveryAddress = null;
 
@@ -557,6 +560,14 @@ class Companies
     public function getMyDebug(): void
     {
         //                dump($this);
-        //                    dd($this);
+//                            dd($this);
     }
+
+//    public function createAddresses(): void
+//    {
+//
+//        dd(func_get_args());
+//        //                dump($this);
+////                            dd($this);
+//    }
 }

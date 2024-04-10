@@ -33,7 +33,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         new API\Post()
     ),
     uriVariables: array(
-        'companyId' => new API\Link(fromClass: Companies::class, toProperty: 'company'),
+        'companyId' => new API\Link(toProperty: 'company', fromClass: Companies::class),
     )
 )]
 #[API\ApiResource(

@@ -1,12 +1,24 @@
 <?php
 
+/*
+ *  This file is part of SplashSync Project.
+ *
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
+
 namespace Splash\Connectors\Sellsy\Services;
 
 use RuntimeException;
-use Splash\Client\Splash;
+use Splash\Connectors\Sellsy\Models\Metadata\Addresses\Addresses;
 use Splash\OpenApi\Hydrator\Hydrator;
 use Splash\OpenApi\Models\Connexion\ConnexionInterface;
-use Splash\Connectors\Sellsy\Models\Metadata\Addresses\Addresses;
 
 /**
  *
@@ -31,8 +43,9 @@ class AddressUpdater
     /**
      * Create or Update Address
      *
-     * @param Addresses|null $address
-     * @param string $addressType
+     * @param null|Addresses $address
+     * @param string         $addressType
+     *
      * @return void
      */
     public function createOrUpdateAddress(?Addresses $address, string $addressType): void
@@ -42,19 +55,19 @@ class AddressUpdater
         }
         switch ($addressType) {
             case 'invoicing':
-                if ($address->name === '') {
+                if ('' === $address->name) {
                     $address->name = 'Addresse de facturation';
                 }
                 $address->isInvoicingAddress = true;
-                break;
 
+                break;
             case 'delivery':
-                if ($address->name === '') {
+                if ('' === $address->name) {
                     $address->name = 'Addresse de livraison';
                 }
                 $address->isDeliveryAddress = true;
-                break;
 
+                break;
             default:
                 throw new RuntimeException('Invalid address type');
         }

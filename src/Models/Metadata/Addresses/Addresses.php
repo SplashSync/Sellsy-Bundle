@@ -57,7 +57,7 @@ class Addresses
         JMS\Type("string"),
         JMS\Groups(array("Read", "Write", "Required")),
         SPL\Field(desc: "Address name"),
-//        SPL\Flags(listed: true),
+        //        SPL\Flags(listed: true),
         SPL\IsRequired,
     ]
     public string $name;
@@ -124,7 +124,7 @@ class Addresses
         JMS\SerializedName("postal_code"),
         JMS\Type("string"),
         SPL\Field(type: SPL_T_VARCHAR, desc: "Address's postal code"),
-//        SPL\Flags(listed: true),
+        //        SPL\Flags(listed: true),
     ]
     public ?string $postalCode = null;
 
@@ -138,7 +138,7 @@ class Addresses
         JMS\SerializedName("city"),
         JMS\Type("string"),
         SPL\Field(type: SPL_T_VARCHAR, desc: "Address's city"),
-//        SPL\Flags(listed: true),
+        //        SPL\Flags(listed: true),
     ]
     public ?string $city = null;
 
@@ -152,7 +152,7 @@ class Addresses
         JMS\SerializedName("country"),
         JMS\Type("string"),
         SPL\Field(type: SPL_T_VARCHAR, desc: "Address's country"),
-//        SPL\Flags(listed: true),
+        //        SPL\Flags(listed: true),
     ]
     public ?string $country = null;
 

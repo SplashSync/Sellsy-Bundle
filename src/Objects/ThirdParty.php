@@ -32,7 +32,7 @@ class ThirdParty extends AbstractApiMetadataObject
     //====================================================================//
 
     /**
-     * @var \Splash\Connectors\Sellsy\Models\Metadata\Company
+     * @var ApiModels\Company
      */
     protected object $object;
 
@@ -97,10 +97,8 @@ class ThirdParty extends AbstractApiMetadataObject
         //====================================================================//
         // Update Invoicing Address
         if ($this->isToUpdate("InvoicingAddress")) {
-
-
             $this->connector->getAddressUpdater()->createOrUpdateAddress(
-//                sprintf("/companies/%d", $this->getObjectIdentifier()), // $parentUri
+                //                sprintf("/companies/%d", $this->getObjectIdentifier()), // $parentUri
                 $this->object->invoicingAddress,
                 'invoicing'
             );
@@ -114,9 +112,8 @@ class ThirdParty extends AbstractApiMetadataObject
         //====================================================================//
         // Update Delivery Address
         if ($this->isToUpdate("DeliveryAddress")) {
-
             $this->connector->getAddressUpdater()->createOrUpdateAddress(
-//                sprintf("/companies/%d", $this->getObjectIdentifier()), // $parentUri
+                //                sprintf("/companies/%d", $this->getObjectIdentifier()), // $parentUri
                 $this->object->deliveryAddress,
                 'delivery'
             );
@@ -130,20 +127,20 @@ class ThirdParty extends AbstractApiMetadataObject
         return $objectId;
     }
 
-//    public function load(string $objectId): ?object
-//    {
-//        //====================================================================//
-//        // Load Remote Object
-//        $loadResponse = $this->visitor->load($objectId);
-//        if (!$loadResponse->isSuccess()) {
-//            return null;
-//        }
-//
-//        dd(json_decode($this->visitor->getLastResponse()->body));
-//        dd($this->visitor->getLastResponse());
-//
-//        return null;
-//    }
+    //    public function load(string $objectId): ?object
+    //    {
+    //        //====================================================================//
+    //        // Load Remote Object
+    //        $loadResponse = $this->visitor->load($objectId);
+    //        if (!$loadResponse->isSuccess()) {
+    //            return null;
+    //        }
+    //
+    //        dd(json_decode($this->visitor->getLastResponse()->body));
+    //        dd($this->visitor->getLastResponse());
+    //
+    //        return null;
+    //    }
 
     //        public function objectsList(?string $filter = null, array $params = array()): array
     //        {

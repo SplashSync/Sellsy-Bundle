@@ -16,6 +16,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata as API;
+use App\Entity\Company\AddressesTrait;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -38,6 +39,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 ]
 class Companies extends AbstractSellsyObject
 {
+    use AddressesTrait;
+
     /**
      * Unique Identifier.
      */
@@ -142,87 +145,6 @@ class Companies extends AbstractSellsyObject
     ]
     public ?string $note = null;
 
-    //    /**
-    //     * Company accounting code id
-    //     */
-    //    #[
-    //        Assert\Type("integer"),
-    //        ORM\Column(type: Types::INTEGER, nullable: true),
-    //    ]
-    //    public ?int $accounting_code_id = null;
-    //
-    //    /**
-    //     * Company accounting purchase code id
-    //     */
-    //    #[
-    //        Assert\Type("integer"),
-    //        ORM\Column(type: Types::INTEGER, nullable: true),
-    //    ]
-    //    public ?int $accounting_purchase_code_id = null;
-    //
-    //    /**
-    //     * Company auxiliary code
-    //     */
-    //    #[
-    //        Assert\Type("string"),
-    //        ORM\Column(nullable: true),
-    //    ]
-    //    public ?string $auxiliary_code = null;
-    //
-    //    /**
-    //     * Company main contact id
-    //     */
-    //    #[
-    //        Assert\Type("integer"),
-    //        ORM\Column(nullable: true),
-    //    ]
-    //    public ?int $main_contact_id = null;
-    //
-    //    /**
-    //     * Company invoicing contact id
-    //     */
-    //    #[
-    //        Assert\Type("integer"),
-    //        ORM\Column(nullable: true),
-    //    ]
-    //    public ?int $invoicing_contact_id = null;
-    //
-    //    /**
-    //     * Company dunning contact id
-    //     */
-    //    #[
-    //        Assert\Type("integer"),
-    //        ORM\Column(nullable: true),
-    //    ]
-    //    public ?int $dunning_contact_id = null;
-    //
-    //    /**
-    //     * Company invoicing address id
-    //     */
-    //    #[
-    //        Assert\Type("integer"),
-    //        ORM\Column(nullable: true),
-    //    ]
-    //    public ?int $invoicing_address_id = null;
-    //
-    //    /**
-    //     * Company delivery address id
-    //     */
-    //    #[
-    //        Assert\Type("integer"),
-    //        ORM\Column(nullable: true),
-    //    ]
-    //    public ?int $delivery_address_id = null;
-    //
-    //    /**
-    //     * Company rate category id
-    //     */
-    //    #[
-    //        Assert\Type("integer"),
-    //        ORM\Column(nullable: true),
-    //    ]
-    //    public ?int $rate_category_id = null;
-
     /**
      * Company creation date
      */
@@ -295,50 +217,14 @@ class Companies extends AbstractSellsyObject
         "custom" => false
     );
 
-    //    /**
-    //     * Company owner
-    //     */
-    //    #[
-    //        Assert\Type("array"),
-    //        ORM\Column(type: Types::JSON, nullable: true)
-    //    ]
-    //    public ?array $owner = array(
-    //        "id" => null,
-    //        "type" => null
-    //    );
-    //
-    //    /**
-    //     * Company business segment
-    //     */
-    //    #[
-    //        Assert\Type("array"),
-    //        ORM\Column(type: Types::JSON, nullable: true)
-    //    ]
-    //    public ?array $business_segment = array(
-    //        "id" => null,
-    //        "label" => null
-    //    );
-    //
-    //    /**
-    //     * Company number of employees
-    //     */
-    //    #[
-    //        Assert\Type("array"),
-    //        ORM\Column(type: Types::JSON, nullable: true)
-    //    ]
-    //    public ?array $number_of_employees = array(
-    //        "id" => null,
-    //        "label" => null
-    //    );
-    //
-    //    /**
-    //     * Company marketing campaigns subscriptions
-    //     */
-    //    #[
-    //        Assert\Type("array"),
-    //        ORM\Column(type: Types::JSON, nullable: true)
-    //    ]
-    //    public ?array $marketing_campaigns_subscriptions = null;
+    #[
+        Assert\Type("array"),
+        ORM\Column(type: Types::JSON, nullable: true)
+    ]
+    public ?array $embed = array(
+        "invoicing_address" => null,
+        "delivery_address" => null
+    );
 
     public function __construct()
     {
@@ -349,5 +235,25 @@ class Companies extends AbstractSellsyObject
     public function onPreUpdate(): void
     {
         $this->updated_at = new DateTime();
+    }
+
+    public function getInvoicingAddress(): ?Addresses
+    {
+        return $this->embed["invoicing_address"];
+    }
+
+    public function setInvoicingAddress(?Addresses $invoicingAddress): void
+    {
+        $this->invoicing_address = $this->embed["invoicing_address"] = $invoicingAddress;
+    }
+
+    public function getDeliveryAddress(): ?Addresses
+    {
+        return $this->embed["delivery_address"];
+    }
+
+    public function setDeliveryAddress(?Addresses $deliveryAddress): void
+    {
+        $this->delivery_address = $this->embed["delivery_address"] = $deliveryAddress;
     }
 }

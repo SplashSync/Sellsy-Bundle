@@ -16,6 +16,7 @@
 namespace Splash\Connectors\Sellsy\Models\Metadata;
 
 use DateTime;
+use JetBrains\PhpStorm\NoReturn;
 use JMS\Serializer\Annotation as JMS;
 use Splash\Connectors\Sellsy\Models\Metadata\Addresses\Addresses;
 use Splash\Connectors\Sellsy\Models\Metadata\Companies\CompanyEmbed;
@@ -554,20 +555,13 @@ class Company
         $this->deliveryAddress = $this->embed->deliveryAddress ?? null;
     }
 
+    /** @noinspection ForgottenDebugOutputInspection */
     #[
+        NoReturn,
         JMS\PostDeserialize(),
     ]
     public function getMyDebug(): void
     {
-        //                dump($this);
-        //                            dd($this);
+        dd($this);
     }
-
-    //    public function createAddresses(): void
-    //    {
-    //
-    //        dd(func_get_args());
-    //        //                dump($this);
-    ////                            dd($this);
-    //    }
 }

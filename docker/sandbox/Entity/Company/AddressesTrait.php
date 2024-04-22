@@ -15,17 +15,61 @@
 
 namespace App\Entity\Company;
 
-use App\Entity\Addresses;
+use ApiPlatform\Metadata as API;
+use App\Entity\CompanyAddress;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Company / Contacts links with Invoicing & Delivery Addresses
+ * Company links with Invoicing & Delivery Addresses
  */
 trait AddressesTrait
 {
-    #[ORM\OneToOne(targetEntity: Addresses::class, cascade: array("all"))]
-    private ?Addresses $invoicing_address = null;
+    /**
+     * Storage for Company Addresses
+     *
+     * @var Collection<CompanyAddress>
+     */
+    #[ORM\OneToMany(mappedBy: 'company', targetEntity: CompanyAddress::class)]
+    #[API\Link(toProperty: 'company')]
+    protected Collection $addresses;
 
-    #[ORM\OneToOne(targetEntity: Addresses::class, cascade: array("all"))]
-    private ?Addresses $delivery_address = null;
+    /**
+     * Get Company Delivery Address
+     */
+    public function addAddress(CompanyAddress $address): static
+    {
+        $address->company = $this;
+        $this->addresses->add($address);
+
+        return $this;
+    }
+
+    /**
+     * Get Company Delivery Address
+     */
+    protected function getInvoicingAddress(): ?CompanyAddress
+    {
+        foreach ($this->addresses as $address) {
+            if ($address->isInvoicingAddress) {
+                return $address;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Get Company Delivery Address
+     */
+    protected function getDeliveryAddress(): ?CompanyAddress
+    {
+        foreach ($this->addresses as $address) {
+            if ($address->isDeliveryAddress) {
+                return $address;
+            }
+        }
+
+        return null;
+    }
 }

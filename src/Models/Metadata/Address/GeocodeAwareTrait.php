@@ -13,7 +13,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Connectors\Sellsy\Models\Metadata\Addresses;
+namespace Splash\Connectors\Sellsy\Models\Metadata\Address;
 
 use JMS\Serializer\Annotation as JMS;
 use Splash\Metadata\Attributes as SPL;
@@ -59,7 +59,7 @@ trait GeocodeAwareTrait
      */
     public function getLatitude(): ?float
     {
-        return $this->geocode->lat;
+        return $this->geocode?->lat;
     }
 
     /**
@@ -67,7 +67,7 @@ trait GeocodeAwareTrait
      */
     public function getLongitude(): ?float
     {
-        return $this->geocode->lng;
+        return $this->geocode?->lng;
     }
 
     /**
@@ -75,7 +75,10 @@ trait GeocodeAwareTrait
      */
     public function setLatitude(?float $latitude): void
     {
-        $this->geocode->latitude = $this->latitude = $latitude;
+        // Ensure geocode is Defined
+        $this->geocode ??= new Geocode();
+        // Update Latitude
+        $this->geocode->lat = $this->latitude = $latitude;
     }
 
     /**
@@ -83,6 +86,9 @@ trait GeocodeAwareTrait
      */
     public function setLongitude(?float $longitude): void
     {
-        $this->geocode->longitude = $this->longitude = $longitude;
+        // Ensure geocode is Defined
+        $this->geocode ??= new Geocode();
+        // Update Longitude
+        $this->geocode->lng = $this->longitude = $longitude;
     }
 }

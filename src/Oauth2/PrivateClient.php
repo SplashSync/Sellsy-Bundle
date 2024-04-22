@@ -77,5 +77,6 @@ class PrivateClient extends ConfigurableProvider
     protected function createResourceOwner(array $response, AccessToken $token)
     {
         // Nothing to Do Here
+        /** @phpstan-ignore-line  */
     }
 }

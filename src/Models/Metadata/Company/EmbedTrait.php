@@ -13,14 +13,19 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Connectors\Sellsy\Models\Metadata\Contacts;
+namespace Splash\Connectors\Sellsy\Models\Metadata\Company;
 
-use Splash\Metadata\Attributes as SPL;
+use JMS\Serializer\Annotation as JMS;
 
-#[SPL\SplashObject(
-    name: "Contacts",
-    description: "Sellsy Contacts Object",
-)]
-class Contacts
+/**
+ * Companies Embedded Metadata Parsing
+ */
+trait EmbedTrait
 {
+    #[
+        JMS\SerializedName("_embed"),
+        JMS\Type(CompanyEmbed::class),
+        JMS\Groups(array("Read")),
+    ]
+    public CompanyEmbed $embed;
 }

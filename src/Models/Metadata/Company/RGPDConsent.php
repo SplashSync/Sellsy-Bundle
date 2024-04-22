@@ -13,7 +13,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Connectors\Sellsy\Models\Metadata\Companies;
+namespace Splash\Connectors\Sellsy\Models\Metadata\Company;
 
 use JMS\Serializer\Annotation as JMS;
 use Splash\Metadata\Attributes as SPL;
@@ -31,6 +31,7 @@ class RGPDConsent
         JMS\SerializedName("email"),
         JMS\Type("boolean"),
         SPL\Field(type: SPL_T_BOOL, desc: "Is Email consent given"),
+        SPL\PreferRead(),
     ]
     public bool $email;
 
@@ -44,6 +45,7 @@ class RGPDConsent
         JMS\SerializedName("sms"),
         JMS\Type("boolean"),
         SPL\Field(type: SPL_T_BOOL, desc: "Is SMS consent given"),
+        SPL\PreferRead(),
     ]
     public bool $sms;
 
@@ -57,6 +59,7 @@ class RGPDConsent
         JMS\SerializedName("phone"),
         JMS\Type("boolean"),
         SPL\Field(type: SPL_T_BOOL, desc: "Is Phone consent given"),
+        SPL\PreferRead(),
     ]
     public bool $phone;
 
@@ -70,6 +73,7 @@ class RGPDConsent
         JMS\SerializedName("postal_mail"),
         JMS\Type("boolean"),
         SPL\Field(type: SPL_T_BOOL, desc: "Is Postal Mail consent given"),
+        SPL\PreferRead(),
     ]
     public bool $postalMail;
 
@@ -83,6 +87,7 @@ class RGPDConsent
         JMS\SerializedName("custom"),
         JMS\Type("boolean"),
         SPL\Field(type: SPL_T_BOOL, desc: "Is Custom consent given"),
+        SPL\PreferRead(),
     ]
     public bool $custom;
 }

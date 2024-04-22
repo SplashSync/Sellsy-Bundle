@@ -13,10 +13,10 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Connectors\Sellsy\Models\Metadata\Companies;
+namespace Splash\Connectors\Sellsy\Models\Metadata\Company;
 
 use JMS\Serializer\Annotation as JMS;
-use Splash\Connectors\Sellsy\Models\Metadata\Addresses\Addresses;
+use Splash\Connectors\Sellsy\Models\Metadata\Address;
 
 /**
  * Virtual/Temporary Storage for Company Embedded Data
@@ -25,15 +25,15 @@ class CompanyEmbed
 {
     #[
         JMS\SerializedName("invoicing_address"),
-        JMS\Type(Addresses::class),
+        JMS\Type(Address::class),
     ]
-    public ?Addresses $invoicingAddress = null;
+    public ?Address $invoicingAddress = null;
 
     #[
         JMS\SerializedName("delivery_address"),
-        JMS\Type(Addresses::class),
+        JMS\Type(Address::class),
     ]
-    public ?Addresses $deliveryAddress = null;
+    public ?Address $deliveryAddress = null;
 
     public static function getUriQuery(): string
     {

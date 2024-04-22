@@ -36,12 +36,11 @@ use Splash\Security\Oauth2\Model\AbstractOauth2Connector;
 use Splash\Security\Oauth2\Services\Oauth2ClientManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-//use Splash\Connectors\ReCommerce\Actions\Master;
-
 /**
  * Sellsy REST API Connector for Splash
  *
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class SellsyConnector extends AbstractOauth2Connector
 {
@@ -55,8 +54,8 @@ class SellsyConnector extends AbstractOauth2Connector
      */
     protected static array $objectsMap = array(
         "ThirdParty" => Objects\ThirdParty::class,
-        //        "Address" => Objects\Address::class,
-        //        "Product" => Objects\ThirdParty::class,
+        "Address" => Objects\Address::class,
+        //        "Product" => Objects\Product::class,
         //        "Invoice" => Objects\ThirdParty::class,
     );
 

@@ -19,23 +19,18 @@ use JMS\Serializer\Annotation as JMS;
 use Splash\Metadata\Attributes as SPL;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * Api Metadata Model for Simple Object: Basic Fields.
- *
- * @SuppressWarnings(PHPMD.TooManyFields)
- */
 #[SPL\SplashObject(
-    name: "Company",
-    description: "Sellsy Company API Object",
-    ico: "fa fa-user"
+    name: "Contact",
+    description: "Sellsy Contacts Object",
+    ico: "fa fa-envelope-o"
 )]
-class Company
+class Contact
 {
-    use Company\MainTrait;
-    use Company\ExtraInfosTrait;
+    use Contact\MainTrait;
+    use Contact\ExtraInfosTrait;
     use Company\EmbedTrait;
     use Company\AddressesTrait;
-    use Company\MetadataTrait;
+    use Contact\MetadataTrait;
 
     #[
         Assert\NotNull,
@@ -45,21 +40,4 @@ class Company
         JMS\Type("string"),
     ]
     public string $id;
-
-    #[
-        Assert\NotNull,
-        Assert\Type("string"),
-        JMS\SerializedName("type"),
-        JMS\Type("string"),
-        JMS\Groups(array("Read", "Write", "List", "Required")),
-        SPL\Field(desc: "Company type"),
-        SPL\Flags(listed: true),
-        SPL\Choices(array(
-            "prospect" => "Prospect",
-            "client" => "Client",
-            "supplier" => "Supplier",
-        )),
-        SPL\IsRequired,
-    ]
-    public string $type;
 }

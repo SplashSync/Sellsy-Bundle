@@ -58,7 +58,7 @@ class ThirdParty extends AbstractApiMetadataObject
         $this->visitor->setModel(
             ApiModels\Company::class,
             "/companies",
-            "/companies/{id}".ApiModels\Companies\CompanyEmbed::getUriQuery(),
+            "/companies/{id}".ApiModels\Company\CompanyEmbed::getUriQuery(),
             array("id")
         );
         $this->visitor->setUpdateAction(Json\PutAction::class);
@@ -93,85 +93,23 @@ class ThirdParty extends AbstractApiMetadataObject
         if (!$objectId) {
             return $objectId;
         }
-
         //====================================================================//
         // Update Invoicing Address
         if ($this->isToUpdate("InvoicingAddress")) {
-            $this->connector->getAddressUpdater()->createOrUpdateAddress(
-                //                sprintf("/companies/%d", $this->getObjectIdentifier()), // $parentUri
-                $this->object->invoicingAddress,
-                'invoicing'
-            );
-
-            $this->visitor->getConnexion()->put(
-                sprintf("/companies/%d/addresses/%d", $this->getObjectIdentifier(), $this->object->invoicingAddress->id),
-                $this->visitor->getHydrator()->extract($this->object->invoicingAddress)
-            );
+            $this->connector
+                ->getAddressUpdater()
+                ->createOrUpdateInvoicingAddress($this->object)
+            ;
         }
-
         //====================================================================//
         // Update Delivery Address
         if ($this->isToUpdate("DeliveryAddress")) {
-            $this->connector->getAddressUpdater()->createOrUpdateAddress(
-                //                sprintf("/companies/%d", $this->getObjectIdentifier()), // $parentUri
-                $this->object->deliveryAddress,
-                'delivery'
-            );
-
-            $this->visitor->getConnexion()->put(
-                sprintf("/companies/%d/addresses/%d", $this->getObjectIdentifier(), $this->object->deliveryAddress->id),
-                $this->visitor->getHydrator()->extract($this->object->deliveryAddress)
-            );
+            $this->connector
+                ->getAddressUpdater()
+                ->createOrUpdateDeliveryAddress($this->object)
+            ;
         }
 
         return $objectId;
     }
-
-    //    public function load(string $objectId): ?object
-    //    {
-    //        //====================================================================//
-    //        // Load Remote Object
-    //        $loadResponse = $this->visitor->load($objectId);
-    //        if (!$loadResponse->isSuccess()) {
-    //            return null;
-    //        }
-    //
-    //        dd(json_decode($this->visitor->getLastResponse()->body));
-    //        dd($this->visitor->getLastResponse());
-    //
-    //        return null;
-    //    }
-
-    //        public function objectsList(?string $filter = null, array $params = array()): array
-    //        {
-    //            $this->visitor->list($filter, $params)->getArrayResults();
-    //            dd(json_decode($this->visitor->getLastResponse()->body));
-    //            dd($this->visitor->list($filter, $params)->getArrayResults());
-    //
-    //            return $this->visitor->list($filter, $params)->getArrayResults() ?? array();
-    //        }
-
-    //        /**
-    //     * Update Request Object
-    //     *
-    //     * @param bool $needed Is This Update Needed
-    //     *
-    //     * @return null|string Object ID of False if Failed to Update
-    //     */
-    //    public function update(bool $needed): ?string
-    //    {
-    //        //====================================================================//
-    //        // Update Remote Object
-    //        $updateResponse = $this->visitor->update((string) $this->getObjectIdentifier(), $this->object);
-    //
-    //        dd(json_decode($this->visitor->getLastResponse()->body));
-    //        //====================================================================//
-    //        // Return Object Id or False
-    //        return $updateResponse->isSuccess()
-    //            ? $this->getObjectIdentifier()
-    //            : Splash::log()->errNull(
-    //                "Unable to Update Object (".$this->getObjectIdentifier().")."
-    //            )
-    //        ;
-    //    }
 }

@@ -18,7 +18,7 @@
 ################################################################################
 # Docker Compose File
 #
-# This Docker File intend to Create a Complete Dev Environnement
+# This Docker File intend to Create a Complete Dev Environment
 # for Splash Sellsy Connector
 #
 # For a faster access to you container, you can add this IP to /etc/hosts
@@ -27,8 +27,6 @@
 #    172.118.0.200       sandbox.sellsy.local
 #
 ################################################################################
-
-version: '2.2'
 
 services:
 
@@ -59,8 +57,8 @@ services:
         image: 'splashsync/openapi-sandbox'
         container_name: sandbox.sellsy.local
         volumes:
-#             # Specify API Entities to Use
-#            - './docker/sandbox/Controller:/srv/api/src/Controller:ro'
+             # Specify API Entities to Use
+            - './docker/sandbox/Controller:/srv/api/src/Controller:ro'
             - './docker/sandbox/Serializer:/srv/api/src/Serializer:ro'
             - './docker/sandbox/Entity:/srv/api/src/Entity:ro'
             - './docker/sandbox/sellsy.yaml:/srv/api/config/packages/sellsy.yaml:ro'

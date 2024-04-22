@@ -66,7 +66,7 @@ final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface,
     {
         //====================================================================//
         //  Check if Resource is Sbo Resource
-        if (!self::isManagedObject($context["resource_class"])) {
+        if (!self::isManagedObject($context["resource_class"] ?? "")) {
             return $object;
         }
         //====================================================================//

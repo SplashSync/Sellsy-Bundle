@@ -62,6 +62,7 @@ functional:
         - apk add --no-cache curl bash git # docker-compose
         # Install & Build Docker Compose
         - docker network create splashsync --attachable
+        - cp .env.dist .env
         - docker compose up -d
 #        - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/toolkit/build.sh  | bash
 

@@ -37,7 +37,7 @@ class Civility
      */
     public static function toSplash(?string $civility): ?string
     {
-        return match($civility) {
+        return match ($civility) {
             self::MAN => "0",
             self::WOMAN, self::LADY => "1",
             default => null
@@ -49,7 +49,7 @@ class Civility
      */
     public static function toSellsy(?string $genderType): ?string
     {
-        return match($genderType) {
+        return match ($genderType) {
             "0" => self::MAN,
             "1" => self::WOMAN,
             default => null

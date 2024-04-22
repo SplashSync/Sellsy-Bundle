@@ -127,6 +127,7 @@ class AddressUpdater
         return match ($parent::class) {
             Company::class => sprintf("/companies/%d/addresses", $parent->id),
             Contact::class => sprintf("/contacts/%d/addresses", $parent->id),
+            default => "/addresses"
         };
     }
 

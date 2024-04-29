@@ -25,6 +25,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 trait MainTrait
 {
     /**
+     * Contact's Civility.
+     */
+    #[
+        Assert\Choice(choices: array('mr', 'mrs', 'ms'), message: "Invalid civility value"),
+        Assert\Type("string"),
+        JMS\SerializedName("civility"),
+        JMS\Type("string"),
+        JMS\Groups(array("Read", "Write")),
+        SPL\Field(type: SPL_T_VARCHAR, desc: "Contact's Civility"),
+    ]
+    public ?string $civility = null;
+
+    /**
      * Contact's Firstname.
      */
     #[

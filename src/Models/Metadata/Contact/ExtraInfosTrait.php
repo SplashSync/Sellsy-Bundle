@@ -37,17 +37,17 @@ trait ExtraInfosTrait
     ]
     public ?SocialUrls $social = null;
 
-    //    /**
-    //     * Contact Synchronisation Options.
-    //     */
-    //    #[
-    //        Assert\Type(ContactSync::class),
-    //        JMS\SerializedName("sync"),
-    //        JMS\Type(ContactSync::class),
-    //        SPL\SubResource(targetClass: ContactSync::class, write: false),
-    //        SPL\Accessor(factory: "addLegalFrance"),
-    //    ]
-    //    public ?ContactSync $sync = null;
+    /**
+     * Contact Synchronisation Options.
+     */
+    #[
+        Assert\Type(ContactSync::class),
+        JMS\SerializedName("sync"),
+        JMS\Type(ContactSync::class),
+        SPL\SubResource(targetClass: ContactSync::class),
+        SPL\Accessor(factory: "addContactSync"),
+    ]
+    public ?ContactSync $sync = null;
 
     /**
      * Add Social Urls
@@ -55,6 +55,14 @@ trait ExtraInfosTrait
     public function addSocialUrls(): void
     {
         $this->social = new SocialUrls();
+    }
+
+    /**
+     * Add Contact Synchronization Options
+     */
+    public function addContactSync(): void
+    {
+        $this->sync = new ContactSync();
     }
 
     //    /**

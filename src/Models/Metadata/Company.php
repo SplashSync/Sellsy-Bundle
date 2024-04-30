@@ -34,7 +34,7 @@ class Company
     use Company\MainTrait;
     use Company\ExtraInfosTrait;
     use Company\EmbedTrait;
-    //    use Company\AddressesTrait;
+    use Company\AddressesTrait;
     use Company\MetadataTrait;
 
     #[

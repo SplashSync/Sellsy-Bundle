@@ -16,6 +16,7 @@
 namespace Splash\Connectors\Sellsy\Models\Metadata\Contact;
 
 use JMS\Serializer\Annotation as JMS;
+use Splash\Client\Splash;
 use Splash\Metadata\Attributes as SPL;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -135,4 +136,33 @@ trait MainTrait
         SPL\Field(type: SPL_T_VARCHAR, desc: "Note about the contact"),
     ]
     public ?string $note = null;
+
+    public function getCivility(): ?string
+    {
+        return $this->civility;
+    }
+
+    public function setCivility(?string $civility): self
+    {
+        switch ($civility) {
+            case "mr":
+            case "mrs":
+            case "ms":
+                $this->civility = $civility;
+                break;
+
+            case "Male":
+                $this->civility = "mr";
+                break;
+
+            case "Female":
+                $this->civility = "ms";
+                break;
+
+            default:
+                Splash::log()->err("Invalid civility value: ".$civility);
+        }
+
+        return $this;
+    }
 }

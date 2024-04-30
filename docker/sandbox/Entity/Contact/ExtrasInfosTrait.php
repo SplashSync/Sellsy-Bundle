@@ -49,8 +49,8 @@ trait ExtrasInfosTrait
         Serializer\Groups("read"),
     ]
     public ?array $sync = array(
-        "mailchimp" => null,
-        "mailjet" => null,
-        "simplemail" => null,
+        "mailchimp" => false,
+        "mailjet" => false,
+        "simplemail" => false,
     );
 }

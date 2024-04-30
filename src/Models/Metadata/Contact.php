@@ -29,7 +29,7 @@ class Contact
     use Contact\MainTrait;
     use Contact\ExtraInfosTrait;
     use Company\EmbedTrait;
-//    use Company\AddressesTrait;
+    use Company\AddressesTrait;
     use Contact\MetadataTrait;
 
     #[

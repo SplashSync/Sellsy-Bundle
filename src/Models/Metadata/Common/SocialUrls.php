@@ -30,6 +30,9 @@ class SocialUrls
     ]
     public ?string $twitter = null;
 
+    // TODO: Impossible d'attribuer ou modifier la valeur  des champs facebook,
+    // linkedin et viadeo depuis Toolkit web pour les contacts
+
     #[
         Assert\Type("string"),
         JMS\SerializedName("facebook"),

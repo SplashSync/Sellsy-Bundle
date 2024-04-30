@@ -87,6 +87,8 @@ class ThirdParty extends AbstractApiMetadataObject
     {
         //====================================================================//
         // Execute Generic Save
+        //        dd($this->visitor->getHydrator()->extract($this->object));
+
         $objectId = parent::update($needed);
         //====================================================================//
         // Update Invoicing Address

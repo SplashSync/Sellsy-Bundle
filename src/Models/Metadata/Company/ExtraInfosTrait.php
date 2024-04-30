@@ -50,18 +50,6 @@ trait ExtraInfosTrait
     public ?LegalFrance $legalFrance = null;
 
     /**
-     * Social media information for the company.
-     */
-    #[
-        Assert\Type(RGPDConsent::class),
-        JMS\SerializedName("rgpd_consent"),
-        JMS\Type(RGPDConsent::class),
-        SPL\SubResource(),
-        SPL\Accessor(factory: "addRGPDConsent"),
-    ]
-    public ?RGPDConsent $rgpdConsent = null;
-
-    /**
      * Add Social Urls
      */
     public function addSocialUrls(): void
@@ -77,11 +65,22 @@ trait ExtraInfosTrait
         $this->legalFrance = new LegalFrance();
     }
 
-    /**
-     * Add GDPR Consents
-     */
-    public function addRGPDConsent(): void
-    {
-        $this->rgpdConsent = new RGPDConsent();
-    }
+    //    /**
+    //     * Social media information for the company.
+    //     */
+    //    #[
+    //        Assert\Type(RGPDConsent::class),
+    //        JMS\SerializedName("rgpd_consent"),
+    //        JMS\Type(RGPDConsent::class),
+    //        SPL\SubResource(RGPDConsent::class),
+    //        SPL\Accessor(factory: "addRGPDConsent"),
+    //    ]
+    //    public ?RGPDConsent $rgpdConsent = null;
+    //    /**
+    //     * Add GDPR Consents
+    //     */
+    //    public function addRGPDConsent(): void
+    //    {
+    //        $this->rgpdConsent = new RGPDConsent();
+    //    }
 }

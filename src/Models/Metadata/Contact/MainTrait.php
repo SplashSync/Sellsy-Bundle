@@ -149,16 +149,16 @@ trait MainTrait
             case "mrs":
             case "ms":
                 $this->civility = $civility;
-                break;
 
+                break;
             case "Male":
                 $this->civility = "mr";
-                break;
 
+                break;
             case "Female":
                 $this->civility = "ms";
-                break;
 
+                break;
             default:
                 Splash::log()->err("Invalid civility value: ".$civility);
         }

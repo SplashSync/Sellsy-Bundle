@@ -139,6 +139,6 @@ class AddressUpdater
         $invoicingId = $parent->invoicingAddress?->id ?? null;
         $deliveryId = $parent->deliveryAddress?->id ?? null;
 
-        return $invoicingId && $deliveryId && ($invoicingId == $deliveryId);
+        return $invoicingId && $deliveryId && ($invoicingId === $deliveryId);
     }
 }

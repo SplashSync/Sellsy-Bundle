@@ -54,4 +54,14 @@ trait MainTrait
         Serializer\Groups("read"),
     ]
     public ?string $position = null;
+
+    /**
+     * Contact's Gender
+     */
+    #[
+        Assert\Type("string"),
+        ORM\Column(nullable: true),
+        Serializer\Groups("read"),
+    ]
+    public ?string $civility = null;
 }

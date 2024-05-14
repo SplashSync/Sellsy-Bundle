@@ -34,6 +34,8 @@
 
         <!-- Only Test Specified Sequence -->
         <const  name="SPLASH_SEQUENCE"  value="Sellsy Sandbox" />
+<!--        <const  name="SPLASH_TYPES"     value="Address" />-->
+<!--        <const  name="SPLASH_FIELDS"     value="civility" />-->
     </php>
 
 </phpunit>

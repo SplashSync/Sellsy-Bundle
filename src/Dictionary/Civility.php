@@ -15,44 +15,22 @@
 
 namespace Splash\Connectors\Sellsy\Dictionary;
 
+use Splash\Models\Objects\ThirdParty\Civility as BaseCivility;
+
 /**
  * Civility Types Dictionary
  */
-class Civility
+class Civility extends BaseCivility
 {
-    const MAN = "mr";
+    public const MAN = "mr";
 
-    const WOMAN = "mrs";
+    public const WOMAN = "mrs";
 
-    const LADY = "ms";
+    public const LADY = "ms";
 
-    const CHOICES = array(
-        self::MAN => "Man",
-        self::WOMAN => "Woman",
-        self::LADY => "Lady",
+    public const MAP = array(
+        self::MAN => self::MALE,
+        self::WOMAN => self::FEMALE,
+        self::LADY => self::FEMALE,
     );
-
-    /**
-     * Convert Sellsy Civility to Splash Gender Type
-     */
-    public static function toSplash(?string $civility): ?string
-    {
-        return match ($civility) {
-            self::MAN => "0",
-            self::WOMAN, self::LADY => "1",
-            default => null
-        };
-    }
-
-    /**
-     * Convert Splash Gender Type to Sellsy Civility
-     */
-    public static function toSellsy(?string $genderType): ?string
-    {
-        return match ($genderType) {
-            "0" => self::MAN,
-            "1" => self::WOMAN,
-            default => null
-        };
-    }
 }

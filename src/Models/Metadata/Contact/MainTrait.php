@@ -16,9 +16,9 @@
 namespace Splash\Connectors\Sellsy\Models\Metadata\Contact;
 
 use JMS\Serializer\Annotation as JMS;
+use Splash\Connectors\Sellsy\Dictionary\Civility;
 use Splash\Metadata\Attributes as SPL;
 use Symfony\Component\Validator\Constraints as Assert;
-use Splash\Connectors\Sellsy\Dictionary\Civility;
 
 /**
  * Contact Main Information Fields

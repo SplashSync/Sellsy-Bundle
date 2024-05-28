@@ -25,21 +25,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 trait MainTrait
 {
     /**
-     * Company's name.
-     */
-    #[
-        Assert\NotNull,
-        Assert\Type("string"),
-        JMS\SerializedName("name"),
-        JMS\Type("string"),
-        JMS\Groups(array("Read", "Write", "List", "Required")),
-        SPL\Field(desc: "Company name"),
-        SPL\Flags(listed: true),
-        SPL\IsRequired,
-    ]
-    public string $name;
-
-    /**
      * Company's reference.
      */
     #[
@@ -120,5 +105,12 @@ trait MainTrait
         JMS\Type("string"),
         SPL\Field(type: SPL_T_VARCHAR, desc: "Note about the company"),
     ]
-    public ?string $note = null;
+    public ?string $note = "";
+
+    public function setNote(?string $note): static
+    {
+        $this->note = (string) $note;
+
+        return $this;
+    }
 }

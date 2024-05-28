@@ -31,6 +31,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 class Company
 {
+    use Company\FullnameTrait;
     use Company\MainTrait;
     use Company\ExtraInfosTrait;
     use Company\EmbedTrait;
@@ -51,7 +52,7 @@ class Company
         Assert\Type("string"),
         JMS\SerializedName("type"),
         JMS\Type("string"),
-        JMS\Groups(array("Read", "Write", "List", "Required")),
+        JMS\Groups(array("Read", "List", "Required")),
         SPL\Field(desc: "Company type"),
         SPL\Flags(listed: true),
         SPL\Choices(array(
@@ -61,5 +62,5 @@ class Company
         )),
         SPL\IsRequired,
     ]
-    public string $type;
+    public ?string $type;
 }

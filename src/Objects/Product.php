@@ -76,16 +76,16 @@ class Product extends AbstractApiMetadataObject
     // DEBUG
     //====================================================================//
 
-    /**
-     * Update Request Object
-     *
-     * @param bool $needed Is This Update Needed
-     *
-     * @return null|string Object ID of False if Failed to Update
-     */
-    public function update(bool $needed): ?string
-    {
-        //        dd($this->visitor->getHydrator()->extract($this->object));
-        return parent::update($needed);
-    }
+//    /**
+//     * Update Request Object
+//     *
+//     * @param bool $needed Is This Update Needed
+//     *
+//     * @return null|string Object ID of False if Failed to Update
+//     */
+//    public function update(bool $needed): ?string
+//    {
+//        dd($this->visitor->getHydrator()->extract($this->object));
+//        return parent::update($needed);
+//    }
 }

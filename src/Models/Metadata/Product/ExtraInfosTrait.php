@@ -69,7 +69,7 @@ trait ExtraInfosTrait
         Assert\Type("integer"),
         JMS\SerializedName("accounting_code_id"),
         JMS\Type("integer"),
-        SPL\Field(type: SPL_T_INT, desc: "Product's accounting code id"),
+        SPL\Field(type: SPL_T_VARCHAR, desc: "Product's accounting code id"),
         SPL\Microdata("http://schema.org/AccountingService", "")
     ]
     public ?int $accountingCodeId;
@@ -81,7 +81,7 @@ trait ExtraInfosTrait
         Assert\Type("integer"),
         JMS\SerializedName("accounting_purchase_code_id"),
         JMS\Type("integer"),
-        SPL\Field(type: SPL_T_INT, desc: "Product's accounting purchase code id"),
+        SPL\Field(type: SPL_T_VARCHAR, desc: "Product's accounting purchase code id"),
         SPL\Microdata("http://schema.org/AccountingService", "")
     ]
     public ?int $accountingPurchaseCodeId;
@@ -91,10 +91,10 @@ trait ExtraInfosTrait
         return $this->accountingCodeId;
     }
 
-    public function setAccountingCodeId(?int $accountingCodeId): self
+    public function setAccountingCodeId(int $accountingCodeId): self
     {
-        if (0 === $accountingCodeId) {
-            $accountingCodeId = null;
+        if ($accountingCodeId === 0) {
+            $accountingCodeId = 1;
         }
         $this->accountingCodeId = $accountingCodeId;
         return $this;
@@ -105,10 +105,10 @@ trait ExtraInfosTrait
         return $this->accountingPurchaseCodeId;
     }
 
-    public function setAccountingPurchaseCodeId(?int $accountingPurchaseCodeId): self
+    public function setAccountingPurchaseCodeId(int $accountingPurchaseCodeId): self
     {
-        if (0 === $accountingPurchaseCodeId) {
-            $accountingPurchaseCodeId = null;
+        if ($accountingPurchaseCodeId === 0) {
+            $accountingPurchaseCodeId = 1;
         }
         $this->accountingPurchaseCodeId = $accountingPurchaseCodeId;
         return $this;

@@ -77,6 +77,7 @@ trait MainTrait
         Assert\Type("string"),
         JMS\SerializedName("purchase_amount"),
         JMS\Type("string"),
+        JMS\Groups(array("Read", "List")),
         SPL\Field(type: SPL_T_VARCHAR, desc: "Product's purchase price excluding taxes"),
         SPL\Microdata("http://schema.org/Product", "")
     ]
@@ -90,6 +91,7 @@ trait MainTrait
         Assert\Type("string"),
         JMS\SerializedName("reference_price_taxes_inc"),
         JMS\Type("string"),
+        JMS\Groups(array("Read", "List", "Required")),
         SPL\Field(type: SPL_T_VARCHAR, desc: "Product's reference price including taxes"),
         SPL\IsRequired,
         SPL\Microdata("http://schema.org/Product", "")
@@ -100,8 +102,8 @@ trait MainTrait
         Assert\Type("boolean"),
         JMS\SerializedName("is_reference_price_taxes_free"),
         JMS\Type("boolean"),
+        JMS\Groups(array("Write", "Read", "List", "Required")),
         SPL\Field(type: SPL_T_BOOL, desc: "Product is reference price has taxes free"),
-        SPL\IsRequired,
         SPL\Microdata("http://schema.org/Product", "")
     ]
     public bool $isReferencePriceTaxesFree;
@@ -115,6 +117,8 @@ trait MainTrait
         Assert\Type("string"),
         JMS\SerializedName("currency"),
         JMS\Type("string"),
+        JMS\Groups(array("Read", "List")),
+        SPL\Flags(listed: true),
         SPL\Field(type: SPL_T_VARCHAR, desc: "Currency code"),
         SPL\Microdata("http://schema.org/Product", "")
     ]
@@ -128,6 +132,7 @@ trait MainTrait
         Assert\Type("string"),
         JMS\SerializedName("standard_quantity"),
         JMS\Type("string"),
+        JMS\Groups(array("Write", "Read", "List")),
         SPL\Field(type: SPL_T_VARCHAR, desc: "Product's standard quantity"),
         SPL\Microdata("http://schema.org/Product", "")
     ]
@@ -140,6 +145,7 @@ trait MainTrait
         Assert\Type("string"),
         JMS\SerializedName("description"),
         JMS\Type("string"),
+        JMS\Groups(array("Read", "Write", "List")),
         SPL\Field(type: SPL_T_TEXT, desc: "Product's description"),
         SPL\Microdata("http://schema.org/Product", "")
     ]
@@ -152,6 +158,7 @@ trait MainTrait
         Assert\Type("boolean"),
         JMS\SerializedName("is_name_included_in_description"),
         JMS\Type("boolean"),
+        JMS\Groups(array("Read", "Write", "List")),
         SPL\Field(type: SPL_T_BOOL, desc: "To add the name of item in description"),
         SPL\Microdata("http://schema.org/Product", "")
     ]

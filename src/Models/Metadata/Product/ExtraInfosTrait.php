@@ -93,10 +93,11 @@ trait ExtraInfosTrait
 
     public function setAccountingCodeId(int $accountingCodeId): self
     {
-        if ($accountingCodeId === 0) {
+        if (0 === $accountingCodeId) {
             $accountingCodeId = 1;
         }
         $this->accountingCodeId = $accountingCodeId;
+
         return $this;
     }
 
@@ -107,10 +108,11 @@ trait ExtraInfosTrait
 
     public function setAccountingPurchaseCodeId(int $accountingPurchaseCodeId): self
     {
-        if ($accountingPurchaseCodeId === 0) {
+        if (0 === $accountingPurchaseCodeId) {
             $accountingPurchaseCodeId = 1;
         }
         $this->accountingPurchaseCodeId = $accountingPurchaseCodeId;
+
         return $this;
     }
 }

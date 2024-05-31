@@ -20,15 +20,15 @@ use Splash\Metadata\Attributes as SPL;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[SPL\SplashObject(
-    name: "Product",
+    name: "Item",
     description: "Sellsy Products Object",
     ico: "fa fa-cube",
 )]
-class Product
+class Item
 {
-    use Product\MainTrait;
-    use Product\ExtraInfosTrait;
-    use Product\MetadataTrait;
+    use Item\MainTrait;
+    use Item\ExtraInfosTrait;
+    use Item\MetadataTrait;
 
     #[
         Assert\NotNull,

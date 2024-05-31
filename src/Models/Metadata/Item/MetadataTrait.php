@@ -13,14 +13,14 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Connectors\Sellsy\Models\Metadata\Product;
+namespace Splash\Connectors\Sellsy\Models\Metadata\Item;
 
 use JMS\Serializer\Annotation as JMS;
 use Splash\Metadata\Attributes as SPL;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Product Metadata Fields
+ * Item Metadata Fields
  */
 trait MetadataTrait
 {
@@ -32,7 +32,7 @@ trait MetadataTrait
         JMS\SerializedName("is_archived"),
         JMS\Type("boolean"),
         JMS\Groups(array("Read", "List")),
-        SPL\Field(type: SPL_T_BOOL, desc: "Product is archived"),
+        SPL\Field(type: SPL_T_BOOL, desc: "Item is archived"),
     ]
     public bool $isArchived = false;
 
@@ -44,7 +44,7 @@ trait MetadataTrait
         JMS\SerializedName("is_declined"),
         JMS\Type("boolean"),
         JMS\Groups(array("Read", "List")),
-        SPL\Field(type: SPL_T_BOOL, desc: "Product is declined"),
+        SPL\Field(type: SPL_T_BOOL, desc: "Item is declined"),
     ]
     public bool $isDeclined = false;
 }

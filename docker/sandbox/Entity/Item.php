@@ -22,7 +22,7 @@ use Symfony\Component\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Class representing the Product model.
+ * Class representing the Item model.
  */
 #[
     ORM\Entity,
@@ -38,11 +38,11 @@ use Symfony\Component\Validator\Constraints as Assert;
         normalizationContext: array('groups' => array('read'))
     )
 ]
-class Product extends AbstractSellsyObject
+class Item extends AbstractSellsyObject
 {
-    use Product\MainTrait;
-    use Product\ExtrasInfosTrait;
-    use Product\MetadataTrait;
+    use Item\MainTrait;
+    use Item\ExtrasInfosTrait;
+    use Item\MetadataTrait;
 
     /**
      * Unique Identifier.
@@ -57,7 +57,7 @@ class Product extends AbstractSellsyObject
     public int $id;
 
     /**
-     * Product Type
+     * Item Type
      */
     #[
         Assert\NotNull,

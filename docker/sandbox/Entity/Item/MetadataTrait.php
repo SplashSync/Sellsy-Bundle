@@ -13,19 +13,19 @@
  *  file that was distributed with this source code.
  */
 
-namespace App\Entity\Product;
+namespace App\Entity\Item;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Products Metadata Fields for Sandbox
+ * Items Metadata Fields for Sandbox
  */
 trait MetadataTrait
 {
     /**
-     * Is Product Archived
+     * Is Item Archived
      */
     #[
         Assert\Type("boolean"),
@@ -35,7 +35,7 @@ trait MetadataTrait
     public bool $is_archived = false;
 
     /**
-     * Is Product declined
+     * Is Item declined
      */
     #[
         Assert\Type("boolean"),

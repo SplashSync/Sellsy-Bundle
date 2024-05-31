@@ -13,7 +13,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Connectors\Sellsy\Models\Metadata\Product;
+namespace Splash\Connectors\Sellsy\Models\Metadata\Item;
 
 use JMS\Serializer\Annotation as JMS;
 use Splash\Metadata\Attributes as SPL;
@@ -25,7 +25,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 trait MainTrait
 {
     /**
-     * Product's name.
+     * Item's name.
      */
     #[
         Assert\Type("string"),
@@ -33,13 +33,13 @@ trait MainTrait
         JMS\Type("string"),
         JMS\Groups(array("Read", "Write", "List")),
         SPL\Flags(listed: true),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Product's name"),
+        SPL\Field(type: SPL_T_VARCHAR, desc: "Item's name"),
         SPL\Microdata("http://schema.org/Product", "name")
     ]
     public ?string $name = null;
 
     /**
-     * Product's reference.
+     * Item's reference.
      */
     #[
         Assert\NotNull,
@@ -47,15 +47,15 @@ trait MainTrait
         JMS\SerializedName("reference"),
         JMS\Type("string"),
         JMS\Groups(array("Read", "Write", "List", "Required")),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Product's reference"),
+        SPL\Field(type: SPL_T_VARCHAR, desc: "Item's reference"),
         SPL\IsRequired,
         SPL\Flags(listed: true),
         SPL\Microdata("http://schema.org/Product", ""),
     ]
-    public string $reference;
+    public string $reference = "";
 
     /**
-     * Product's reference price excluding taxes.
+     * Item's reference price excluding taxes.
      */
     #[
         Assert\NotNull,
@@ -63,14 +63,14 @@ trait MainTrait
         JMS\SerializedName("reference_price_taxes_exc"),
         JMS\Type("string"),
         JMS\Groups(array("Read", "Write", "List", "Required")),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Product's reference price excluding taxes"),
+        SPL\Field(type: SPL_T_VARCHAR, desc: "Item's reference price excluding taxes"),
         SPL\IsRequired,
         SPL\Microdata("http://schema.org/Product", "price")
     ]
-    public string $referencePriceTaxesExc;
+    public string $referencePriceTaxesExc = "0.00";
 
     /**
-     * Product's purchase price excluding taxes.
+     * Item's purchase price excluding taxes.
      */
     #[
         Assert\NotNull,
@@ -78,13 +78,13 @@ trait MainTrait
         JMS\SerializedName("purchase_amount"),
         JMS\Type("string"),
         JMS\Groups(array("Read", "List")),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Product's purchase price excluding taxes"),
+        SPL\Field(type: SPL_T_VARCHAR, desc: "Item's purchase price excluding taxes"),
         SPL\Microdata("http://schema.org/Product", "")
     ]
-    public string $purchaseAmount;
+    public string $purchaseAmount = "0.00";
 
     /**
-     * Product's reference price including taxes.
+     * Item's reference price including taxes.
      */
     #[
         Assert\NotNull,
@@ -92,24 +92,24 @@ trait MainTrait
         JMS\SerializedName("reference_price_taxes_inc"),
         JMS\Type("string"),
         JMS\Groups(array("Read", "List", "Required")),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Product's reference price including taxes"),
+        SPL\Field(type: SPL_T_VARCHAR, desc: "Item's reference price including taxes"),
         SPL\IsRequired,
         SPL\Microdata("http://schema.org/Product", "")
     ]
-    public string $referencePriceTaxesInc;
+    public string $referencePriceTaxesInc = "0.00";
 
     #[
         Assert\Type("boolean"),
         JMS\SerializedName("is_reference_price_taxes_free"),
         JMS\Type("boolean"),
         JMS\Groups(array("Write", "Read", "List", "Required")),
-        SPL\Field(type: SPL_T_BOOL, desc: "Product is reference price has taxes free"),
+        SPL\Field(type: SPL_T_BOOL, desc: "Item is reference price has taxes free"),
         SPL\Microdata("http://schema.org/Product", "")
     ]
-    public bool $isReferencePriceTaxesFree;
+    public bool $isReferencePriceTaxesFree = false;
 
     /**
-     * Product's Currency code.
+     * Item's Currency code.
      *
      * @var null|string
      */
@@ -125,7 +125,7 @@ trait MainTrait
     public ?string $currency = null;
 
     /**
-     * Product's Standard quantity.
+     * Item's Standard quantity.
      */
     #[
         Assert\NotNull,
@@ -133,20 +133,20 @@ trait MainTrait
         JMS\SerializedName("standard_quantity"),
         JMS\Type("string"),
         JMS\Groups(array("Write", "Read", "List")),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Product's standard quantity"),
+        SPL\Field(type: SPL_T_VARCHAR, desc: "Item's standard quantity"),
         SPL\Microdata("http://schema.org/Product", "")
     ]
-    public string $standardQuantity;
+    public string $standardQuantity = "1.00";
 
     /**
-     * Product's Description.
+     * Item's Description.
      */
     #[
         Assert\Type("string"),
         JMS\SerializedName("description"),
         JMS\Type("string"),
         JMS\Groups(array("Read", "Write", "List")),
-        SPL\Field(type: SPL_T_TEXT, desc: "Product's description"),
+        SPL\Field(type: SPL_T_TEXT, desc: "Item's description"),
         SPL\Microdata("http://schema.org/Product", "")
     ]
     public ?string $description = null;
@@ -162,5 +162,5 @@ trait MainTrait
         SPL\Field(type: SPL_T_BOOL, desc: "To add the name of item in description"),
         SPL\Microdata("http://schema.org/Product", "")
     ]
-    public bool $isNameInDescription;
+    public bool $isNameInDescription = false;
 }

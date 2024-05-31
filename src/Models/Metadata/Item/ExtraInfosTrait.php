@@ -13,7 +13,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Connectors\Sellsy\Models\Metadata\Product;
+namespace Splash\Connectors\Sellsy\Models\Metadata\Item;
 
 use JMS\Serializer\Annotation as JMS;
 use Splash\Metadata\Attributes as SPL;
@@ -25,7 +25,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 trait ExtraInfosTrait
 {
     /**
-     * Product's tax id.
+     * Item's tax id.
      */
     #[
         Assert\Type("integer"),
@@ -35,10 +35,10 @@ trait ExtraInfosTrait
         SPL\IsRequired,
         SPL\Microdata("http://schema.org/Product", "taxID")
     ]
-    public int $taxId;
+    public ?int $taxId = null;
 
     /**
-     * Product's unit id.
+     * Item's unit id.
      */
     #[
         Assert\Type("integer"),
@@ -48,10 +48,10 @@ trait ExtraInfosTrait
         SPL\IsRequired,
         SPL\Microdata("http://schema.org/Product", "sku")
     ]
-    public int $unitId;
+    public ?int $unitId = null;
 
     /**
-     * Product's category id.
+     * Item's category id.
      */
     #[
         Assert\Type("integer"),
@@ -60,31 +60,31 @@ trait ExtraInfosTrait
         SPL\Field(type: SPL_T_INT, desc: "Category id"),
         SPL\Microdata("http://schema.org/Product", "category")
     ]
-    public int $categoryId;
+    public int $categoryId = 0;
 
     /**
-     * Product's accounting code id.
+     * Item's accounting code id.
      */
     #[
         Assert\Type("integer"),
         JMS\SerializedName("accounting_code_id"),
         JMS\Type("integer"),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Product's accounting code id"),
+        SPL\Field(type: SPL_T_VARCHAR, desc: "Item's accounting code id"),
         SPL\Microdata("http://schema.org/AccountingService", "")
     ]
-    public ?int $accountingCodeId;
+    public ?int $accountingCodeId = null;
 
     /**
-     * Product's accounting purchase code id.
+     * Item's accounting purchase code id.
      */
     #[
         Assert\Type("integer"),
         JMS\SerializedName("accounting_purchase_code_id"),
         JMS\Type("integer"),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Product's accounting purchase code id"),
+        SPL\Field(type: SPL_T_VARCHAR, desc: "Item's accounting purchase code id"),
         SPL\Microdata("http://schema.org/AccountingService", "")
     ]
-    public ?int $accountingPurchaseCodeId;
+    public ?int $accountingPurchaseCodeId = null;
 
     public function getAccountingCodeId(): ?int
     {

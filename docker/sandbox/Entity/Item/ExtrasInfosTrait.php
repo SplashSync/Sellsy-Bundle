@@ -13,7 +13,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace App\Entity\Product;
+namespace App\Entity\Item;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -21,12 +21,12 @@ use Symfony\Component\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Products Extras Fields for Sandbox: some IDs...
+ * Items Extras Fields for Sandbox: some IDs...
  */
 trait ExtrasInfosTrait
 {
     /**
-     * Product's tax ID.
+     * Item's tax ID.
      */
     #[
         Assert\Type("integer"),
@@ -36,7 +36,7 @@ trait ExtrasInfosTrait
     public ?int $tax_id = null;
 
     /**
-     * Product's unit ID.
+     * Item's unit ID.
      */
     #[
         Assert\Type("integer"),
@@ -46,17 +46,17 @@ trait ExtrasInfosTrait
     public ?int $unit_id = null;
 
     /**
-     * Product's category ID.
+     * Item's category ID.
      */
     #[
         Assert\Type("integer"),
         ORM\Column(type: Types::INTEGER),
         Serializer\Groups("read")
     ]
-    public int $category_id;
+    public int $category_id = 0;
 
     /**
-     * Product's accounting code ID.
+     * Item's accounting code ID.
      */
     #[
         Assert\Type("integer"),
@@ -66,7 +66,7 @@ trait ExtrasInfosTrait
     public ?int $accounting_code_id = null;
 
     /**
-     * Product's accounting purchase code ID.
+     * Item's accounting purchase code ID.
      */
     #[
         Assert\Type("integer"),

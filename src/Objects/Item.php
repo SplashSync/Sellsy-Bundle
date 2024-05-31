@@ -25,14 +25,14 @@ use Splash\OpenApi\Models\Metadata\AbstractApiMetadataObject;
 /**
  * OpenApi Implementation for Sellsy Item Object
  */
-class Product extends AbstractApiMetadataObject
+class Item extends AbstractApiMetadataObject
 {
     //====================================================================//
     // General Class Variables
     //====================================================================//
 
     /**
-     * @var ApiModels\Product
+     * @var ApiModels\Item
      */
     protected object $object;
 
@@ -50,13 +50,13 @@ class Product extends AbstractApiMetadataObject
             $connector->getMetadataAdapter(),
             $connector->getConnexion(),
             $connector->getHydrator(),
-            ApiModels\Product::class
+            ApiModels\Item::class
         );
         $this->visitor->setTimezone("UTC");
         //====================================================================//
         // Prepare Api Visitor
         $this->visitor->setModel(
-            ApiModels\Product::class,
+            ApiModels\Item::class,
             "/items",
             "/items/{id}",
             array("id")

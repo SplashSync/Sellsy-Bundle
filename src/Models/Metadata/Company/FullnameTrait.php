@@ -26,7 +26,6 @@ trait FullnameTrait
      * Company's name.
      */
     #[
-        Assert\NotNull,
         Assert\Type("string"),
         JMS\SerializedName("name"),
         JMS\Type("string"),
@@ -36,7 +35,7 @@ trait FullnameTrait
         SPL\Flags(listed: true),
         SPL\IsRequired,
     ]
-    protected string $name;
+    protected ?string $name = null;
 
     /**
      * Virtual First Name.
@@ -64,23 +63,23 @@ trait FullnameTrait
     private FullNameParser $fullNameParser;
 
     /**
-     * @return string
+     * @return string|null Get Company Name
      *
      * Get Company Name
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->getFullnameParser()->getCompanyName();
     }
 
     /**
-     * @param string $name
+     * @param string|null $name
      *
      * @return $this
      *
      * Set Company Name
      */
-    public function setName(string $name): static
+    public function setName(?string $name): static
     {
         $this->getFullnameParser()->setCompanyName($name);
 

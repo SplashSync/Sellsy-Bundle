@@ -1,5 +1,18 @@
 <?php
 
+/*
+ *  This file is part of SplashSync Project.
+ *
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
+
 namespace Splash\Connectors\Sellsy\Oauth2;
 
 use League\OAuth2\Client\Provider\AbstractProvider;
@@ -18,15 +31,6 @@ class SandboxClient extends ConfigurableProvider
     const CODE = "sellsy_sandbox";
 
     const ENDPOINT = "http://sandbox.sellsy.local";
-
-    /**
-     * @inheritDoc
-     */
-    protected function getPkceMethod()
-    {
-//        return AbstractProvider::PKCE_METHOD_PLAIN;
-        return AbstractProvider::PKCE_METHOD_S256;
-    }
 
     /**
      * @inheritDoc
@@ -55,6 +59,15 @@ class SandboxClient extends ConfigurableProvider
     /**
      * @inheritDoc
      */
+    protected function getPkceMethod()
+    {
+        //        return AbstractProvider::PKCE_METHOD_PLAIN;
+        return AbstractProvider::PKCE_METHOD_S256;
+    }
+
+    /**
+     * @inheritDoc
+     */
     protected function getDefaultScopes()
     {
         return array("USER");
@@ -74,5 +87,6 @@ class SandboxClient extends ConfigurableProvider
     protected function createResourceOwner(array $response, AccessToken $token)
     {
         // Nothing to Do Here
+        /** @phpstan-ignore-line  */
     }
 }

@@ -22,6 +22,10 @@ use Splash\Bundle\Models\Connectors\GenericObjectMapperTrait;
 use Splash\Bundle\Models\Connectors\GenericWidgetMapperTrait;
 use Splash\Connectors\Sellsy\Oauth2\PrivateClient;
 use Splash\Connectors\Sellsy\Oauth2\SandboxClient;
+use Splash\Connectors\Sellsy\Objects;
+use Splash\Connectors\Sellsy\Services\AddressUpdater;
+use Splash\Connectors\Sellsy\Services\ContactCompaniesManager;
+use Splash\Connectors\Sellsy\Widgets;
 use Splash\Core\SplashCore as Splash;
 use Splash\Metadata\Services\MetadataAdapter;
 use Splash\OpenApi\Action;
@@ -33,14 +37,11 @@ use Splash\Security\Oauth2\Model\AbstractOauth2Connector;
 use Splash\Security\Oauth2\Services\Oauth2ClientManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-//use Splash\Connectors\ReCommerce\Actions\Master;
-use Splash\Connectors\Sellsy\Objects;
-//use Splash\Connectors\ReCommerce\Widgets;
-
 /**
  * Sellsy REST API Connector for Splash
  *
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class SellsyConnector extends AbstractOauth2Connector
 {
@@ -52,8 +53,11 @@ class SellsyConnector extends AbstractOauth2Connector
      *
      * @var array<string, class-string>
      */
-    protected static $objectsMap = array(
+    protected static array $objectsMap = array(
         "ThirdParty" => Objects\ThirdParty::class,
+        "Address" => Objects\Address::class,
+        //        "Product" => Objects\Product::class,
+        //        "Invoice" => Objects\ThirdParty::class,
     );
 
     /**
@@ -61,8 +65,8 @@ class SellsyConnector extends AbstractOauth2Connector
      *
      * @var array
      */
-    protected static $widgetsMap = array(
-//        "SelfTest" => Widgets\SelfTest::class,
+    protected static array $widgetsMap = array(
+        "SelfTest" => Widgets\SelfTest::class,
     );
 
     /**
@@ -83,6 +87,8 @@ class SellsyConnector extends AbstractOauth2Connector
     private string $metaDir;
 
     public function __construct(
+        private readonly AddressUpdater $addressUpdater,
+        private readonly ContactCompaniesManager $contactCompaniesManager,
         protected readonly MetadataAdapter   $metadataAdapter,
         Oauth2ClientManager $oauth2ClientManager,
         EventDispatcherInterface $eventDispatcher,
@@ -91,13 +97,13 @@ class SellsyConnector extends AbstractOauth2Connector
         parent::__construct($oauth2ClientManager, $eventDispatcher, $logger);
     }
 
-//    public function __construct(
-//        private Oauth2ClientManager $oauth2ClientManager,
-//        EventDispatcherInterface $eventDispatcher,
-//        LoggerInterface $logger
-//    ){
-//        parent::__construct($eventDispatcher, $logger);
-//    }
+    //    public function __construct(
+    //        private Oauth2ClientManager $oauth2ClientManager,
+    //        EventDispatcherInterface $eventDispatcher,
+    //        LoggerInterface $logger
+    //    ){
+    //        parent::__construct($eventDispatcher, $logger);
+    //    }
 
     /**
      * Setup Cache Dir for Metadata
@@ -120,13 +126,6 @@ class SellsyConnector extends AbstractOauth2Connector
             return false;
         }
 
-
-//        dump($this->getTokenOrRefresh(true));
-
-//        $this->oauth2ClientManager->connect($this);
-//        dd($this);
-
-//        return true;
         //====================================================================//
         // Perform Ping Test
         return Action\Ping::execute($this->getConnexion(), "/scopes");
@@ -173,15 +172,15 @@ class SellsyConnector extends AbstractOauth2Connector
         $informations->country = "France";
         $informations->www = "https://sellsy.com/";
         $informations->email = "contact@sellsy.com";
-        $informations->phone = "";
+        $informations->phone = "&nbsp;";
         //====================================================================//
         // Server Logo & Ico
         $informations->icoraw = Splash::file()->readFileContents(
-            dirname(dirname(__FILE__))."/Resources/public/img/favicon-32x32.png"
+            dirname(__FILE__, 2)."/Resources/public/img/favicon-32x32.png"
         );
         $informations->logourl = null;
         $informations->logoraw = Splash::file()->readFileContents(
-            dirname(dirname(__FILE__))."/Resources/public/img/favicon-192x192.png"
+            dirname(__FILE__, 2)."/Resources/public/img/favicon-192x192.png"
         );
         //====================================================================//
         // Server Informations
@@ -266,8 +265,6 @@ class SellsyConnector extends AbstractOauth2Connector
         );
     }
 
-
-
     /**
      * {@inheritdoc}
      */
@@ -278,13 +275,13 @@ class SellsyConnector extends AbstractOauth2Connector
         return PrivateAppConfigurationForm::class;
     }
 
-//    /**
-//     * {@inheritdoc}
-//     */
-//    public function getMasterAction(): ?string
-//    {
-//        return \Splash\Security\Oauth2\Actions\Master::class;
-//    }
+    //    /**
+    //     * {@inheritdoc}
+    //     */
+    //    public function getMasterAction(): ?string
+    //    {
+    //        return \Splash\Security\Oauth2\Actions\Master::class;
+    //    }
 
     /**
      * {@inheritdoc}
@@ -292,20 +289,20 @@ class SellsyConnector extends AbstractOauth2Connector
     public function getPublicActions() : array
     {
         return array(
-//            "webhook" => Master::class,
-//            "connect" => \Splash\Security\Oauth2\Actions\Connect::class,
+            //            "webhook" => Master::class,
+            //            "connect" => \Splash\Security\Oauth2\Actions\Connect::class,
         );
     }
 
-//    /**
-//     * {@inheritdoc}
-//     */
-//    public function getSecuredActions() : array
-//    {
-//        return array(
-//            "connect" => \Splash\Security\Oauth2\Actions\Connect::class,
-//        );
-//    }
+    //    /**
+    //     * {@inheritdoc}
+    //     */
+    //    public function getSecuredActions() : array
+    //    {
+    //        return array(
+    //            "connect" => \Splash\Security\Oauth2\Actions\Connect::class,
+    //        );
+    //    }
 
     //====================================================================//
     // ReCommerce Connector Specific
@@ -316,7 +313,7 @@ class SellsyConnector extends AbstractOauth2Connector
      *
      * @return bool
      */
-    public function isSandbox()
+    public function isSandbox(): bool
     {
         if ($this->getParameter("isSandbox", false)) {
             return true;
@@ -346,10 +343,10 @@ class SellsyConnector extends AbstractOauth2Connector
         //====================================================================//
         // Safety check
         if (!$this->selfTest()) {
-            throw new Exception("Self-test fails... Unable to create API Connexion!");
+            throw new \RuntimeException("Self-test fails... Unable to create API Connexion!");
         }
         if (!$client = $this->getOauth2Client()) {
-            throw new Exception("Self-test fails... Unable to create API Client!");
+            throw new \RuntimeException("Self-test fails... Unable to create API Client!");
         }
         //====================================================================//
         // Fetch Access Token
@@ -357,7 +354,7 @@ class SellsyConnector extends AbstractOauth2Connector
         //====================================================================//
         // Setup Api Connexion
         $this->connexion = new JsonHalConnexion(
-        $this->isSandbox() ? SandboxClient::ENDPOINT : PrivateClient::ENDPOINT,
+            $this->isSandbox() ? SandboxClient::ENDPOINT : PrivateClient::ENDPOINT,
             $client->getOAuth2Provider()->getHeaders($token)
         );
 
@@ -392,5 +389,27 @@ class SellsyConnector extends AbstractOauth2Connector
     public function getMetadataAdapter(): MetadataAdapter
     {
         return $this->metadataAdapter;
+    }
+
+    /**
+     * Get Sellsy Address Updater
+     */
+    public function getAddressUpdater(): AddressUpdater
+    {
+        return $this
+            ->addressUpdater
+            ->configure($this->getConnexion(), $this->getHydrator())
+        ;
+    }
+
+    /**
+     * Get Sellsy Contacts Companies Manager
+     */
+    public function getContactCompaniesManager(): ContactCompaniesManager
+    {
+        return $this
+            ->contactCompaniesManager
+            ->configure($this->getConnexion())
+        ;
     }
 }

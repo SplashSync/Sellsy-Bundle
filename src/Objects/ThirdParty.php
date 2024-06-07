@@ -1,20 +1,29 @@
 <?php
 
+/*
+ *  This file is part of SplashSync Project.
+ *
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
+
 namespace Splash\Connectors\Sellsy\Objects;
 
 use Exception;
-use Splash\Client\Splash;
 use Splash\Connectors\Sellsy\Connector\SellsyConnector;
 use Splash\Connectors\Sellsy\Models\Actions\SellsyListAction;
 use Splash\Connectors\Sellsy\Models\Metadata as ApiModels;
-use Splash\Metadata\Services\MetadataAdapter;
-use Splash\OpenApi\Models\Metadata\AbstractApiMetadataObject;
-use Splash\OpenApi\Visitor\AbstractVisitor as Visitor;
-use Splash\OpenApi\Visitor\JsonVisitor;
 use Splash\OpenApi\Action\Json;
+use Splash\OpenApi\Models\Metadata\AbstractApiMetadataObject;
 
 /**
- * OpenApi Implementation for Sellsy Companies Object
+ * OpenApi Implementation for Sellsy Company Object
  */
 class ThirdParty extends AbstractApiMetadataObject
 {
@@ -23,7 +32,7 @@ class ThirdParty extends AbstractApiMetadataObject
     //====================================================================//
 
     /**
-     * @var ApiModels\Companies
+     * @var ApiModels\Company
      */
     protected object $object;
 
@@ -36,21 +45,20 @@ class ThirdParty extends AbstractApiMetadataObject
      */
     public function __construct(
         protected SellsyConnector $connector
-    )
-    {
+    ) {
         parent::__construct(
             $connector->getMetadataAdapter(),
             $connector->getConnexion(),
             $connector->getHydrator(),
-            ApiModels\Companies::class
+            ApiModels\Company::class
         );
         $this->visitor->setTimezone("UTC");
         //====================================================================//
         // Prepare Api Visitor
         $this->visitor->setModel(
-            ApiModels\Companies::class,
+            ApiModels\Company::class,
             "/companies",
-            "/companies/{id}",
+            "/companies/{id}".ApiModels\Company\CompanyEmbed::getUriQuery(),
             array("id")
         );
         $this->visitor->setUpdateAction(Json\PutAction::class);
@@ -62,35 +70,48 @@ class ThirdParty extends AbstractApiMetadataObject
                 "offsetKey" => "offset"
             )
         );
-
-
     }
 
     //====================================================================//
     // DEBUG
     //====================================================================//
 
+    /**
+     * Update Request Object
+     *
+     * @param bool $needed Is This Update Needed
+     *
+     * @return null|string Object ID of False if Failed to Update
+     */
+    public function update(bool $needed): ?string
+    {
+        //====================================================================//
+        // Execute Generic Save
+        //        dd($this->visitor->getHydrator()->extract($this->object));
 
-//    public function load(string $objectId): ?object
-//    {
-//        //====================================================================//
-//        // Load Remote Object
-//        $loadResponse = $this->visitor->load($objectId);
-//        if (!$loadResponse->isSuccess()) {
-//            return null;
-//        }
-//        dd(json_decode($this->visitor->getLastResponse()->body));
-//
-//        return null;
-//    }
+        $objectId = parent::update($needed);
+        //====================================================================//
+        // Update Invoicing Address
+        if (!$objectId) {
+            return $objectId;
+        }
+        //====================================================================//
+        // Update Invoicing Address
+        if ($this->isToUpdate("InvoicingAddress")) {
+            $this->connector
+                ->getAddressUpdater()
+                ->createOrUpdateInvoicingAddress($this->object)
+            ;
+        }
+        //====================================================================//
+        // Update Delivery Address
+        if ($this->isToUpdate("DeliveryAddress")) {
+            $this->connector
+                ->getAddressUpdater()
+                ->createOrUpdateDeliveryAddress($this->object)
+            ;
+        }
 
-//    public function objectsList(?string $filter = null, array $params = array()): array
-//    {
-//        $this->visitor->list($filter, $params)->getArrayResults();
-//        dd(json_decode($this->visitor->getLastResponse()->body));
-//        dd($this->visitor->list($filter, $params)->getArrayResults());
-//
-//        return $this->visitor->list($filter, $params)->getArrayResults() ?? array();
-//    }
-
+        return $objectId;
+    }
 }

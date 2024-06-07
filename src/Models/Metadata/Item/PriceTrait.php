@@ -1,5 +1,18 @@
 <?php
 
+/*
+ *  This file is part of SplashSync Project.
+ *
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
+
 namespace Splash\Connectors\Sellsy\Models\Metadata\Item;
 
 use JMS\Serializer\Annotation as JMS;
@@ -27,7 +40,7 @@ trait PriceTrait
     }
 
     /**
-     * @return array|null
+     * @return null|array
      */
     public function getSplPrice(): ?array
     {
@@ -40,7 +53,6 @@ trait PriceTrait
             ? (float) $this->splPrice['reference_price']
             : null;
 
-
         // Récupérer le taux de taxe
         $tax = $this->getTaxRate($taxId);
         $currency = $this->splPrice['currency'] ?? $this->getDefaultCurrency();
@@ -52,23 +64,24 @@ trait PriceTrait
             $priceTTC,
             $currency
         );
+
         return $this->splPrice;
     }
 
     /**
-     * @param int|null $taxId
+     * @param null|int $taxId
+     *
      * @return float
      */
     private function getTaxRate(?int $taxId): float
     {
         // Vérification de sécurité
-        if ($taxId === null) {
+        if (null === $taxId) {
             return 19.6;
         }
-        // Charger le taux de taxe (ici c'est en dur, à remplacer par une vraie logique)
-        $taxRate = 19.6;
 
-        return $taxRate;
+        // Charger le taux de taxe (ici c'est en dur, à remplacer par une vraie logique)
+        return 19.6;
     }
 
     /**

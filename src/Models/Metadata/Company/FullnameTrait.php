@@ -63,7 +63,7 @@ trait FullnameTrait
     private FullNameParser $fullNameParser;
 
     /**
-     * @return string|null Get Company Name
+     * @return null|string Get Company Name
      *
      * Get Company Name
      */
@@ -73,7 +73,7 @@ trait FullnameTrait
     }
 
     /**
-     * @param string|null $name
+     * @param null|string $name
      *
      * @return $this
      *

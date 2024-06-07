@@ -24,6 +24,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 trait MainTrait
 {
+    use PriceTrait;
+
     /**
      * Item's name.
      */
@@ -50,7 +52,7 @@ trait MainTrait
         SPL\Field(type: SPL_T_VARCHAR, desc: "Item's reference"),
         SPL\IsRequired,
         SPL\Flags(listed: true),
-        SPL\Microdata("http://schema.org/Product", ""),
+        SPL\Microdata("http://schema.org/Product", "model"),
     ]
     public string $reference = "";
 
@@ -163,4 +165,17 @@ trait MainTrait
         SPL\Microdata("http://schema.org/Product", "")
     ]
     public bool $isNameInDescription = false;
+
+    #[JMS\PostSerialize]
+    public function buildPrice(): void
+    {
+        $this->setSplPrice(array(
+            'tax_id' => null,
+            'is_reference_price_taxes_free' => $this->isReferencePriceTaxesFree,
+            'reference_price' => $this->referencePriceTaxesInc,
+            'reference_price_taxes_exc' => $this->referencePriceTaxesExc,
+            'purchase_amount' => $this->purchaseAmount,
+            'currency' => $this->currency,
+        ));
+    }
 }

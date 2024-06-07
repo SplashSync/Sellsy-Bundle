@@ -92,7 +92,7 @@ trait MainTrait
         ORM\Column(nullable: true),
         Serializer\Groups("read"),
     ]
-    public ?string $currency = null;
+    public ?string $currency = "EUR";
 
     /**
      * Item's standard quantity

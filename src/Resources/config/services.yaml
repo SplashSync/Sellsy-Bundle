@@ -15,12 +15,18 @@ services:
 
     ################################################################################
     # Auto-wiring for Actions
-#    Splash\Connectors\Sellsy\Bundle\Actions\:
-#        resource:   '../../Bundle/Actions'
+#    Splash\Connectors\Sellsy\Models\Actions\:
+#        resource:   '../../Models/Actions'
 #        tags:
 #          - { name: 'controller.service_arguments' }
+#        arguments:
+#            $options: []
 
     ################################################################################
     # Auto-wiring for Services
-#    Splash\Connectors\Sellsy\Bundle\Services\:
-#        resource:   '../../Bundle/Services'
+    Splash\Connectors\Sellsy\Services\:
+        resource:   '../../Services'
+
+    ################################################################################
+    Splash\OpenApi\Visitor\AbstractVisitor:
+        class:  Splash\OpenApi\Visitor\AbstractVisitor

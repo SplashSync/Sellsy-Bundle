@@ -1,6 +1,6 @@
 parameters:
-    env(SELLSY_STAGING_API_USER):  'none'
-    env(SELLSY_STAGING_API_KEY):   'none'
+    env(SELLSY_STAGING_CLIENT_ID):          'none'
+    env(SELLSY_STAGING_CLIENT_SECRET):      'none'
 
 splash:
 

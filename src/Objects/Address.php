@@ -19,20 +19,25 @@ use Exception;
 use Splash\Connectors\Sellsy\Connector\SellsyConnector;
 use Splash\Connectors\Sellsy\Models\Actions\SellsyListAction;
 use Splash\Connectors\Sellsy\Models\Metadata as ApiModels;
+use Splash\Models\Objects\IntelParserTrait;
 use Splash\OpenApi\Action\Json;
 use Splash\OpenApi\Models\Metadata\AbstractApiMetadataObject;
 
 /**
- * OpenApi Implementation for Sellsy Company Object
+ * OpenApi Implementation for Sellsy Address Object
  */
-class ThirdParty extends AbstractApiMetadataObject
+class Address extends AbstractApiMetadataObject
 {
+    use IntelParserTrait;
+    use Address\CompanyTrait;
+    use Address\CompanyLinksTrait;
+
     //====================================================================//
     // General Class Variables
     //====================================================================//
 
     /**
-     * @var ApiModels\Company
+     * @var ApiModels\Contact
      */
     protected object $object;
 
@@ -50,15 +55,15 @@ class ThirdParty extends AbstractApiMetadataObject
             $connector->getMetadataAdapter(),
             $connector->getConnexion(),
             $connector->getHydrator(),
-            ApiModels\Company::class
+            ApiModels\Contact::class
         );
         $this->visitor->setTimezone("UTC");
         //====================================================================//
         // Prepare Api Visitor
         $this->visitor->setModel(
-            ApiModels\Company::class,
-            "/companies",
-            "/companies/{id}".ApiModels\Company\CompanyEmbed::getUriQuery(),
+            ApiModels\Contact::class,
+            "/contacts",
+            "/contacts/{id}".ApiModels\Company\CompanyEmbed::getUriQuery(),
             array("id")
         );
         $this->visitor->setUpdateAction(Json\PutAction::class);
@@ -87,8 +92,6 @@ class ThirdParty extends AbstractApiMetadataObject
     {
         //====================================================================//
         // Execute Generic Save
-        //        dd($this->visitor->getHydrator()->extract($this->object));
-
         $objectId = parent::update($needed);
         //====================================================================//
         // Update Invoicing Address
@@ -96,19 +99,19 @@ class ThirdParty extends AbstractApiMetadataObject
             return $objectId;
         }
         //====================================================================//
-        // Update Invoicing Address
-        if ($this->isToUpdate("InvoicingAddress")) {
-            $this->connector
-                ->getAddressUpdater()
-                ->createOrUpdateInvoicingAddress($this->object)
-            ;
-        }
-        //====================================================================//
         // Update Delivery Address
         if ($this->isToUpdate("DeliveryAddress")) {
             $this->connector
                 ->getAddressUpdater()
                 ->createOrUpdateDeliveryAddress($this->object)
+            ;
+        }
+        //====================================================================//
+        // Update Invoicing Address
+        if ($this->isToUpdate("InvoicingAddress")) {
+            $this->connector
+                ->getAddressUpdater()
+                ->createOrUpdateInvoicingAddress($this->object)
             ;
         }
 

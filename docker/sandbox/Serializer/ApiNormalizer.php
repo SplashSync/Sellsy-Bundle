@@ -17,6 +17,7 @@ namespace App\Serializer;
 
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use App\Entity\SellsyObjectInterface;
+use InvalidArgumentException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\SerializerAwareInterface;
@@ -29,7 +30,7 @@ final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface,
     /**
      * @var DenormalizerInterface|NormalizerInterface
      */
-    private $decorated;
+    private DenormalizerInterface|NormalizerInterface $decorated;
 
     /**
      * @param NormalizerInterface $decorated
@@ -37,7 +38,7 @@ final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface,
     public function __construct(NormalizerInterface $decorated)
     {
         if (!$decorated instanceof DenormalizerInterface) {
-            throw new \InvalidArgumentException(sprintf('The decorated normalizer must implement the %s.', DenormalizerInterface::class));
+            throw new InvalidArgumentException(sprintf('The decorated normalizer must implement the %s.', DenormalizerInterface::class));
         }
 
         $this->decorated = $decorated;
@@ -51,7 +52,7 @@ final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface,
         if ($this->decorated->supportsNormalization($data, $format)) {
             return true;
         }
-        if ((static::FORMAT === $format) && ($data instanceof Paginator)) {
+        if ((self::FORMAT === $format) && ($data instanceof Paginator)) {
             return true;
         }
 
@@ -64,8 +65,8 @@ final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface,
     public function normalize($object, $format = null, array $context = array())
     {
         //====================================================================//
-        //  Check if Ressource is Sbo Ressource
-        if (!self::isManagedObject($context["resource_class"])) {
+        //  Check if Resource is Sbo Resource
+        if (!self::isManagedObject($context["resource_class"] ?? "")) {
             return $object;
         }
         //====================================================================//
@@ -85,7 +86,7 @@ final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface,
         }
         //====================================================================//
         //  Item Normalizer
-        if ("item" == $context["operation_type"]) {
+        if ("item" === $context["operation_type"]) {
             /** @var SellsyObjectInterface $object */
             return ($object::getItemIndex() && !isset($context["api_attribute"]))
                 ? array($object::getItemIndex() => $this->decorated->normalize($object, $format, $context))
@@ -94,7 +95,7 @@ final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface,
 
         //====================================================================//
         //  Collection Normalizer
-        if ("collection" == $context["operation_type"]) {
+        if ("collection" === $context["operation_type"]) {
             return $this->decorated->normalize($object, $format, $context);
         }
 
@@ -115,7 +116,7 @@ final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface,
     public function denormalize($data, $class, $format = null, array $context = array())
     {
         //====================================================================//
-        //  Check if Ressource is Sbo Ressource
+        //  Check if Resource is Sbo Resource
         if (!self::isManagedObject($class)) {
             return $data;
         }
@@ -126,7 +127,7 @@ final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface,
     /**
      * {@inheritDoc}
      */
-    public function setSerializer(SerializerInterface $serializer)
+    public function setSerializer(SerializerInterface $serializer): void
     {
         if ($this->decorated instanceof SerializerAwareInterface) {
             $this->decorated->setSerializer($serializer);

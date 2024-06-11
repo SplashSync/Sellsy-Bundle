@@ -20,10 +20,15 @@ use Exception;
 use Psr\Log\LoggerInterface;
 use Splash\Bundle\Models\Connectors\GenericObjectMapperTrait;
 use Splash\Bundle\Models\Connectors\GenericWidgetMapperTrait;
+use Splash\Connectors\Sellsy\Models\Connector\ConnectorScopesTrait;
+use Splash\Connectors\Sellsy\Models\Connector\ConnectorTaxesTrait;
 use Splash\Connectors\Sellsy\Oauth2\PrivateClient;
 use Splash\Connectors\Sellsy\Oauth2\SandboxClient;
 use Splash\Connectors\Sellsy\Objects;
 use Splash\Connectors\Sellsy\Services\AddressUpdater;
+use Splash\Connectors\Sellsy\Services\ContactCompaniesManager;
+use Splash\Connectors\Sellsy\Services\ScopesManager;
+use Splash\Connectors\Sellsy\Services\TaxManager;
 use Splash\Connectors\Sellsy\Widgets;
 use Splash\Core\SplashCore as Splash;
 use Splash\Metadata\Services\MetadataAdapter;
@@ -46,6 +51,8 @@ class SellsyConnector extends AbstractOauth2Connector
 {
     use GenericObjectMapperTrait;
     use GenericWidgetMapperTrait;
+    use ConnectorScopesTrait;
+    use ConnectorTaxesTrait;
 
     /**
      * Objects Type Class Map
@@ -55,7 +62,7 @@ class SellsyConnector extends AbstractOauth2Connector
     protected static array $objectsMap = array(
         "ThirdParty" => Objects\ThirdParty::class,
         "Address" => Objects\Address::class,
-        "Item" => Objects\Item::class,
+        //        "Product" => Objects\Product::class,
         //        "Invoice" => Objects\ThirdParty::class,
     );
 
@@ -87,21 +94,16 @@ class SellsyConnector extends AbstractOauth2Connector
 
     public function __construct(
         private readonly AddressUpdater $addressUpdater,
+        private readonly ContactCompaniesManager $contactCompaniesManager,
         protected readonly MetadataAdapter   $metadataAdapter,
+        protected readonly ScopesManager   $scopesManager,
+        protected readonly TaxManager   $taxManager,
         Oauth2ClientManager $oauth2ClientManager,
         EventDispatcherInterface $eventDispatcher,
         LoggerInterface          $logger
     ) {
         parent::__construct($oauth2ClientManager, $eventDispatcher, $logger);
     }
-
-    //    public function __construct(
-    //        private Oauth2ClientManager $oauth2ClientManager,
-    //        EventDispatcherInterface $eventDispatcher,
-    //        LoggerInterface $logger
-    //    ){
-    //        parent::__construct($eventDispatcher, $logger);
-    //    }
 
     /**
      * Setup Cache Dir for Metadata
@@ -146,10 +148,23 @@ class SellsyConnector extends AbstractOauth2Connector
         if ($this->isSandbox() && !$this->getTokenOrRefresh()) {
             return false;
         }
-
         //====================================================================//
         // Perform Connect Test
-        return Action\Connect::execute($this->getConnexion(), "/scopes");
+        if (!Action\Connect::execute($this->getConnexion(), "/scopes")) {
+            return false;
+        }
+        //====================================================================//
+        // Get Scopes Informations
+        if (!$this->fetchAccessScopes()) {
+            return false;
+        }
+        //====================================================================//
+        // Get List of Available Taxes
+        if (!$this->fetchTaxesLists()) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -397,6 +412,17 @@ class SellsyConnector extends AbstractOauth2Connector
         return $this
             ->addressUpdater
             ->configure($this->getConnexion(), $this->getHydrator())
+        ;
+    }
+
+    /**
+     * Get Sellsy Contacts Companies Manager
+     */
+    public function getContactCompaniesManager(): ContactCompaniesManager
+    {
+        return $this
+            ->contactCompaniesManager
+            ->configure($this->getConnexion())
         ;
     }
 }

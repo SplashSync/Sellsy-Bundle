@@ -31,6 +31,7 @@ class Contact
     use Company\EmbedTrait;
     use Company\AddressesTrait;
     use Contact\MetadataTrait;
+    use Contact\CompaniesLinkTrait;
 
     #[
         Assert\NotNull,

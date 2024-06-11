@@ -27,7 +27,7 @@ class ContactSync
         JMS\Type("boolean"),
         SPL\Field(type: SPL_T_BOOL, desc: "[Sync] Activate the mailchimp synchronization"),
     ]
-    public bool $mailchimp = false;
+    public ?bool $mailchimp = false;
 
     #[
         Assert\Type("boolean"),
@@ -35,13 +35,13 @@ class ContactSync
         JMS\Type("boolean"),
         SPL\Field(type: SPL_T_BOOL, desc: "[Sync] Activate the mailjet synchronization"),
     ]
-    public bool $mailjet = false;
+    public ?bool $mailjet = false;
 
     #[
         Assert\Type("boolean"),
         JMS\SerializedName("simplemail"),
         JMS\Type("boolean"),
-        SPL\Field(type: SPL_T_BOOL, desc: "[Sync] Activate the simplemail synchronization"),
+        SPL\Field(type: SPL_T_BOOL, desc: "[Sync] Activate the Simple Mail synchronization"),
     ]
-    public bool $simplemail = false;
+    public ?bool $simplemail = false;
 }

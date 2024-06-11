@@ -17,6 +17,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata as API;
 use App\Controller\AddContactAddress;
+use App\Controller\CompanyContacts;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Types\Types;
@@ -49,6 +50,14 @@ use Symfony\Component\Validator\Constraints as Assert;
         )
     ),
 )]
+#[API\ApiResource(
+    uriTemplate: '/contacts/{id}/companies',
+    operations: array(
+        new API\GetCollection(
+            controller: CompanyContacts::class
+        ),
+    ),
+)]
 class Contact extends AbstractSellsyObject
 {
     use Contact\MainTrait;
@@ -56,6 +65,7 @@ class Contact extends AbstractSellsyObject
     use Contact\ExtrasInfosTrait;
     use Contact\MetadataTrait;
     use Contact\AddressesTrait;
+    use Contact\CompaniesTrait;
 
     /**
      * Unique Identifier.

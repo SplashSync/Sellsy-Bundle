@@ -17,6 +17,8 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata as API;
 use App\Controller\AddCompanyAddress;
+use App\Controller\AddCompanyContact;
+use App\Controller\RemoveCompanyContact;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Types\Types;
@@ -49,6 +51,21 @@ use Symfony\Component\Validator\Constraints as Assert;
         )
     ),
 )]
+#[API\ApiResource(
+    uriTemplate: '/companies/{id}/contacts/{contactId}',
+    operations: array(
+        new API\Post(
+            controller: AddCompanyContact::class,
+            read:   false,
+            write:  false,
+        ),
+        new API\Delete(
+            controller: RemoveCompanyContact::class,
+            read:   false,
+            write:  false,
+        ),
+    ),
+)]
 class Company extends AbstractSellsyObject
 {
     use Company\MainTrait;
@@ -56,6 +73,7 @@ class Company extends AbstractSellsyObject
     use Company\ExtrasInfosTrait;
     use Company\MetadataTrait;
     use Company\AddressesTrait;
+    use Company\ContactsTrait;
 
     /**
      * Unique Identifier.

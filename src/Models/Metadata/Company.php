@@ -61,6 +61,7 @@ class Company
             "supplier" => "Supplier",
         )),
         SPL\IsRequired,
+        SPL\IsNotTested,
     ]
     public ?string $type;
 }

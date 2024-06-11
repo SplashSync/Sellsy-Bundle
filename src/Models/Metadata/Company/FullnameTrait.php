@@ -26,6 +26,7 @@ trait FullnameTrait
      * Company's name.
      */
     #[
+        Assert\NotNull,
         Assert\Type("string"),
         JMS\SerializedName("name"),
         JMS\Type("string"),
@@ -35,7 +36,7 @@ trait FullnameTrait
         SPL\Flags(listed: true),
         SPL\IsRequired,
     ]
-    protected ?string $name = null;
+    protected string $name;
 
     /**
      * Virtual First Name.
@@ -44,6 +45,7 @@ trait FullnameTrait
         JMS\Exclude(),
         SPL\Field(desc: "First Name"),
         SPL\Microdata("http://schema.org/Person", "familyName"),
+        SPL\Associations(array("firstName", "lastName"))
     ]
     protected ?string $firstName = null;
 
@@ -54,6 +56,7 @@ trait FullnameTrait
         JMS\Exclude(),
         SPL\Field(desc: "Last Name"),
         SPL\Microdata("http://schema.org/Person", "givenName"),
+        SPL\Associations(array("firstName", "lastName"))
     ]
     protected ?string $lastName = null;
 
@@ -63,25 +66,25 @@ trait FullnameTrait
     private FullNameParser $fullNameParser;
 
     /**
-     * @return null|string Get Company Name
+     * @return string
      *
      * Get Company Name
      */
-    public function getName(): ?string
+    public function getName(): string
     {
-        return $this->getFullnameParser()->getCompanyName();
+        return (string) $this->getFullNameParser()->getCompanyName();
     }
 
     /**
-     * @param null|string $name
+     * @param string $name
      *
      * @return $this
      *
      * Set Company Name
      */
-    public function setName(?string $name): static
+    public function setName(string $name): static
     {
-        $this->getFullnameParser()->setCompanyName($name);
+        $this->getFullNameParser()->setCompanyName($name);
 
         return $this;
     }
@@ -93,7 +96,7 @@ trait FullnameTrait
      */
     public function getFirstName(): ?string
     {
-        return $this->getFullnameParser()->getFirstName();
+        return $this->getFullNameParser()->getFirstName();
     }
 
     /**
@@ -105,7 +108,7 @@ trait FullnameTrait
      */
     public function setFirstName(?string $name): static
     {
-        $this->getFullnameParser()->setFirstName($name);
+        $this->getFullNameParser()->setFirstName($name);
 
         return $this;
     }
@@ -117,7 +120,7 @@ trait FullnameTrait
      */
     public function getLastName(): ?string
     {
-        return $this->getFullnameParser()->getLastName();
+        return $this->getFullNameParser()->getLastName();
     }
 
     /**
@@ -129,41 +132,35 @@ trait FullnameTrait
      */
     public function setLastName(?string $name): static
     {
-        $this->getFullnameParser()->setLastName($name);
+        $this->getFullNameParser()->setLastName($name);
 
         return $this;
     }
 
     /**
-     * @return void
-     *
-     * Decode Fullname
+     * Decode User Full Name
      */
     #[JMS\PostDeserialize()]
-    public function decodeFullname(): void
+    public function decodeFullName(): void
     {
         $this->fullNameParser ??= new FullNameParser($this->name);
     }
 
     /**
-     * @return $this
-     *
-     * Encode Fullname
+     * Encode User Full Name
      */
     #[JMS\PreSerialize()]
-    public function encodeFullname(): static
+    public function encodeFullName(): static
     {
-        $this->name = $this->getFullnameParser()->getFullName();
+        $this->name = (string) $this->getFullNameParser()->getFullName();
 
         return $this;
     }
 
     /**
-     * @return FullNameParser
-     *
-     * Get Fullname Parser
+     * Get Full Name Parser
      */
-    private function getFullnameParser(): FullNameParser
+    private function getFullNameParser(): FullNameParser
     {
         return $this->fullNameParser ??= new FullNameParser();
     }

@@ -64,12 +64,4 @@ trait ExtraInfosTrait
     {
         $this->sync = new ContactSync();
     }
-
-    //    /**
-    //     * Add Legal France Information
-    //     */
-    //    public function addLegalFrance(): void
-    //    {
-    //        $this->legalFrance = new LegalFrance();
-    //    }
 }

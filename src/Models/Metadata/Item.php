@@ -20,7 +20,7 @@ use Splash\Metadata\Attributes as SPL;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[SPL\SplashObject(
-    name: "Item",
+    name: "Product",
     description: "Sellsy Products Object",
     ico: "fa fa-cube",
 )]
@@ -46,7 +46,7 @@ class Item
         JMS\SerializedName("type"),
         JMS\Type("string"),
         JMS\Groups(array("Read", "List", "Required")),
-        SPL\Field(desc: "Item type"),
+        SPL\Field(desc: "Product type"),
         SPL\Flags(listed: true),
         SPL\Choices(array(
             "product" => "Product",

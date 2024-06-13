@@ -19,14 +19,18 @@ use Exception;
 use Splash\Connectors\Sellsy\Connector\SellsyConnector;
 use Splash\Connectors\Sellsy\Models\Actions\SellsyListAction;
 use Splash\Connectors\Sellsy\Models\Metadata as ApiModels;
+use Splash\Models\Objects\IntelParserTrait;
 use Splash\OpenApi\Action\Json;
 use Splash\OpenApi\Models\Metadata\AbstractApiMetadataObject;
 
 /**
- * OpenApi Implementation for Sellsy Item Object
+ * OpenApi Implementation for Sellsy Product Object
  */
-class Item extends AbstractApiMetadataObject
+class Product extends AbstractApiMetadataObject
 {
+    use IntelParserTrait;
+    use Product\PriceTrait;
+
     //====================================================================//
     // General Class Variables
     //====================================================================//
@@ -76,6 +80,15 @@ class Item extends AbstractApiMetadataObject
     // DEBUG
     //====================================================================//
 
+    //        /**
+    //     * {@inheritdoc}
+    //     */
+    //    public function objectsList(?string $filter = null, array $params = array()): array
+    //    {
+    ////        dd($this);
+    //        dd($this->connector->getTaxManager()->getRate("5716828"));
+    ////        return $this->visitor->list($filter, $params)->getArrayResults() ?? array();
+    //    }
     //    /**
     //     * Update Request Object
     //     *

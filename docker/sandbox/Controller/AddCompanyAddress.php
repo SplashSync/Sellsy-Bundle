@@ -46,19 +46,19 @@ class AddCompanyAddress extends AbstractController
             throw new NotFoundHttpException();
         }
         //====================================================================//
-        // Refresh Parent Item => Prevent Changes of Similar fields
+        // Refresh Parent Product => Prevent Changes of Similar fields
         $this->entityManager->refresh($company);
         //====================================================================//
-        // Decode Received Item
+        // Decode Received Product
         $rawData = json_decode($request->getContent(), true, 512, \JSON_BIGINT_AS_STRING);
         /** @var CompanyAddress $address */
         $address = $this->serializer->denormalize($rawData, CompanyAddress::class, "json");
         $address->setCompany($company);
         //====================================================================//
-        // Persist Item
+        // Persist Product
         $this->entityManager->persist($address);
         //====================================================================//
-        // Save Item
+        // Save Product
         $this->entityManager->flush();
 
         return new JsonResponse($this->serializer->normalize($address, 'json', array(

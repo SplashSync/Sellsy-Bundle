@@ -22,7 +22,7 @@ use Symfony\Component\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Class representing the Item model.
+ * Class representing the Product model.
  */
 #[
     ORM\Entity,
@@ -57,7 +57,7 @@ class Item extends AbstractSellsyObject
     public int $id;
 
     /**
-     * Item Type
+     * Product Type
      */
     #[
         Assert\NotNull,

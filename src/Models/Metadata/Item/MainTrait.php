@@ -24,10 +24,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 trait MainTrait
 {
-    use PriceTrait;
-
     /**
-     * Item's name.
+     * Product's name.
      */
     #[
         Assert\Type("string"),
@@ -35,13 +33,13 @@ trait MainTrait
         JMS\Type("string"),
         JMS\Groups(array("Read", "Write", "List")),
         SPL\Flags(listed: true),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Item's name"),
+        SPL\Field(type: SPL_T_VARCHAR, desc: "Product's name"),
         SPL\Microdata("http://schema.org/Product", "name")
     ]
     public ?string $name = null;
 
     /**
-     * Item's reference.
+     * Product's reference.
      */
     #[
         Assert\NotNull,
@@ -49,7 +47,7 @@ trait MainTrait
         JMS\SerializedName("reference"),
         JMS\Type("string"),
         JMS\Groups(array("Read", "Write", "List", "Required")),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Item's reference"),
+        SPL\Field(type: SPL_T_VARCHAR, desc: "Product's reference"),
         SPL\IsRequired,
         SPL\Flags(listed: true),
         SPL\Microdata("http://schema.org/Product", "model"),
@@ -57,46 +55,50 @@ trait MainTrait
     public string $reference = "";
 
     /**
-     * Item's reference price excluding taxes.
+     * Product's reference price excluding taxes.
      */
     #[
         Assert\NotNull,
         Assert\Type("string"),
         JMS\SerializedName("reference_price_taxes_exc"),
         JMS\Type("string"),
-        JMS\Groups(array("Read", "Write", "List", "Required")),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Item's reference price excluding taxes"),
-        SPL\IsRequired,
-        SPL\Microdata("http://schema.org/Product", "price")
+        SPL\Field(
+            type: SPL_T_VARCHAR,
+            desc: "Product's reference price excluding taxes",
+            group: "read",
+        ),
+        SPL\Microdata("http://schema.org/Product", "price"),
     ]
     public string $referencePriceTaxesExc = "0.00";
 
     /**
-     * Item's purchase price excluding taxes.
+     * Product's purchase price excluding taxes.
      */
     #[
         Assert\NotNull,
         Assert\Type("string"),
         JMS\SerializedName("purchase_amount"),
         JMS\Type("string"),
-        JMS\Groups(array("Read", "List")),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Item's purchase price excluding taxes"),
-        SPL\Microdata("http://schema.org/Product", "")
+        SPL\Field(type: SPL_T_DOUBLE, desc: "Product's purchase price excluding taxes"),
+        SPL\Microdata("http://schema.org/Product", ""),
+        SPL\IsWriteOnly()
     ]
     public string $purchaseAmount = "0.00";
 
     /**
-     * Item's reference price including taxes.
+     * Product's reference price including taxes.
      */
     #[
         Assert\NotNull,
         Assert\Type("string"),
         JMS\SerializedName("reference_price_taxes_inc"),
-        JMS\Type("string"),
-        JMS\Groups(array("Read", "List", "Required")),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Item's reference price including taxes"),
-        SPL\IsRequired,
-        SPL\Microdata("http://schema.org/Product", "")
+        JMS\Groups(array("Read")),
+        SPL\Field(
+            type: SPL_T_VARCHAR,
+            desc: "Product's reference price including taxes",
+            group: "write"
+        ),
+        SPL\Microdata("http://schema.org/Product", ""),
     ]
     public string $referencePriceTaxesInc = "0.00";
 
@@ -104,14 +106,14 @@ trait MainTrait
         Assert\Type("boolean"),
         JMS\SerializedName("is_reference_price_taxes_free"),
         JMS\Type("boolean"),
-        JMS\Groups(array("Write", "Read", "List", "Required")),
-        SPL\Field(type: SPL_T_BOOL, desc: "Item is reference price has taxes free"),
-        SPL\Microdata("http://schema.org/Product", "")
+        SPL\Field(type: SPL_T_BOOL, desc: "Product is reference price has taxes free"),
+        SPL\Microdata("http://schema.org/Product", ""),
+        SPL\IsWriteOnly()
     ]
     public bool $isReferencePriceTaxesFree = false;
 
     /**
-     * Item's Currency code.
+     * Product's Currency code.
      *
      * @var null|string
      */
@@ -119,15 +121,18 @@ trait MainTrait
         Assert\Type("string"),
         JMS\SerializedName("currency"),
         JMS\Type("string"),
-        JMS\Groups(array("Read", "List")),
-        SPL\Flags(listed: true),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Currency code"),
-        SPL\Microdata("http://schema.org/Product", "")
+        JMS\Groups(array("Read")),
+        SPL\Field(
+            type: SPL_T_VARCHAR,
+            desc: "Currency code",
+            group: "write"
+        ),
+        SPL\Microdata("http://schema.org/Product", ""),
     ]
     public ?string $currency = null;
 
     /**
-     * Item's Standard quantity.
+     * Product's Standard quantity.
      */
     #[
         Assert\NotNull,
@@ -135,20 +140,20 @@ trait MainTrait
         JMS\SerializedName("standard_quantity"),
         JMS\Type("string"),
         JMS\Groups(array("Write", "Read", "List")),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Item's standard quantity"),
+        SPL\Field(type: SPL_T_VARCHAR, desc: "Product's standard quantity"),
         SPL\Microdata("http://schema.org/Product", "")
     ]
     public string $standardQuantity = "1.00";
 
     /**
-     * Item's Description.
+     * Product's Description.
      */
     #[
         Assert\Type("string"),
         JMS\SerializedName("description"),
         JMS\Type("string"),
         JMS\Groups(array("Read", "Write", "List")),
-        SPL\Field(type: SPL_T_TEXT, desc: "Item's description"),
+        SPL\Field(type: SPL_T_TEXT, desc: "Product's description"),
         SPL\Microdata("http://schema.org/Product", "")
     ]
     public ?string $description = null;
@@ -165,17 +170,4 @@ trait MainTrait
         SPL\Microdata("http://schema.org/Product", "")
     ]
     public bool $isNameInDescription = false;
-
-    #[JMS\PostSerialize]
-    public function buildPrice(): void
-    {
-        $this->setSplPrice(array(
-            'tax_id' => null,
-            'is_reference_price_taxes_free' => $this->isReferencePriceTaxesFree,
-            'reference_price' => $this->referencePriceTaxesInc,
-            'reference_price_taxes_exc' => $this->referencePriceTaxesExc,
-            'purchase_amount' => $this->purchaseAmount,
-            'currency' => $this->currency,
-        ));
-    }
 }

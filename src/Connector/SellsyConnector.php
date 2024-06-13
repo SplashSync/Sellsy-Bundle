@@ -62,7 +62,7 @@ class SellsyConnector extends AbstractOauth2Connector
     protected static array $objectsMap = array(
         "ThirdParty" => Objects\ThirdParty::class,
         "Address" => Objects\Address::class,
-        //        "Product" => Objects\Product::class,
+        "Product" => Objects\Product::class,
         //        "Invoice" => Objects\ThirdParty::class,
     );
 
@@ -154,7 +154,7 @@ class SellsyConnector extends AbstractOauth2Connector
             return false;
         }
         //====================================================================//
-        // Get Scopes Informations
+        // Get Scopes Information
         if (!$this->fetchAccessScopes()) {
             return false;
         }
@@ -163,6 +163,8 @@ class SellsyConnector extends AbstractOauth2Connector
         if (!$this->fetchTaxesLists()) {
             return false;
         }
+
+        $this->updateConfiguration();
 
         return true;
     }

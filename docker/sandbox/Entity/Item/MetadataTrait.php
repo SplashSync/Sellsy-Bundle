@@ -25,7 +25,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 trait MetadataTrait
 {
     /**
-     * Is Item Archived
+     * Is Product Archived
      */
     #[
         Assert\Type("boolean"),
@@ -35,7 +35,7 @@ trait MetadataTrait
     public bool $is_archived = false;
 
     /**
-     * Is Item declined
+     * Is Product declined
      */
     #[
         Assert\Type("boolean"),

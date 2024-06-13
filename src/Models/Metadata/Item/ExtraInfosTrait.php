@@ -25,33 +25,31 @@ use Symfony\Component\Validator\Constraints as Assert;
 trait ExtraInfosTrait
 {
     /**
-     * Item's tax id.
+     * Product's tax id.
      */
     #[
         Assert\Type("integer"),
         JMS\SerializedName("tax_id"),
         JMS\Type("integer"),
         SPL\Field(type: SPL_T_INT, desc: "Tax id"),
-        SPL\IsRequired,
         SPL\Microdata("http://schema.org/Product", "taxID")
     ]
-    public ?int $taxId = null;
+    public int $taxId = 0;
 
     /**
-     * Item's unit id.
+     * Product's unit id.
      */
     #[
         Assert\Type("integer"),
         JMS\SerializedName("unit_id"),
         JMS\Type("integer"),
         SPL\Field(type: SPL_T_INT, desc: "Unit id"),
-        SPL\IsRequired,
         SPL\Microdata("http://schema.org/Product", "sku")
     ]
-    public ?int $unitId = null;
+    public int $unitId = 0;
 
     /**
-     * Item's category id.
+     * Product's category id.
      */
     #[
         Assert\Type("integer"),
@@ -63,56 +61,28 @@ trait ExtraInfosTrait
     public int $categoryId = 0;
 
     /**
-     * Item's accounting code id.
+     * Product's accounting code id.
      */
     #[
         Assert\Type("integer"),
         JMS\SerializedName("accounting_code_id"),
         JMS\Type("integer"),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Item's accounting code id"),
-        SPL\Microdata("http://schema.org/AccountingService", "")
+        SPL\Field(type: SPL_T_VARCHAR, desc: "Product's accounting code id"),
+        SPL\Microdata("http://schema.org/AccountingService", ""),
+        SPL\IsReadOnly()
     ]
-    public ?int $accountingCodeId = null;
+    public int $accountingCodeId = 0;
 
     /**
-     * Item's accounting purchase code id.
+     * Product's accounting purchase code id.
      */
     #[
         Assert\Type("integer"),
         JMS\SerializedName("accounting_purchase_code_id"),
         JMS\Type("integer"),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Item's accounting purchase code id"),
-        SPL\Microdata("http://schema.org/AccountingService", "")
+        SPL\Field(type: SPL_T_VARCHAR, desc: "Product's accounting purchase code id"),
+        SPL\Microdata("http://schema.org/AccountingService", ""),
+        SPL\IsReadOnly()
     ]
-    public ?int $accountingPurchaseCodeId = null;
-
-    public function getAccountingCodeId(): ?int
-    {
-        return $this->accountingCodeId;
-    }
-
-    public function setAccountingCodeId(int $accountingCodeId): self
-    {
-        if (0 === $accountingCodeId) {
-            $accountingCodeId = 1;
-        }
-        $this->accountingCodeId = $accountingCodeId;
-
-        return $this;
-    }
-
-    public function getAccountingPurchaseCodeId(): ?int
-    {
-        return $this->accountingPurchaseCodeId;
-    }
-
-    public function setAccountingPurchaseCodeId(int $accountingPurchaseCodeId): self
-    {
-        if (0 === $accountingPurchaseCodeId) {
-            $accountingPurchaseCodeId = 1;
-        }
-        $this->accountingPurchaseCodeId = $accountingPurchaseCodeId;
-
-        return $this;
-    }
+    public int $accountingPurchaseCodeId = 0;
 }

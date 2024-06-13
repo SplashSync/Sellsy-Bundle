@@ -25,7 +25,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 trait MainTrait
 {
     /**
-     * Item's name
+     * Product's name
      */
     #[
         Assert\Type("string"),
@@ -35,7 +35,7 @@ trait MainTrait
     public ?string $name = null;
 
     /**
-     * Item's reference
+     * Product's reference
      */
     #[
         Assert\Type("string"),
@@ -45,7 +45,7 @@ trait MainTrait
     public string $reference = "";
 
     /**
-     * Item's reference price excluding taxes
+     * Product's reference price excluding taxes
      */
     #[
         Assert\Type("string"),
@@ -55,7 +55,7 @@ trait MainTrait
     public string $reference_price_taxes_exc = "0.00";
 
     /**
-     * Item's purchase amount
+     * Product's purchase amount
      */
     #[
         Assert\Type("string"),
@@ -65,7 +65,7 @@ trait MainTrait
     public string $purchase_amount = "0.00";
 
     /**
-     * Item's reference price excluding taxes
+     * Product's reference price excluding taxes
      */
     #[
         Assert\Type("string"),
@@ -85,7 +85,7 @@ trait MainTrait
     public bool $is_reference_price_taxes_free = false;
 
     /**
-     * Item's currency code
+     * Product's currency code
      */
     #[
         Assert\Type("string"),
@@ -95,7 +95,7 @@ trait MainTrait
     public ?string $currency = "EUR";
 
     /**
-     * Item's standard quantity
+     * Product's standard quantity
      */
     #[
         Assert\Type("string"),
@@ -105,7 +105,7 @@ trait MainTrait
     public string $standard_quantity = "1.00";
 
     /**
-     * Item's description
+     * Product's description
      */
     #[
         Assert\Type("string"),

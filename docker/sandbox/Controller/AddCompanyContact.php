@@ -53,7 +53,7 @@ class AddCompanyContact extends AbstractController
         // Add Contact to Company
         $company->addContact($contact);
         //====================================================================//
-        // Save Item
+        // Save Product
         $this->entityManager->flush();
 
         return new JsonResponse(array("roles" => array("main", "invoicing", "dunning")));

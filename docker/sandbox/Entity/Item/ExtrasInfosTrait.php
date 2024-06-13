@@ -26,7 +26,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 trait ExtrasInfosTrait
 {
     /**
-     * Item's tax ID.
+     * Product's tax ID.
      */
     #[
         Assert\Type("integer"),
@@ -36,7 +36,7 @@ trait ExtrasInfosTrait
     public ?int $tax_id = null;
 
     /**
-     * Item's unit ID.
+     * Product's unit ID.
      */
     #[
         Assert\Type("integer"),
@@ -46,7 +46,7 @@ trait ExtrasInfosTrait
     public ?int $unit_id = null;
 
     /**
-     * Item's category ID.
+     * Product's category ID.
      */
     #[
         Assert\Type("integer"),
@@ -56,7 +56,7 @@ trait ExtrasInfosTrait
     public int $category_id = 0;
 
     /**
-     * Item's accounting code ID.
+     * Product's accounting code ID.
      */
     #[
         Assert\Type("integer"),
@@ -66,7 +66,7 @@ trait ExtrasInfosTrait
     public ?int $accounting_code_id = null;
 
     /**
-     * Item's accounting purchase code ID.
+     * Product's accounting purchase code ID.
      */
     #[
         Assert\Type("integer"),

@@ -29,6 +29,7 @@ class Item
     use Item\MainTrait;
     use Item\ExtraInfosTrait;
     use Item\MetadataTrait;
+    use Item\PriceTrait;
 
     #[
         Assert\NotNull,

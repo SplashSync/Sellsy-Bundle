@@ -78,6 +78,11 @@ class TaxManager
         return $this->taxes[$taxId]["rate"] ?? 0.0;
     }
 
+    public function getTaxes(): array
+    {
+        return $this->taxes;
+    }
+
     /**
      * Get Tax Label from ID
      */

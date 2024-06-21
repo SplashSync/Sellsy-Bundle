@@ -25,18 +25,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 trait ExtraInfosTrait
 {
     /**
-     * Product's tax id.
-     */
-    #[
-        Assert\Type("integer"),
-        JMS\SerializedName("tax_id"),
-        JMS\Type("integer"),
-        SPL\Field(type: SPL_T_INT, desc: "Tax id"),
-        SPL\Microdata("http://schema.org/Product", "taxID")
-    ]
-    public int $taxId = 0;
-
-    /**
      * Product's unit id.
      */
     #[

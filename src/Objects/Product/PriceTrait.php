@@ -15,7 +15,8 @@
 
 namespace Splash\Connectors\Sellsy\Objects\Product;
 
-use JMS\Serializer\Annotation as JMS;
+use Exception;
+use Splash\Client\Splash;
 use Splash\Connectors\Sellsy\Models\Connector\ConnectorTaxesTrait;
 use Splash\Metadata\Attributes as SPL;
 use Splash\Models\Objects\PricesTrait;
@@ -29,7 +30,6 @@ trait PriceTrait
      * Product's reference price excluding taxes.
      */
     #[
-        JMS\Exclude(),
         SPL\Field(type: SPL_T_PRICE, desc: "Product's Price"),
         SPL\IsRequired,
         SPL\Microdata("http://schema.org/Product", "price")
@@ -48,11 +48,20 @@ trait PriceTrait
     {
         //====================================================================//
         // Product Price
-        $this->fieldsFactory()->create(SPL_T_PRICE)
+        self::fieldsFactory()->create(SPL_T_PRICE)
             ->identifier("price")
             ->name("Ref. Price")
             ->description("Product reference price")
             ->microData("http://schema.org/Product", "price")
+        ;
+
+        //====================================================================//
+        // WholeSale Price
+        self::fieldsFactory()->create(SPL_T_PRICE)
+            ->identifier("price-wholesale")
+            ->name("Wholesale price")
+            ->description("Product wholesale price")
+            ->microData("http://schema.org/Product", "wholesalePrice")
         ;
     }
 
@@ -66,8 +75,12 @@ trait PriceTrait
         switch ($fieldName) {
             case "price":
                 $this->out[$fieldName] = $this->getSplashPrice();
-
                 break;
+
+            case "price-wholesale":
+                $this->out[$fieldName] = $this->getWholesalePrice();
+                break;
+
             default:
                 return;
         }
@@ -86,10 +99,25 @@ trait PriceTrait
             case "price":
                 $current = $this->getSplashPrice();
                 if (self::prices()->compare($current, $fieldData)) {
+
+                    $this->object->taxId = $fieldData["tax_id"] ?? $this->object->taxId;
+                    $this->object->referencePrice = $fieldData["reference_price"] ?? 0.00;
+                    $this->object->purchaseAmount = $fieldData["purchase_amount"] ?? "0.00";
+                    $this->object->isReferencePriceTaxesFree = $fieldData["is_reference_price_taxes_free"] ?? false;
+
+//                    $closestRate = $this->setCloserTaxRate($this->object->taxId);
+
+                    // voir https://gitlab.com/SplashSync/Prestashop/-/blob/master/modules/splashsync/src/Services/TaxManager.php?ref_type=heads#L119
+
                     $this->needUpdate();
                 }
-
                 break;
+
+            case "price-wholesale":
+                $this->object->purchaseAmount = $fieldData["price-wholesale"] ?? "0.00";
+                $this->needUpdate();
+                break;
+
             default:
                 return;
         }
@@ -108,5 +136,52 @@ trait PriceTrait
             null,
             $this->object->currency ?: "EUR"
         );
+    }
+
+    /**
+     * @return null|array
+     */
+    private function getWholesalePrice(): ?array
+    {
+        return self::prices()->encode(
+            (float) $this->object->purchaseAmount,
+            0.00,
+            null,
+            $this->object->currency ?: "EUR"
+        );
+    }
+
+    private function setCloserTaxRate(int $taxId): ?float
+    {
+        if (empty($taxId)) {
+            return null;
+        }
+
+        $currentRate = $this->connector->getTaxManager()->getRate($taxId);
+
+        try {
+            $isTaxRateList = $this->connector->fetchTaxesLists();
+        } catch (Exception $e) {
+            Splash::log()->err($e->getMessage());
+            return null;
+        }
+
+        if ($isTaxRateList) {
+            $taxes = $this->connector->getTaxManager()->getTaxes();
+            $closest = null;
+            $closestRate = null;
+            foreach ($taxes as $tax) {
+                $rate = $tax["rate"];
+                if ($closest === null || abs($rate - $currentRate) < abs($closestRate - $currentRate)) {
+                    $closest = $tax;
+                    $closestRate = $rate;
+                }
+            }
+            if (abs($closestRate - $currentRate) < 0.01) {
+                return null;
+            }
+            return $closestRate;
+        }
+        return null;
     }
 }

@@ -55,23 +55,6 @@ trait MainTrait
     public string $reference = "";
 
     /**
-     * Product's reference price excluding taxes.
-     */
-    #[
-        Assert\NotNull,
-        Assert\Type("string"),
-        JMS\SerializedName("reference_price_taxes_exc"),
-        JMS\Type("string"),
-        SPL\Field(
-            type: SPL_T_VARCHAR,
-            desc: "Product's reference price excluding taxes",
-            group: "read",
-        ),
-        SPL\Microdata("http://schema.org/Product", "price"),
-    ]
-    public string $referencePriceTaxesExc = "0.00";
-
-    /**
      * Product's purchase price excluding taxes.
      */
     #[
@@ -84,52 +67,6 @@ trait MainTrait
         SPL\IsWriteOnly()
     ]
     public string $purchaseAmount = "0.00";
-
-    /**
-     * Product's reference price including taxes.
-     */
-    #[
-        Assert\NotNull,
-        Assert\Type("string"),
-        JMS\SerializedName("reference_price_taxes_inc"),
-        JMS\Groups(array("Read")),
-        SPL\Field(
-            type: SPL_T_VARCHAR,
-            desc: "Product's reference price including taxes",
-            group: "write"
-        ),
-        SPL\Microdata("http://schema.org/Product", ""),
-    ]
-    public string $referencePriceTaxesInc = "0.00";
-
-    #[
-        Assert\Type("boolean"),
-        JMS\SerializedName("is_reference_price_taxes_free"),
-        JMS\Type("boolean"),
-        SPL\Field(type: SPL_T_BOOL, desc: "Product is reference price has taxes free"),
-        SPL\Microdata("http://schema.org/Product", ""),
-        SPL\IsWriteOnly()
-    ]
-    public bool $isReferencePriceTaxesFree = false;
-
-    /**
-     * Product's Currency code.
-     *
-     * @var null|string
-     */
-    #[
-        Assert\Type("string"),
-        JMS\SerializedName("currency"),
-        JMS\Type("string"),
-        JMS\Groups(array("Read")),
-        SPL\Field(
-            type: SPL_T_VARCHAR,
-            desc: "Currency code",
-            group: "write"
-        ),
-        SPL\Microdata("http://schema.org/Product", ""),
-    ]
-    public ?string $currency = null;
 
     /**
      * Product's Standard quantity.

@@ -75,12 +75,12 @@ trait PriceTrait
         switch ($fieldName) {
             case "price":
                 $this->out[$fieldName] = $this->getSplashPrice();
-                break;
 
+                break;
             case "price-wholesale":
                 $this->out[$fieldName] = $this->getWholesalePrice();
-                break;
 
+                break;
             default:
                 return;
         }
@@ -99,25 +99,24 @@ trait PriceTrait
             case "price":
                 $current = $this->getSplashPrice();
                 if (self::prices()->compare($current, $fieldData)) {
-
                     $this->object->taxId = $fieldData["tax_id"] ?? $this->object->taxId;
                     $this->object->referencePrice = $fieldData["reference_price"] ?? 0.00;
                     $this->object->purchaseAmount = $fieldData["purchase_amount"] ?? "0.00";
                     $this->object->isReferencePriceTaxesFree = $fieldData["is_reference_price_taxes_free"] ?? false;
 
-//                    $closestRate = $this->setCloserTaxRate($this->object->taxId);
+                    //                    $closestRate = $this->setCloserTaxRate($this->object->taxId);
 
                     // voir https://gitlab.com/SplashSync/Prestashop/-/blob/master/modules/splashsync/src/Services/TaxManager.php?ref_type=heads#L119
 
                     $this->needUpdate();
                 }
-                break;
 
+                break;
             case "price-wholesale":
                 $this->object->purchaseAmount = $fieldData["price-wholesale"] ?? "0.00";
                 $this->needUpdate();
-                break;
 
+                break;
             default:
                 return;
         }
@@ -163,6 +162,7 @@ trait PriceTrait
             $isTaxRateList = $this->connector->fetchTaxesLists();
         } catch (Exception $e) {
             Splash::log()->err($e->getMessage());
+
             return null;
         }
 
@@ -172,7 +172,7 @@ trait PriceTrait
             $closestRate = null;
             foreach ($taxes as $tax) {
                 $rate = $tax["rate"];
-                if ($closest === null || abs($rate - $currentRate) < abs($closestRate - $currentRate)) {
+                if (null === $closest || abs($rate - $currentRate) < abs($closestRate - $currentRate)) {
                     $closest = $tax;
                     $closestRate = $rate;
                 }
@@ -180,8 +180,10 @@ trait PriceTrait
             if (abs($closestRate - $currentRate) < 0.01) {
                 return null;
             }
+
             return $closestRate;
         }
+
         return null;
     }
 }

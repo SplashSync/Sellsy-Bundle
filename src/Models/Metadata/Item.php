@@ -37,7 +37,6 @@ class Item
         JMS\SerializedName("id"),
         JMS\Groups(array("Read", "List")),
         JMS\Type("string"),
-        SPL\Microdata("http://schema.org/Product", "productID")
     ]
     public string $id;
 

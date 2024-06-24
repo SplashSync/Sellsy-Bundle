@@ -15,8 +15,6 @@
 
 namespace Splash\Connectors\Sellsy\Objects\Product;
 
-use Exception;
-use Splash\Client\Splash;
 use Splash\Connectors\Sellsy\Models\Connector\ConnectorTaxesTrait;
 use Splash\Metadata\Attributes as SPL;
 use Splash\Models\Objects\PricesTrait;
@@ -93,27 +91,37 @@ trait PriceTrait
      */
     protected function setPriceFields(string $fieldName, ?array $fieldData): void
     {
+        if (null === $fieldData) {
+            return;
+        }
         //====================================================================//
         // READ FIELD
         switch ($fieldName) {
             case "price":
                 $current = $this->getSplashPrice();
-                if (self::prices()->compare($current, $fieldData)) {
-                    $this->object->taxId = $fieldData["tax_id"] ?? $this->object->taxId;
-                    $this->object->referencePrice = $fieldData["reference_price"] ?? 0.00;
-                    $this->object->purchaseAmount = $fieldData["purchase_amount"] ?? "0.00";
-                    $this->object->isReferencePriceTaxesFree = $fieldData["is_reference_price_taxes_free"] ?? false;
-
-                    //                    $closestRate = $this->setCloserTaxRate($this->object->taxId);
-
-                    // voir https://gitlab.com/SplashSync/Prestashop/-/blob/master/modules/splashsync/src/Services/TaxManager.php?ref_type=heads#L119
-
+                if (!self::prices()->compare($current, $fieldData)) {
+                    //====================================================================//
+                    // Update reference price
+                    $this->object->referencePrice = (string) (self::prices()->taxExcluded($fieldData) ?? 0.0);
+                    $this->object->isReferencePriceTaxesFree = true;
+                    //====================================================================//
+                    // Update Tax Class
+                    $taxPercent = self::prices()->taxPercent($fieldData);
+                    if (null === $taxPercent) {
+                        $this->object->taxId = 0;
+                    } else {
+                        $currentRate = $this->connector->getTaxManager()->getRate($this->object->taxId);
+                        if (abs($taxPercent - $currentRate) > 0.01) {
+                            $this->object->taxId = $this->connector->getTaxManager()->findClosestTaxRate($taxPercent)
+                                ?? $this->object->taxId;
+                        }
+                    }
                     $this->needUpdate();
                 }
 
                 break;
             case "price-wholesale":
-                $this->object->purchaseAmount = $fieldData["price-wholesale"] ?? "0.00";
+                $this->object->purchaseAmount = (string) (self::prices()->taxExcluded($fieldData) ?? 0.0);
                 $this->needUpdate();
 
                 break;
@@ -148,42 +156,5 @@ trait PriceTrait
             null,
             $this->object->currency ?: "EUR"
         );
-    }
-
-    private function setCloserTaxRate(int $taxId): ?float
-    {
-        if (empty($taxId)) {
-            return null;
-        }
-
-        $currentRate = $this->connector->getTaxManager()->getRate($taxId);
-
-        try {
-            $isTaxRateList = $this->connector->fetchTaxesLists();
-        } catch (Exception $e) {
-            Splash::log()->err($e->getMessage());
-
-            return null;
-        }
-
-        if ($isTaxRateList) {
-            $taxes = $this->connector->getTaxManager()->getTaxes();
-            $closest = null;
-            $closestRate = null;
-            foreach ($taxes as $tax) {
-                $rate = $tax["rate"];
-                if (null === $closest || abs($rate - $currentRate) < abs($closestRate - $currentRate)) {
-                    $closest = $tax;
-                    $closestRate = $rate;
-                }
-            }
-            if (abs($closestRate - $currentRate) < 0.01) {
-                return null;
-            }
-
-            return $closestRate;
-        }
-
-        return null;
     }
 }

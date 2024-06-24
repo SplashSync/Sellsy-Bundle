@@ -97,4 +97,32 @@ class TaxManager
             : $tax["label"]
         ;
     }
+
+    /**
+     * Get Closest Tax ID for Given Tax Rate
+     */
+    public function findClosestTaxRate(float $taxRate): ?int
+    {
+        if (empty($taxRate)) {
+            return null;
+        }
+
+        //====================================================================//
+        // Walk on Defined tax Rates
+        $closestId = $closestRate = null;
+        foreach ($this->taxes as $tax) {
+            $rate = $tax["rate"];
+            if (null === $closestId || abs($rate - $taxRate) < abs($closestRate - $taxRate)) {
+                $closestId = $tax["id"];
+                $closestRate = $rate;
+            }
+        }
+        //====================================================================//
+        // Safety Check
+        if (abs($closestRate - $taxRate) > 0.01) {
+            return null;
+        }
+
+        return $closestId;
+    }
 }

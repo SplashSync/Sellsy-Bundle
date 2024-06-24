@@ -26,16 +26,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 trait ExtrasInfosTrait
 {
     /**
-     * Product's tax ID.
-     */
-    #[
-        Assert\Type("integer"),
-        ORM\Column(type: Types::INTEGER, nullable: true),
-        Serializer\Groups("read")
-    ]
-    public ?int $tax_id = null;
-
-    /**
      * Product's unit ID.
      */
     #[

@@ -80,15 +80,17 @@ class Product extends AbstractApiMetadataObject
     // DEBUG
     //====================================================================//
 
-    //        /**
-    //     * {@inheritdoc}
-    //     */
-    //    public function objectsList(?string $filter = null, array $params = array()): array
-    //    {
-    ////        dd($this);
-    //        dd($this->connector->getTaxManager()->getRate("5716828"));
-    ////        return $this->visitor->list($filter, $params)->getArrayResults() ?? array();
-    //    }
+    /**
+     * {@inheritdoc}
+     */
+    //        public function objectsList(?string $filter = null, array $params = array()): array
+    //        {
+    //            $this->visitor->getConnexion()->get("/items") ?? array();
+    //    //        dd($this);
+    //
+    //            dd($this->visitor->getLastResponse());
+    //            return $this->visitor->list($filter, $params)->getArrayResults() ?? array();
+    //        }
     //    /**
     //     * Update Request Object
     //     *

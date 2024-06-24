@@ -43,6 +43,7 @@ class Item extends AbstractSellsyObject
     use Item\MainTrait;
     use Item\ExtrasInfosTrait;
     use Item\MetadataTrait;
+    use Item\PriceTrait;
 
     /**
      * Unique Identifier.

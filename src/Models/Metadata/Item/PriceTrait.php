@@ -26,12 +26,12 @@ trait PriceTrait
      */
     #[
         Assert\NotNull,
-        Assert\Type("double"), // float ?
+        Assert\Type("string"),
         JMS\SerializedName("reference_price"),
-        JMS\Type("double"),
+        JMS\Type("string"),
         JMS\Groups(array("Write")),
     ]
-    public float $referencePrice = 0.0;
+    public string $referencePrice = "0.0";
 
     /**
      * Product's reference price excluding taxes.
@@ -71,7 +71,11 @@ trait PriceTrait
         Assert\Type("boolean"),
         JMS\SerializedName("is_reference_price_taxes_free"),
         JMS\Type("boolean"),
-        SPL\Field(type: SPL_T_BOOL, desc: "Product is reference price has taxes free"),
+        SPL\Field(
+            type: SPL_T_BOOL,
+            desc: "Product is reference price has taxes free",
+            group: "Pricing"
+        ),
         SPL\IsReadOnly
     ]
     public bool $isReferencePriceTaxesFree = false;
@@ -83,8 +87,9 @@ trait PriceTrait
         Assert\Type("integer"),
         JMS\SerializedName("tax_id"),
         JMS\Type("integer"),
-        SPL\Field(type: SPL_T_INT, desc: "Tax id"),
-        SPL\Microdata("http://schema.org/Product", "taxID")
+        JMS\Groups(array("Read")),
+        SPL\Field(type: SPL_T_INT, desc: "Tax ID", group: "Meta"),
+        SPL\IsReadOnly,
     ]
     public int $taxId = 0;
 

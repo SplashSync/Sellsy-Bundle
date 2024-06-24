@@ -62,9 +62,6 @@ trait MainTrait
         Assert\Type("string"),
         JMS\SerializedName("purchase_amount"),
         JMS\Type("string"),
-        SPL\Field(type: SPL_T_DOUBLE, desc: "Product's purchase price excluding taxes"),
-        SPL\Microdata("http://schema.org/Product", ""),
-        SPL\IsWriteOnly()
     ]
     public string $purchaseAmount = "0.00";
 
@@ -93,7 +90,7 @@ trait MainTrait
         SPL\Field(type: SPL_T_TEXT, desc: "Product's description"),
         SPL\Microdata("http://schema.org/Product", "")
     ]
-    public ?string $description = null;
+    public ?string $description = "";
 
     /**
      * Is the name of the product included in the desc.

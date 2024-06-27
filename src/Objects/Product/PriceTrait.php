@@ -94,25 +94,29 @@ trait PriceTrait
         if (null === $fieldData) {
             return;
         }
+
         //====================================================================//
         // READ FIELD
         switch ($fieldName) {
             case "price":
                 $current = $this->getSplashPrice();
+                $taxManager = $this->connector->getTaxManager();
+
                 if (!self::prices()->compare($current, $fieldData)) {
                     //====================================================================//
                     // Update reference price
                     $this->object->referencePrice = (string) (self::prices()->taxExcluded($fieldData) ?? 0.0);
                     $this->object->isReferencePriceTaxesFree = true;
+
                     //====================================================================//
                     // Update Tax Class
                     $taxPercent = self::prices()->taxPercent($fieldData);
                     if (null === $taxPercent) {
                         $this->object->taxId = 0;
                     } else {
-                        $currentRate = $this->connector->getTaxManager()->getRate($this->object->taxId);
+                        $currentRate = $taxManager->getRate($this->object->taxId);
                         if (abs($taxPercent - $currentRate) > 0.01) {
-                            $this->object->taxId = $this->connector->getTaxManager()->findClosestTaxRate($taxPercent)
+                            $this->object->taxId = $taxManager->findClosestTaxRate($taxPercent)
                                 ?? $this->object->taxId;
                         }
                     }
@@ -128,7 +132,6 @@ trait PriceTrait
             default:
                 return;
         }
-
         unset($this->in[$fieldName]);
     }
 
@@ -141,7 +144,7 @@ trait PriceTrait
             (float) $this->object->referencePriceTaxesExc,
             $this->connector->getTaxManager()->getRate($this->object->taxId),
             null,
-            $this->object->currency ?: "EUR"
+            $this->object->currency ?: $this->getDefaultCurrency()
         );
     }
 
@@ -154,7 +157,12 @@ trait PriceTrait
             (float) $this->object->purchaseAmount,
             0.00,
             null,
-            $this->object->currency ?: "EUR"
+            $this->object->currency ?: $this->getDefaultCurrency()
         );
+    }
+
+    private function getDefaultCurrency(): string
+    {
+        return "EUR"; // TODO: Get Default Currency from Sellsy and/or User local settings
     }
 }

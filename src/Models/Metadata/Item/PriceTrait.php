@@ -87,7 +87,6 @@ trait PriceTrait
         Assert\Type("integer"),
         JMS\SerializedName("tax_id"),
         JMS\Type("integer"),
-        JMS\Groups(array("Read")),
         SPL\Field(type: SPL_T_INT, desc: "Tax ID", group: "Meta"),
         SPL\IsReadOnly,
     ]

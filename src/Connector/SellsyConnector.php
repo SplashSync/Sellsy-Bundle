@@ -145,7 +145,7 @@ class SellsyConnector extends AbstractOauth2Connector
         }
         //====================================================================//
         // Sandbox Connect Test Always Pass
-        if ($this->isSandbox() && !$this->getTokenOrRefresh()) {
+        if (!$this->isSandbox() && !$this->getTokenOrRefresh()) {
             return false;
         }
         //====================================================================//

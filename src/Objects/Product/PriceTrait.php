@@ -15,14 +15,12 @@
 
 namespace Splash\Connectors\Sellsy\Objects\Product;
 
-use Splash\Connectors\Sellsy\Models\Connector\ConnectorTaxesTrait;
 use Splash\Metadata\Attributes as SPL;
 use Splash\Models\Objects\PricesTrait;
 
 trait PriceTrait
 {
     use PricesTrait;
-    use ConnectorTaxesTrait;
 
     /**
      * Product's reference price excluding taxes.

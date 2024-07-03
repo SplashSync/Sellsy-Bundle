@@ -24,20 +24,11 @@ trait PriceTrait
 {
     use PricesTrait;
 
-    //    /**
-    //     * Product's price in Splash format
-    //     */
-    //    #[
-    //        Assert\Type("array"),
-    //        ORM\Column(nullable: false),
-    //    ]
-    //    public ?array $splash_price = null;
-
     /**
      * Product's wholesale price in Splash format
      */
     #[
-        ORM\Column(),
+        ORM\Column(nullable: true),
     ]
     public ?float $reference_price = null;
 
@@ -48,7 +39,7 @@ trait PriceTrait
         ORM\Column(),
         Serializer\Groups("read"),
     ]
-    public ?float $reference_price_taxes_exc = 0.0;
+    public float $reference_price_taxes_exc = 0.0;
 
     /**
      * Product's reference price excluding taxes
@@ -57,14 +48,14 @@ trait PriceTrait
         ORM\Column(),
         Serializer\Groups("read"),
     ]
-    public ?float $reference_price_taxes_inc = 0.0;
+    public float $reference_price_taxes_inc = 0.0;
 
     /**
      * Is Reference Price Taxes Free
      */
     #[
         Assert\Type("boolean"),
-        ORM\Column(nullable: false),
+        ORM\Column(),
     ]
     public bool $is_reference_price_taxes_free = true;
 
@@ -88,17 +79,11 @@ trait PriceTrait
     ]
     public ?string $currency = "EUR";
 
-    //    public function setSplashPrice(?array $splash_price): void
-    //    {
-    //        $this->splash_price = $splash_price;
-    //    }
-    //
     public function getSplashPrice(): ?array
     {
         return self::prices()->encode(
             $this->is_reference_price_taxes_free ? $this->reference_price : null,
-            0.00,
-            //            $this->tax  ? $this->tax->rate : 0.00,
+            $this  ? $this->tax->rate : 0.00,
             !$this->is_reference_price_taxes_free ? $this->reference_price : null,
             $this->currency ?: "EUR"
         );

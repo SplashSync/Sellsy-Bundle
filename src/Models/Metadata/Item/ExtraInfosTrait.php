@@ -58,7 +58,6 @@ trait ExtraInfosTrait
         JMS\SerializedName("accounting_code_id"),
         JMS\Type("integer"),
         SPL\Field(type: SPL_T_VARCHAR, desc: "Product's accounting code id", group: "Meta"),
-        SPL\Microdata("http://schema.org/AccountingService", ""),
         SPL\IsReadOnly()
     ]
     public int $accountingCodeId = 0;
@@ -71,7 +70,6 @@ trait ExtraInfosTrait
         JMS\SerializedName("accounting_purchase_code_id"),
         JMS\Type("integer"),
         SPL\Field(type: SPL_T_VARCHAR, desc: "Product's accounting purchase code id", group: "Meta"),
-        SPL\Microdata("http://schema.org/AccountingService", ""),
         SPL\IsReadOnly()
     ]
     public int $accountingPurchaseCodeId = 0;

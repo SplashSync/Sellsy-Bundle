@@ -33,6 +33,7 @@ namespace DoctrineMigrations;
 use App\Entity\Taxe;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -68,6 +69,7 @@ final class Version202407TaxeFixtures extends AbstractMigration implements Conta
      */
     public function postUp(Schema $schema): void
     {
+        /** @var EntityManagerInterface $em */
         $em = $this->container->get('doctrine.orm.entity_manager');
 
         foreach ($this->getTaxes() as $taxe) {
@@ -91,6 +93,7 @@ final class Version202407TaxeFixtures extends AbstractMigration implements Conta
      */
     public function postDown(Schema $schema): void
     {
+        /** @var EntityManagerInterface $em */
         $em = $this->container->get('doctrine.orm.entity_manager');
 
         foreach ($em->getRepository(Taxe::class)->findAll() as $taxe) {

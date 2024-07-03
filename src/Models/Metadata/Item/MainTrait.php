@@ -75,7 +75,7 @@ trait MainTrait
         JMS\Type("string"),
         JMS\Groups(array("Write", "Read", "List")),
         SPL\Field(type: SPL_T_VARCHAR, desc: "Product's standard quantity"),
-        SPL\Microdata("http://schema.org/Product", "")
+        SPL\Microdata("http://schema.org/Offer", "eligibleTransactionVolume")
     ]
     public string $standardQuantity = "1.00";
 
@@ -88,7 +88,7 @@ trait MainTrait
         JMS\Type("string"),
         JMS\Groups(array("Read", "Write", "List")),
         SPL\Field(type: SPL_T_TEXT, desc: "Product's description"),
-        SPL\Microdata("http://schema.org/Product", "")
+        SPL\Microdata("http://schema.org/Product", "description")
     ]
     public ?string $description = "";
 
@@ -101,7 +101,6 @@ trait MainTrait
         JMS\Type("boolean"),
         JMS\Groups(array("Read", "Write", "List")),
         SPL\Field(type: SPL_T_BOOL, desc: "To add the name of item in description"),
-        SPL\Microdata("http://schema.org/Product", "")
     ]
     public bool $isNameInDescription = false;
 }

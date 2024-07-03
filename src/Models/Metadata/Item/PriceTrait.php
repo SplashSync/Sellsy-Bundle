@@ -102,15 +102,8 @@ trait PriceTrait
         JMS\SerializedName("currency"),
         JMS\Type("string"),
         JMS\Groups(array("Read")),
-        SPL\Flags(
-            read: false,
-            write: false
-        ),
-        SPL\Field(
-            type: SPL_T_VARCHAR,
-            desc: "Currency code",
-        ),
-        SPL\Microdata("http://schema.org/Product", ""),
+        SPL\Flags(read: false, write: false),
+        SPL\Field(type: SPL_T_CURRENCY, desc: "Currency code"),
     ]
     public ?string $currency = null;
 }

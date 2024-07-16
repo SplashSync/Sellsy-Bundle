@@ -104,7 +104,7 @@ trait PriceTrait
 
     public function isTaxCreated(int $tax_id): bool
     {
-        if (null === $this->tax || $tax_id === 0) {
+        if (null === $this->tax || 0 === $tax_id) {
             return false;
         }
 

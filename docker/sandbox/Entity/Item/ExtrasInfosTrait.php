@@ -30,10 +30,10 @@ trait ExtrasInfosTrait
      */
     #[
         Assert\Type("integer"),
-        ORM\Column(type: Types::INTEGER, nullable: true),
+        ORM\Column(type: Types::INTEGER, nullable: false),
         Serializer\Groups("read")
     ]
-    public ?int $unit_id = null;
+    public int $unit_id = 0;
 
     /**
      * Product's category ID.
@@ -50,18 +50,18 @@ trait ExtrasInfosTrait
      */
     #[
         Assert\Type("integer"),
-        ORM\Column(type: Types::INTEGER, nullable: true),
+        ORM\Column(type: Types::INTEGER, nullable: false),
         Serializer\Groups("read")
     ]
-    public ?int $accounting_code_id = null;
+    public int $accounting_code_id = 0;
 
     /**
      * Product's accounting purchase code ID.
      */
     #[
         Assert\Type("integer"),
-        ORM\Column(type: Types::INTEGER, nullable: true),
+        ORM\Column(type: Types::INTEGER, nullable: false),
         Serializer\Groups("read")
     ]
-    public ?int $accounting_purchase_code_id = null;
+    public int $accounting_purchase_code_id = 0;
 }

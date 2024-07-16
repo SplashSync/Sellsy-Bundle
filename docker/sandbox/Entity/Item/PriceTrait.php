@@ -15,6 +15,7 @@
 
 namespace App\Entity\Item;
 
+use App\Entity\Taxe;
 use Doctrine\ORM\Mapping as ORM;
 use Splash\Models\Objects\PricesTrait;
 use Symfony\Component\Serializer\Annotation as Serializer;
@@ -79,24 +80,36 @@ trait PriceTrait
     ]
     public ?string $currency = "EUR";
 
+    /**
+     * Product's tax ID.
+     */
+    #[
+        Assert\Type("integer"),
+        ORM\Column(nullable: false),
+        Serializer\Groups("read"),
+    ]
+    public int $tax_id = 0;
+
+    private ?Taxe $tax = null;
+
     public function getSplashPrice(): ?array
     {
         return self::prices()->encode(
             $this->is_reference_price_taxes_free ? $this->reference_price : null,
-            $this  ? $this->tax->rate : 0.00,
+            $this->isTaxCreated($this->tax_id) ? $this->tax->rate : 0.00,
             !$this->is_reference_price_taxes_free ? $this->reference_price : null,
             $this->currency ?: "EUR"
         );
     }
 
-    /**
-     * Product's tax ID.
-     */
-    //    #[
-    //        ORM\OneToOne(targetEntity: Taxe::class, nullable: true),
-    ////        Serializer\Groups("read")
-    //    ]
-    //    public ?int $tax_id = null;
+    public function isTaxCreated(int $tax_id): bool
+    {
+        if (null === $this->tax || $tax_id === 0) {
+            return false;
+        }
+
+        return true;
+    }
 
     //    #[ORM\PreUpdate()]
     //    public function updatePriceFields(): static
@@ -109,13 +122,4 @@ trait PriceTrait
     //
     //        return $this;
     //    }
-
-    protected function getRate(?int $taxId): ?float
-    {
-        if (null === $taxId) {
-            return null;
-        }
-
-        return 20.00;
-    }
 }

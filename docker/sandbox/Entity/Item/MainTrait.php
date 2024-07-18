@@ -52,7 +52,7 @@ trait MainTrait
         ORM\Column(nullable: false),
         Serializer\Groups("read"),
     ]
-    public string $standard_quantity = "1.00";
+    public string $standardQuantity = "1.00";
 
     /**
      * Product's description
@@ -72,5 +72,5 @@ trait MainTrait
         ORM\Column(nullable: false),
         Serializer\Groups("read"),
     ]
-    public bool $is_name_included_in_description = false;
+    public bool $isNameIncludedInDescription = false;
 }

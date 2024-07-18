@@ -64,7 +64,7 @@ class Item extends AbstractSellsyObject
         Assert\NotNull,
         Assert\Type("string"),
         Assert\Choice(array("product", "service", "shipping", "packaging")),
-        ORM\Column(type: Types::STRING, length: 16),
+        ORM\Column(),
         Serializer\Groups("read")
     ]
     public string $type;

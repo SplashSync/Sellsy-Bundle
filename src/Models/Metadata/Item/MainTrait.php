@@ -74,8 +74,7 @@ trait MainTrait
         JMS\SerializedName("standard_quantity"),
         JMS\Type("string"),
         JMS\Groups(array("Write", "Read", "List")),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Product's standard quantity"),
-        SPL\Microdata("http://schema.org/Offer", "eligibleTransactionVolume")
+        SPL\Field(type: SPL_T_DOUBLE, desc: "Product's standard quantity"),
     ]
     public string $standardQuantity = "1.00";
 
@@ -87,7 +86,7 @@ trait MainTrait
         JMS\SerializedName("description"),
         JMS\Type("string"),
         JMS\Groups(array("Read", "Write", "List")),
-        SPL\Field(type: SPL_T_TEXT, desc: "Product's description"),
+        SPL\Field(type: SPL_T_VARCHAR, desc: "Product's description"),
         SPL\Microdata("http://schema.org/Product", "description")
     ]
     public ?string $description = "";

@@ -55,6 +55,7 @@ class Item
             "packaging" => "Packaging"
         )),
         SPL\IsRequired,
+        SPL\IsNotTested
     ]
     public string $type;
 }

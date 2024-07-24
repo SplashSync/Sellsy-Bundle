@@ -28,12 +28,14 @@ trait MetadataTrait
      * Is product archived ?.
      */
     #[
+        Assert\NotNull,
         Assert\Type("boolean"),
         JMS\SerializedName("is_archived"),
         JMS\Type("boolean"),
         JMS\Groups(array("Read", "List")),
         SPL\Field(type: SPL_T_BOOL, desc: "Product is archived", group: "Meta"),
-        SPL\IsReadOnly()
+        SPL\Microdata("http://schema.org/Product", "offered"),
+        SPL\IsNotTested
     ]
     public bool $isArchived = false;
 

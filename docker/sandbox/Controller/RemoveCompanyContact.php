@@ -53,7 +53,7 @@ class RemoveCompanyContact extends AbstractController
         // Add Contact to Company
         $company->removeContact($contact);
         //====================================================================//
-        // Save Item
+        // Save Product
         $this->entityManager->flush();
 
         return new JsonResponse(array());

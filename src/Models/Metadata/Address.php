@@ -175,7 +175,7 @@ class Address
         Assert\Type("bool"),
         JMS\SerializedName("is_invoicing_address"),
         JMS\Type("boolean"),
-        SPL\Field(name: "Is Invoicing", type: SPL_T_BOOL, desc: "Is address invoicing address ?"),
+        SPL\Field(type: SPL_T_BOOL, name: "Is Invoicing", desc: "Is address invoicing address ?"),
         SPL\IsNotTested(),
     ]
     public bool $isInvoicingAddress = false;
@@ -189,7 +189,7 @@ class Address
         Assert\Type("bool"),
         JMS\SerializedName("is_delivery_address"),
         JMS\Type("boolean"),
-        SPL\Field(name: "Is Delivery", type: SPL_T_BOOL, desc: "Is address delivery address ?"),
+        SPL\Field(type: SPL_T_BOOL, name: "Is Delivery", desc: "Is address delivery address ?"),
         SPL\IsNotTested(),
     ]
     public bool $isDeliveryAddress = false;

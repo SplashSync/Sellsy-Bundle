@@ -1,5 +1,18 @@
 <?php
 
+/*
+ *  This file is part of SplashSync Project.
+ *
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
+
 namespace Splash\Connectors\Sellsy\Models\Metadata\Order;
 
 use JMS\Serializer\Annotation as JMS;
@@ -34,7 +47,7 @@ trait MainTrait
         JMS\Groups(array("Read", "List")),
         JMS\Type("string"),
         SPL\Field(type: SPL_T_VARCHAR, desc: "Order Status"),
-        SPL\Choices([
+        SPL\Choices(array(
             "draft" => "Draft",
             "sent" => "Sent",
             "read" => "Read",
@@ -44,7 +57,7 @@ trait MainTrait
             "invoiced" => "Invoiced",
             "partialinvoiced" => "Partially Invoiced",
             "cancelled" => "Cancelled"
-        ]),
+        )),
     ]
     public string $status;
 
@@ -58,13 +71,13 @@ trait MainTrait
         JMS\Groups(array("Read", "List")),
         JMS\Type("string"),
         SPL\Field(type: SPL_T_VARCHAR, desc: "Order Status"),
-        SPL\Choices([
+        SPL\Choices(array(
             "none" => "None",
             "wait" => "Wait",
             "picking" => "Picking",
             "sent" => "Sent",
             "partialsent" => "Partially Sent",
-        ]),
+        )),
     ]
     public string $orderStatus;
 
@@ -107,7 +120,7 @@ trait MainTrait
     ]
     public string $subject;
 
-    public object $amounts; #TODO: Create Amounts Object
+    public object $amounts; //TODO: Create Amounts Object
 
     /**
      * Order's currency.
@@ -122,17 +135,17 @@ trait MainTrait
     ]
     public string $currency;
 
-    public object $taxes; #TODO: Create Taxes Object
+    public object $taxes; //TODO: Create Taxes Object
 
-    public ?object $discount = null; #TODO: Create Discount Object
+    public ?object $discount = null; //TODO: Create Discount Object
 
-    public object $related; #TODO: Create Related Object
+    public object $related; //TODO: Create Related Object
 
-    public object $publicLink; #TODO: Create PublicLink Object
+    public object $publicLink; //TODO: Create PublicLink Object
 
-    public object $paymentConditionAcceptance; #TODO: Create PaymentConditionAcceptance Object
+    public object $paymentConditionAcceptance; //TODO: Create PaymentConditionAcceptance Object
 
-    public object $owner; #TODO: Create Owner Object
+    public object $owner; //TODO: Create Owner Object
 
     /**
      * Order's fiscal year ID.
@@ -158,9 +171,9 @@ trait MainTrait
     ]
     public ?string $pdfLink = null;
 
-    public object $decimalNumber; #TODO: Create DecimalNumber Object
+    public object $decimalNumber; //TODO: Create DecimalNumber Object
 
-    public ?object $serviceDates = null; #TODO: Create ServiceDates Object
+    public ?object $serviceDates = null; //TODO: Create ServiceDates Object
 
     /**
      * A note about the order.
@@ -185,5 +198,4 @@ trait MainTrait
         SPL\Field(type: SPL_T_DATE, desc: "Shipping Date"),
     ]
     public ?string $shippingDate = null;
-
 }

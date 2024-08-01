@@ -54,8 +54,7 @@ class Item
             "shipping" => "Shipping",
             "packaging" => "Packaging"
         )),
-        SPL\IsRequired,
         SPL\IsNotTested
     ]
-    public string $type;
+    public string $type = "product";
 }

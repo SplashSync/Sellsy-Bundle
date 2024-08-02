@@ -120,7 +120,17 @@ trait MainTrait
     ]
     public string $subject;
 
-    public object $amounts; //TODO: Create Amounts Object
+    /**
+     * Social media information for the company.
+     */
+    #[
+        Assert\Type(Amounts::class),
+        JMS\SerializedName("amounts"),
+        JMS\Type(Amounts::class),
+        SPL\SubResource(targetClass: Amounts::class),
+        SPL\Accessor(factory: "addAmounts"),
+    ]
+    public Amounts $amounts;
 
     /**
      * Order's currency.
@@ -135,17 +145,46 @@ trait MainTrait
     ]
     public string $currency;
 
-    public object $taxes; //TODO: Create Taxes Object
+    //    /**
+    //     * Order's list of taxes used on the order.
+    //     */
+    //    #[
+    //        Assert\NotNull,
+    //        Assert\All([
+    //            new Assert\Type("string")
+    //        ]),
+    //        JMS\SerializedName("taxes"),
+    //        JMS\Groups(["Read", "List", "Required"]),
+    //        JMS\Type("array<string>"),
+    //        SPL\Field(type: SPL_T_INLINE, desc: "Order's Taxes")
+    //    ]
+    //    public array $taxes; TODO: Verifier comment définir les array of objects
 
-    public ?object $discount = null; //TODO: Create Discount Object
+    /**
+     * Social media information for the company.
+     */
+    #[
+        Assert\Type(Discount::class),
+        JMS\SerializedName("discount"),
+        JMS\Type(Discount::class),
+        SPL\SubResource(targetClass: Discount::class),
+        SPL\Accessor(factory: "addDiscount"),
+    ]
+    public ?Discount $discount = null;
 
-    public object $related; //TODO: Create Related Object
+    //    public object $related; TODO: Create Related Object
 
-    public object $publicLink; //TODO: Create PublicLink Object
-
-    public object $paymentConditionAcceptance; //TODO: Create PaymentConditionAcceptance Object
-
-    public object $owner; //TODO: Create Owner Object
+    /**
+     * Order's owner.
+     */
+    #[
+        Assert\Type(Owner::class),
+        JMS\SerializedName("owner"),
+        JMS\Type(Owner::class),
+        SPL\SubResource(targetClass: Owner::class),
+        SPL\Accessor(factory: "addOwner"),
+    ]
+    public Owner $owner;
 
     /**
      * Order's fiscal year ID.
@@ -171,10 +210,6 @@ trait MainTrait
     ]
     public ?string $pdfLink = null;
 
-    public object $decimalNumber; //TODO: Create DecimalNumber Object
-
-    public ?object $serviceDates = null; //TODO: Create ServiceDates Object
-
     /**
      * A note about the order.
      */
@@ -198,4 +233,19 @@ trait MainTrait
         SPL\Field(type: SPL_T_DATE, desc: "Shipping Date"),
     ]
     public ?string $shippingDate = null;
+
+    public function addAmounts(): void
+    {
+        $this->amounts = new Amounts();
+    }
+
+    public function addDiscount(): void
+    {
+        $this->discount = new Discount();
+    }
+
+    public function addOwner(): void
+    {
+        $this->owner = new Owner();
+    }
 }

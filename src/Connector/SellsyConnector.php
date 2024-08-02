@@ -62,6 +62,7 @@ class SellsyConnector extends AbstractOauth2Connector
     protected static array $objectsMap = array(
         "ThirdParty" => Objects\ThirdParty::class,
         "Address" => Objects\Address::class,
+        "Order" => Objects\Order::class,
         //        "Product" => Objects\Product::class,
         //        "Invoice" => Objects\ThirdParty::class,
     );

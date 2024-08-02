@@ -25,13 +25,14 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @SuppressWarnings(PHPMD.TooManyFields)
  */
 #[SPL\SplashObject(
-    name: "Company",
-    description: "Sellsy Company API Object",
-    ico: "fa fa-user"
+    name: "Order",
+    description: "Sellsy Order API Object",
+    ico: "fa"
 )]
 class Order
 {
     use Order\MainTrait;
+    use Order\ExtraInfoTrait;
     use Order\MetadataTrait;
 
     #[

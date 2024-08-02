@@ -19,18 +19,25 @@ use JMS\Serializer\Annotation as JMS;
 use Splash\Metadata\Attributes as SPL;
 use Symfony\Component\Validator\Constraints as Assert;
 
-trait MetadataTrait
+class Owner
 {
-    /**
-     * Order's creation date.
-     */
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("created"),
-        JMS\Groups(array("Read", "List")),
+        JMS\SerializedName("id"),
         JMS\Type("string"),
-        SPL\Field(type: SPL_T_DATETIME, desc: "Order Creation Date"),
+        SPL\Field(type: SPL_T_INT, desc: "[Owner] Owner's ID."),
+        //        SPL\Microdata("http://schema.org/", "")
     ]
-    public string $created;
+    public int $id;
+
+    #[
+        Assert\NotNull,
+        Assert\Type("string"),
+        JMS\SerializedName("type"),
+        JMS\Type("string"),
+        SPL\Field(type: SPL_T_VARCHAR, desc: "[Owner] Owner's type."),
+        //        SPL\Microdata("http://schema.org/", "")
+    ]
+    public string $type;
 }

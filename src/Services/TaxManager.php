@@ -58,7 +58,7 @@ class TaxManager
         //====================================================================//
         // Reformat results
         $taxes = array_combine(
-            array_map(function (array $taxItem) {
+            array_map(static function (array $taxItem) {
                 return $taxItem["id"];
             }, $response['data']),
             $response['data']
@@ -78,6 +78,11 @@ class TaxManager
         return $this->taxes[$taxId]["rate"] ?? 0.0;
     }
 
+    public function getTaxes(): array
+    {
+        return $this->taxes;
+    }
+
     /**
      * Get Tax Label from ID
      */
@@ -91,5 +96,40 @@ class TaxManager
             ? sprintf("%.02f%% VAT", $this->getRate($taxId))
             : $tax["label"]
         ;
+    }
+
+    /**
+     * Get Closest Tax ID for Given Tax Rate
+     */
+    public function findClosestTaxRate(float $taxRate): ?int
+    {
+        if (empty($taxRate) || $taxRate < 0.00) {
+            return null;
+        }
+
+        $closestId = $closestRate = null;
+        $taxList = $this->getTaxes();
+        if (empty($taxList)) {
+            return null;
+        }
+
+        //====================================================================//
+        // Walk on Defined tax Rates
+        foreach ($taxList as $tax) {
+            $rate = $tax["rate"];
+            if (null === $closestId || abs($rate - $taxRate) < abs($closestRate - $taxRate)) {
+                $closestId = $tax["id"];
+                $closestRate = $rate;
+            }
+        }
+
+        //====================================================================//
+        // Check if Closest Rate is Close Enough
+        $threshold = 0.5; // Par exemple, tolérer une différence de 0.5
+        if (abs($closestRate - $taxRate) > $threshold) {
+            return null;
+        }
+
+        return $closestId;
     }
 }

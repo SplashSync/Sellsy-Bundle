@@ -46,19 +46,19 @@ class AddContactAddress extends AbstractController
             throw new NotFoundHttpException();
         }
         //====================================================================//
-        // Refresh Parent Item => Prevent Changes of Similar fields
+        // Refresh Parent Product => Prevent Changes of Similar fields
         $this->entityManager->refresh($contact);
         //====================================================================//
-        // Decode Received Item
+        // Decode Received Product
         $rawData = json_decode($request->getContent(), true, 512, \JSON_BIGINT_AS_STRING);
         /** @var ContactAddress $address */
         $address = $this->serializer->denormalize($rawData, ContactAddress::class, "json");
         $address->setContact($contact);
         //====================================================================//
-        // Persist Item
+        // Persist Product
         $this->entityManager->persist($address);
         //====================================================================//
-        // Save Item
+        // Save Product
         $this->entityManager->flush();
 
         return new JsonResponse($this->serializer->normalize($address, 'json', array(

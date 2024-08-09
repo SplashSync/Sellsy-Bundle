@@ -85,7 +85,7 @@ final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface,
                 : $data;
         }
         //====================================================================//
-        //  Item Normalizer
+        //  Product Normalizer
         if ("item" === $context["operation_type"]) {
             /** @var SellsyObjectInterface $object */
             return ($object::getItemIndex() && !isset($context["api_attribute"]))

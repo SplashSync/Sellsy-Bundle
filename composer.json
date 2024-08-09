@@ -45,7 +45,8 @@
         "badpixxel/php-sdk":                            "~2.0",
         "splash/toolkit":                               "dev-master",
         "knpuniversity/oauth2-client-bundle":           "~2.0",
-        "api-platform/core":                            "^2.7"
+        "api-platform/core":                            "^2.7",
+        "doctrine/migrations":                          "^3.7"
     },
 
     "config": {

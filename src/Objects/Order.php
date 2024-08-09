@@ -57,7 +57,8 @@ class Order extends AbstractApiMetadataObject
         // Prepare Api Visitor
         $this->visitor->setModel(
             ApiModels\Order::class,
-            "/orders",
+//            "/orders",
+            "/invoices",
             "/orders/{id}", //.ApiModels\Order\OrderEmbed::getUriQuery(),
             array("id")
         );
@@ -71,4 +72,18 @@ class Order extends AbstractApiMetadataObject
             )
         );
     }
+
+
+        /**
+     * {@inheritdoc}
+     */
+    public function objectsList(?string $filter = null, array $params = array()): array
+    {
+        $this->visitor->list($filter, $params)->getArrayResults() ?? array();
+
+        dd($this->visitor->getLastResponse());
+
+        return $this->visitor->list($filter, $params)->getArrayResults() ?? array();
+    }
+
 }

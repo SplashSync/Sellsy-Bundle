@@ -63,7 +63,7 @@ class SellsyConnector extends AbstractOauth2Connector
         "ThirdParty" => Objects\ThirdParty::class,
         "Address" => Objects\Address::class,
         "Product" => Objects\Product::class,
-        //        "Invoice" => Objects\ThirdParty::class,
+        "Invoice" => Objects\Invoice::class,
     );
 
     /**

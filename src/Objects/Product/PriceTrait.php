@@ -98,7 +98,7 @@ trait PriceTrait
         switch ($fieldName) {
             case "price":
                 $current = $this->getSplashPrice();
-                $taxManager = $this->connector->getTaxManager();
+                $taxManager = $this->connector->getLocator()->getTaxManager();
 
                 if (!self::prices()->compare($current, $fieldData)) {
                     //====================================================================//
@@ -140,9 +140,9 @@ trait PriceTrait
     {
         return self::prices()->encode(
             (float) $this->object->referencePriceTaxesExc,
-            $this->connector->getTaxManager()->getRate($this->object->taxId),
+            $this->connector->getLocator()->getTaxManager()->getRate($this->object->taxId),
             null,
-            $this->object->currency ?: $this->getDefaultCurrency()
+            $this->object->currency ?: $this->connector->getDefaultCurrency()
         );
     }
 
@@ -155,12 +155,7 @@ trait PriceTrait
             (float) $this->object->purchaseAmount,
             0.00,
             null,
-            $this->object->currency ?: $this->getDefaultCurrency()
+            $this->object->currency ?: $this->connector->getDefaultCurrency()
         );
-    }
-
-    private function getDefaultCurrency(): string
-    {
-        return "EUR"; // TODO: Get Default Currency from Sellsy and/or User local settings
     }
 }

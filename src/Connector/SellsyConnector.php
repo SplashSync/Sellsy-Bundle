@@ -55,8 +55,6 @@ class SellsyConnector extends AbstractOauth2Connector
 {
     use GenericObjectMapperTrait;
     use GenericWidgetMapperTrait;
-    use ConnectorScopesTrait;
-    use ConnectorTaxesTrait;
 
     /**
      * Objects Type Class Map
@@ -102,9 +100,6 @@ class SellsyConnector extends AbstractOauth2Connector
         private readonly ContactCompaniesManager $contactCompaniesManager,
         protected readonly MetadataAdapter   $metadataAdapter,
         protected readonly SellsyLocator   $locator,
-        protected readonly ScopesManager   $scopesManager,
-        protected readonly TaxManager   $taxManager,
-        protected readonly RowsUpdater $rowsUpdater,
         Oauth2ClientManager $oauth2ClientManager,
         EventDispatcherInterface $eventDispatcher,
         LoggerInterface          $logger
@@ -162,12 +157,12 @@ class SellsyConnector extends AbstractOauth2Connector
         }
         //====================================================================//
         // Get Scopes Information
-        if (!$this->fetchAccessScopes()) {
+        if (!$this->getLocator()->getScopesManager()->fetchAccessScopes()) {
             return false;
         }
         //====================================================================//
         // Get List of Available Taxes
-        if (!$this->fetchTaxesLists()) {
+        if (!$this->getLocator()->getTaxManager()->fetchTaxesLists()) {
             return false;
         }
 
@@ -328,16 +323,6 @@ class SellsyConnector extends AbstractOauth2Connector
         );
     }
 
-    //    /**
-    //     * {@inheritdoc}
-    //     */
-    //    public function getSecuredActions() : array
-    //    {
-    //        return array(
-    //            "connect" => \Splash\Security\Oauth2\Actions\Connect::class,
-    //        );
-    //    }
-
     /**
      * {@inheritdoc}
      */
@@ -345,7 +330,6 @@ class SellsyConnector extends AbstractOauth2Connector
     {
         return "@Sellsy/Profile/connected.html.twig";
     }
-
 
     //====================================================================//
     // Sellsy Connector Specific
@@ -435,40 +419,7 @@ class SellsyConnector extends AbstractOauth2Connector
     }
 
     /**
-     * Get Sellsy Address Updater
-     */
-    public function getAddressUpdater(): AddressUpdater
-    {
-        return $this
-            ->addressUpdater
-            ->configure($this->getConnexion(), $this->getHydrator())
-        ;
-    }
-
-    /**
-     * Get Sellsy Rows Updater
-     */
-    public function getRowsUpdater(): RowsUpdater
-    {
-        return $this
-            ->rowsUpdater
-            ->configure($this)
-        ;
-    }
-
-    /**
-     * Get Sellsy Contacts Companies Manager
-     */
-    public function getContactCompaniesManager(): ContactCompaniesManager
-    {
-        return $this
-            ->contactCompaniesManager
-            ->configure($this->getConnexion())
-        ;
-    }
-
-    /**
-     * Get Sellsy Rows Updater
+     * Get Sellsy Services Locator
      */
     public function getLocator(): SellsyLocator
     {

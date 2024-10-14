@@ -16,6 +16,7 @@
 namespace Splash\Connectors\Sellsy\Services;
 
 use Splash\Client\Splash;
+use Splash\Connectors\Sellsy\Models\Connector\SellsyConnectorAwareTrait;
 use Splash\Connectors\Sellsy\Models\Metadata\Address;
 use Splash\Connectors\Sellsy\Models\Metadata\Company;
 use Splash\Connectors\Sellsy\Models\Metadata\Contact;
@@ -27,20 +28,7 @@ use Splash\OpenApi\Models\Connexion\ConnexionInterface;
  */
 class AddressUpdater
 {
-    private ConnexionInterface $connexion;
-
-    private Hydrator $hydrator;
-
-    /**
-     * Configure with Current API Connexion Settings
-     */
-    public function configure(ConnexionInterface $connexion, Hydrator $hydrator): static
-    {
-        $this->connexion = $connexion;
-        $this->hydrator = $hydrator;
-
-        return $this;
-    }
+    use SellsyConnectorAwareTrait;
 
     /**
      * Create or Update Invoicing Address
@@ -105,16 +93,16 @@ class AddressUpdater
         if (empty($address->id)) {
             //====================================================================//
             // Create Address
-            $this->connexion->post(
+            $this->connector->getConnexion()->post(
                 $this->getBaseUri($parent),
-                $this->hydrator->extract($address)
+                $this->connector->getHydrator()->extract($address)
             );
         } else {
             //====================================================================//
             // Update Address
-            $this->connexion->put(
+            $this->connector->getConnexion()->put(
                 sprintf("%s/%d", $this->getBaseUri($parent), $address->id),
-                $this->hydrator->extract($address)
+                $this->connector->getHydrator()->extract($address)
             );
         }
     }

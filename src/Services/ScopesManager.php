@@ -18,18 +18,24 @@ namespace Splash\Connectors\Sellsy\Services;
 use Exception;
 use Splash\Client\Splash;
 use Splash\Connectors\Sellsy\Connector\SellsyConnector;
+use Splash\Connectors\Sellsy\Models\Connector\SellsyConnectorAwareTrait;
 
+/**
+ * Manage Splash Sellsy Connector Access Scopes
+ */
 class ScopesManager
 {
+    use SellsyConnectorAwareTrait;
+
     /**
      * Get Sellsy Access Scope from APi
      */
-    public function fetchAccessScopes(SellsyConnector $connector): bool
+    public function fetchAccessScopes(): bool
     {
         //====================================================================//
         // Get Lists of Available Scopes from Api
         try {
-            $response = $connector->getConnexion()->get("/scopes");
+            $response = $this->connector->getConnexion()->get("/scopes");
         } catch (Exception $e) {
             return Splash::log()->report($e);
         }
@@ -38,7 +44,7 @@ class ScopesManager
         }
         //====================================================================//
         // Store in Connector Settings
-        $connector->setParameter("Scopes", $response);
+        $this->connector->setParameter("Scopes", $response);
 
         return true;
     }

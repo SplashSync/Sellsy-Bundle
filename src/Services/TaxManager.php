@@ -18,12 +18,15 @@ namespace Splash\Connectors\Sellsy\Services;
 use Exception;
 use Splash\Client\Splash;
 use Splash\Connectors\Sellsy\Connector\SellsyConnector;
+use Splash\Connectors\Sellsy\Models\Connector\SellsyConnectorAwareTrait;
 
 /**
  * Manage Sellsy Account Taxes
  */
 class TaxManager
 {
+    use SellsyConnectorAwareTrait;
+
     /**
      * @var array
      */
@@ -34,6 +37,7 @@ class TaxManager
      */
     public function configure(SellsyConnector $connector): static
     {
+        $this->connector = $connector;
         $taxes = $connector->getParameter("Taxes", array());
         $this->taxes = is_array($taxes) ? $taxes : array();
 
@@ -43,12 +47,12 @@ class TaxManager
     /**
      * Get Sellsy Taxes from API
      */
-    public function fetchTaxesLists(SellsyConnector $connector): bool
+    public function fetchTaxesLists(): bool
     {
         //====================================================================//
         // Get Lists of Available Taxes from Api
         try {
-            $response = $connector->getConnexion()->get("/taxes", array('limit' => "100"));
+            $response = $this->connector->getConnexion()->get("/taxes", array('limit' => "100"));
         } catch (Exception $e) {
             return Splash::log()->report($e);
         }
@@ -65,7 +69,7 @@ class TaxManager
         );
         //====================================================================//
         // Store in Connector Settings
-        $connector->setParameter("Taxes", $taxes);
+        $this->connector->setParameter("Taxes", $taxes);
 
         return true;
     }
@@ -99,6 +103,25 @@ class TaxManager
     }
 
     /**
+     * Get Tax ID for Given Tax Label
+     */
+    public function findByLabel(string $label): ?int
+    {
+        if (empty($taxList = $this->getTaxes())) {
+            return null;
+        }
+        //====================================================================//
+        // Walk on Defined tax Rates
+        foreach ($taxList as $tax) {
+            if ($label == $tax["label"] ?? null) {
+                return $tax['id'];
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Get Closest Tax ID for Given Tax Rate
      */
     public function findClosestTaxRate(float $taxRate): ?int
@@ -108,8 +131,7 @@ class TaxManager
         }
 
         $closestId = $closestRate = null;
-        $taxList = $this->getTaxes();
-        if (empty($taxList)) {
+        if (empty($taxList = $this->getTaxes())) {
             return null;
         }
 
@@ -125,7 +147,7 @@ class TaxManager
 
         //====================================================================//
         // Check if Closest Rate is Close Enough
-        $threshold = 0.5; // Par exemple, tolérer une différence de 0.5
+        $threshold = 0.1; // Par exemple, tolérer une différence de 0.5
         if (abs($closestRate - $taxRate) > $threshold) {
             return null;
         }

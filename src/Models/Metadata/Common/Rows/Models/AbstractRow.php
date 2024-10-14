@@ -8,8 +8,8 @@ use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\BreakPageRow;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\CatalogRow;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\CommentRow;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\PackagingRow;
-use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\ShippingPackagingRow;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\ShippingRow;
+use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\SingleRow;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\SubTotalRow;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\TitleRow;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -18,7 +18,7 @@ use Splash\Metadata\Attributes as SPL;
 #[JMS\Discriminator(
     field: "type",
     map: array(
-
+        SingleRow::DATATYPE => SingleRow::class,
         CatalogRow::DATATYPE => CatalogRow::class,
         TitleRow::DATATYPE => TitleRow::class,
         CommentRow::DATATYPE => CommentRow::class,
@@ -33,14 +33,13 @@ abstract class AbstractRow implements RowInterface
 {
     #[
         Assert\NotNull,
-        Assert\Type("string"),
+        Assert\Type("integer"),
         JMS\SerializedName("id"),
-        JMS\Groups(array("Read", "Write")),
-        JMS\Type("string"),
+        JMS\Type("integer"),
         SPL\Field(type: SPL_T_INT, desc: "Item ID"),
         SPL\IsReadOnly(),
     ]
-    public string $id;
+    public int $id;
 
     #[
         Assert\NotNull,
@@ -51,7 +50,7 @@ abstract class AbstractRow implements RowInterface
         SPL\Field(type: SPL_T_VARCHAR, desc: "Item Type"),
         SPL\IsReadOnly(),
     ]
-    public readonly string $rowType;
+    public string $rowType;
 
     /**
      * @inheritdoc

@@ -1,0 +1,7 @@
+
+admin:
+    webhooks:
+        setup:
+            title:  "Webhooks Configuration"
+            ok:     "Webhooks Setup Done"
+            fail:   "Webhooks Setup fail, please try again or contact your administrator"

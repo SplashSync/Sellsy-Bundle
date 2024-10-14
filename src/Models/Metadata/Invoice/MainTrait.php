@@ -25,54 +25,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 trait MainTrait
 {
     /**
-     * Invoice's date.
-     */
-    #[
-        Assert\NotNull,
-        Assert\Type("string<date>"),
-        JMS\SerializedName("date"),
-        JMS\Type("string<date>"),
-        SPL\Field(type: SPL_T_DATE, desc: "Date of the invoice"),
-    ]
-    public string $date = "";
-
-    /**
-     * Invoice's shipping date.
-     */
-    #[
-        Assert\NotNull,
-        Assert\Type("string<string>"),
-        JMS\SerializedName("shipping_date"),
-        JMS\Type("string<date>"),
-        SPL\Field(type: SPL_T_DATE, desc: "Shipping Date of the invoice"),
-    ]
-    public string $shippingDate = "";
-
-    /**
-     * Invoice's due date.
-     */
-    #[
-        Assert\NotNull,
-        Assert\Type("date"),
-        JMS\SerializedName("due_date"),
-        JMS\Type("string<date>"),
-        SPL\Field(type: SPL_T_DATE, desc: "Due Date of the invoice"),
-    ]
-    public string $dueDate = "";
-
-    /**
-     * Invoice's subject.
-     */
-    #[
-        Assert\NotNull,
-        Assert\Type("string"),
-        JMS\SerializedName("subject"),
-        JMS\Type("string"),
-        SPL\Field(desc: "Invoice Subject"),
-    ]
-    public string $subject = "";
-
-    /**
      * Invoice's currency.
      */
     #[
@@ -82,18 +34,30 @@ trait MainTrait
         JMS\Type("string"),
         SPL\Field(desc: "Invoice Currency Code"),
     ]
-    public string $currency = "";
+    public string $currency = "EUR";
 
     /**
-     * Invoice's PDF link.
+     * Invoice's subject.
      */
     #[
-        Assert\Type("url"),
-        JMS\SerializedName("pdf_link"),
-        JMS\Type("url"),
-        SPL\Field(type: SPL_T_URL, desc: "Invoice PDF Link"),
+        Assert\Type("string"),
+        JMS\SerializedName("subject"),
+        JMS\Type("string"),
+        SPL\Field(desc: "Invoice Subject"),
     ]
-    public ?string $pdfLink = null;
+    protected ?string $subject = null;
+
+//    /**
+//     * Invoice's order reference.
+//     */
+//    #[
+//        Assert\Type("string"),
+//        JMS\SerializedName("third_reference"),
+//        JMS\Type("string"),
+//        JMS\Groups(array("Write")),
+//        SPL\Field(desc: "Invoice client Reference"),
+//    ]
+//    public ?string $clientReference = "CUSTO-REf";
 
     /**
      * Invoice's order reference.
@@ -104,31 +68,7 @@ trait MainTrait
         JMS\Type("string"),
         SPL\Field(desc: "Invoice Order Reference"),
     ]
-    public string $orderReference = "";
-
-    /**
-     * Invoice's isDeposit flag.
-     */
-    #[
-        Assert\NotNull,
-        Assert\Type("bool"),
-        JMS\SerializedName("isDeposit"),
-        JMS\Type("bool"),
-        SPL\Field(type: SPL_T_BOOL, desc: "Is a Deposit Invoice ?"),
-    ]
-    public bool $isDeposit = false;
-
-    /**
-     * Invoice's isSentToAccounting flag.
-     */
-    #[
-        Assert\NotNull,
-        Assert\Type("bool"),
-        JMS\SerializedName("is_sent_to_accounting"),
-        JMS\Type("bool"),
-        SPL\Field(type: SPL_T_BOOL, desc: "Is Invoice Sent to Accounting ?"),
-    ]
-    public bool $isSentToAccounting = false;
+    protected ?string $orderReference = null;
 
     /**
      * Invoice's note.
@@ -137,7 +77,61 @@ trait MainTrait
         Assert\Type("string"),
         JMS\SerializedName("note"),
         JMS\Type("string"),
-        SPL\Field(desc: "Invoice Note"),
+        SPL\Field(type: SPL_T_TEXT, desc: "Invoice Note"),
     ]
-    public string $note = "";
+    protected ?string $note = null;
+
+    /**
+     * Get Subject as String
+     */
+    public function getSubject(): string
+    {
+        return (string) $this->subject;
+    }
+
+    /**
+     * Set Subject
+     */
+    public function setSubject(?string $subject): static
+    {
+        $this->subject = (string) $subject;
+
+        return $this;
+    }
+
+    /**
+     * Get Order Reference as String
+     */
+    public function getOrderReference(): string
+    {
+        return (string) $this->orderReference;
+    }
+
+    /**
+     * Set Order Reference
+     */
+    public function setOrderReference(?string $orderReference): static
+    {
+        $this->orderReference = (string) $orderReference;
+
+        return $this;
+    }
+
+    /**
+     * Get Note as String
+     */
+    public function getNote(): string
+    {
+        return (string) $this->note;
+    }
+
+    /**
+     * Set Note
+     */
+    public function setNote(?string $note): static
+    {
+        $this->note = (string) $note;
+
+        return $this;
+    }
 }

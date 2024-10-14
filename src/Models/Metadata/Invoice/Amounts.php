@@ -19,7 +19,7 @@ class Amounts
         JMS\SerializedName("total_raw_excl_tax"),
         JMS\Type("string"),
         JMS\Groups(array("Read")),
-        SPL\Field(type: SPL_T_DOUBLE, desc: "Total Amount of the invoice", group: "Totals"),
+        SPL\Field(type: SPL_T_DOUBLE, desc: "Total Amount of the invoice"),
     ]
     public string $totalRawExclTax = "";
 
@@ -33,7 +33,7 @@ class Amounts
         Assert\Type("string"),
         JMS\SerializedName("total_after_discount_excl_tax"),
         JMS\Type("string"),
-        SPL\Field(type: SPL_T_DOUBLE, desc: "Total Amount of the invoice after discount", group: "Totals"),
+        SPL\Field(type: SPL_T_DOUBLE, desc: "Total Amount of the invoice after discount"),
     ]
     public string $totalAfterDiscountExclTax = "";
 

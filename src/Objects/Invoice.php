@@ -19,6 +19,8 @@ use Exception;
 use Splash\Connectors\Sellsy\Connector\SellsyConnector;
 use Splash\Connectors\Sellsy\Models\Actions\SellsyListAction;
 use Splash\Connectors\Sellsy\Models\Metadata as ApiModels;
+use Splash\Connectors\Sellsy\Objects\Common\RowsParserTrait;
+use Splash\Models\Objects\IntelParserTrait;
 use Splash\OpenApi\Action\Json;
 use Splash\OpenApi\Models\Metadata\AbstractApiMetadataObject;
 
@@ -27,6 +29,9 @@ use Splash\OpenApi\Models\Metadata\AbstractApiMetadataObject;
  */
 class Invoice extends AbstractApiMetadataObject
 {
+    use IntelParserTrait;
+    use RowsParserTrait;
+
     //====================================================================//
     // General Class Variables
     //====================================================================//
@@ -44,7 +49,7 @@ class Invoice extends AbstractApiMetadataObject
      * @throws Exception
      */
     public function __construct(
-        protected SellsyConnector $connector
+        protected SellsyConnector $connector,
     ) {
         parent::__construct(
             $connector->getMetadataAdapter(),
@@ -75,21 +80,25 @@ class Invoice extends AbstractApiMetadataObject
     //====================================================================//
     // DEBUG
     //====================================================================//
+
+    /**
+     * Update Request Object
+     *
+     * @param bool $needed Is This Update Needed
+     *
+     * @return null|string Object ID of False if Failed to Update
+     */
+    public function update(bool $needed): ?string
+    {
+        //====================================================================//
+        // Execute Generic Save
+//                dd($this->visitor->getHydrator()->extract($this->object));
+//                dump($this->visitor->getHydrator()->extract($this->object));
 //
-//    /**
-//     * Update Request Object
-//     *
-//     * @param bool $needed Is This Update Needed
-//     *
-//     * @return null|string Object ID of False if Failed to Update
-//     */
-//    public function update(bool $needed): ?string
-//    {
-//        //====================================================================//
-//        // Execute Generic Save
-//        //        dd($this->visitor->getHydrator()->extract($this->object));
-//
-//        $objectId = parent::update($needed);
+
+
+
+        $objectId = parent::update($needed);
 //        //====================================================================//
 //        // Update Invoicing Address
 //        if (!$objectId) {
@@ -112,36 +121,41 @@ class Invoice extends AbstractApiMetadataObject
 //            ;
 //        }
 //
-//        return $objectId;
-//    }
+        return $objectId;
+    }
 
     /**
-     * Load Request Object
-     *
-     * @param string $objectId Object id
-     *
-     * @return null|object
+     * @inheritdoc
      */
     public function load(string $objectId): ?object
     {
         //====================================================================//
-        // Stack Trace
-//        Splash::log()->trace();
-        //====================================================================//
         // Load Remote Object
-        $loadResponse = $this->visitor->load($objectId);
-        if (!$loadResponse->isSuccess()) {
-            return null;
+        $object = parent::load($objectId);
+        if ($object instanceof ApiModels\Invoice) {
+            //====================================================================//
+            // Load Invoice Linked Payments
+            $object->payments = $this->fetchPayments($objectId);
+
         }
 
-        dump(json_decode($loadResponse->getResponse()));
-        //====================================================================//
-        // Return Hydrated Object
-        $object = $loadResponse->getResults();
-
-        dump($object);
-//        dd($object);
-
-        return is_object($object) ? $object : null;
+        return $object;
     }
+
+    /**
+     * Load Invoice Linked Payments
+     *
+     * @return ApiModels\Payment[]
+     */
+    public function fetchPayments(string $objectId): array
+    {
+        //====================================================================//
+        // Fetch RAW List of Invoice Payements
+        $rawList = $this->visitor->getConnexion()->get("/invoices/".$objectId."/payments?limit=100");
+
+
+        return $this->visitor->getHydrator()->hydrateMany($rawList['data'], ApiModels\Payment::class);
+    }
+
+
 }

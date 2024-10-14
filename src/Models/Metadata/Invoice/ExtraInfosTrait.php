@@ -104,5 +104,5 @@ trait ExtraInfosTrait
         JMS\Type("integer"),
         SPL\Field(type: SPL_T_INT, desc: "Subscription ID"),
     ]
-    public int $subscriptionId = 0;
+    public ?int $subscriptionId = null;
 }

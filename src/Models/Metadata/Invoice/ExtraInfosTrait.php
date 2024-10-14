@@ -19,8 +19,6 @@ use JMS\Serializer\Annotation as JMS;
 use Splash\Metadata\Attributes as SPL;
 use Symfony\Component\Validator\Constraints as Assert;
 
-use Splash\Connectors\Sellsy\Models\Metadata\Invoice\PublicLink;
-
 /**
  * Invoice Extras Fields
  */
@@ -84,6 +82,7 @@ trait ExtraInfosTrait
 
     /**
      * Invoice's Rate Category ID.
+     *
      * @var int
      */
     #[
@@ -96,7 +95,6 @@ trait ExtraInfosTrait
 
     /**
      * Invoice's Subscription ID.
-     *
      */
     #[
         Assert\Type("integer"),

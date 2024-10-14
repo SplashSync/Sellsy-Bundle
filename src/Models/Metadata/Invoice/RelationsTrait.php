@@ -1,19 +1,31 @@
 <?php
 
+/*
+ *  This file is part of SplashSync Project.
+ *
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
+
 namespace Splash\Connectors\Sellsy\Models\Metadata\Invoice;
 
 use JMS\Serializer\Annotation as JMS;
 use Splash\Connectors\Sellsy\Models\Metadata\Payment;
-use Splash\Metadata\Attributes as SPL;
-use Symfony\Component\Validator\Constraints as Assert;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Relation;
+use Splash\Metadata\Attributes as SPL;
 use Splash\Models\Helpers\ObjectsHelper;
+use Symfony\Component\Validator\Constraints as Assert;
 
 trait RelationsTrait
 {
-
     /**
-     * @var Relation[]|null
+     * @var null|Relation[]
      */
     #[
         Assert\Type("array"),
@@ -84,15 +96,15 @@ trait RelationsTrait
         $relation = null;
 
         //====================================================================//
-        // TODO
-//        foreach ($this->related ?? array() as $related)
-//        {
-//            if ($related->type === "company") {
-//                $relation = $related;
-//            }
-//        }
-//
-//        return $relation ? ObjectsHelper::encode("ThirdParty", $relation->id) : null;
+        // Check if Company already exists
+        foreach ($this->related ?? array() as $related) {
+            if ("company" === $related->type && $related->id === ObjectsHelper::id($objectId)) {
+                $relation = $related;
+            }
+        }
+
+        // If Not Found, Create Company Relation
+        $this->customer = $relation ? ObjectsHelper::encode("ThirdParty", ObjectsHelper::id($objectId)) : null;
 
         return $this;
     }

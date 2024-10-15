@@ -30,15 +30,17 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[JMS\Discriminator(
     field: "type",
     map: array(
+        // Mapped by Splash
         SingleRow::DATATYPE => SingleRow::class,
         CatalogRow::DATATYPE => CatalogRow::class,
+        ShippingRow::DATATYPE => ShippingRow::class,
+        PackagingRow::DATATYPE => PackagingRow::class,
+        // NOT Mapped by Splash
         TitleRow::DATATYPE => TitleRow::class,
         CommentRow::DATATYPE => CommentRow::class,
         SubTotalRow::DATATYPE => SubTotalRow::class,
         BreakLineRow::DATATYPE => BreakLineRow::class,
         BreakPageRow::DATATYPE => BreakPageRow::class,
-        ShippingRow::DATATYPE => ShippingRow::class,
-        PackagingRow::DATATYPE => PackagingRow::class,
     )
 )]
 abstract class AbstractRow implements RowInterface

@@ -49,7 +49,7 @@ class Invoice extends AbstractApiMetadataObject
      * @throws Exception
      */
     public function __construct(
-        protected SellsyConnector $connector,
+        protected SellsyConnector $connector
     ) {
         parent::__construct(
             $connector->getMetadataAdapter(),

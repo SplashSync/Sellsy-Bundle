@@ -45,7 +45,7 @@ trait MainTrait
         JMS\Type("string<date>"),
         SPL\Field(type: SPL_T_DATE, desc: "Shipping Date of the invoice"),
     ]
-    public string $shippingDate = "";
+    public ?string $shippingDate = "";
 
     /**
      * Invoice's due date.

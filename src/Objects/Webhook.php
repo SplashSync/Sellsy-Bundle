@@ -1,14 +1,27 @@
 <?php
 
+/*
+ *  This file is part of SplashSync Project.
+ *
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
+
 namespace Splash\Connectors\Sellsy\Objects;
 
 use Exception;
 use Splash\Connectors\Sellsy\Connector\SellsyConnector;
 use Splash\Connectors\Sellsy\Models\Actions\SellsyListAction;
-use Splash\Models\Objects\IntelParserTrait;
-use Splash\OpenApi\Models\Metadata\AbstractApiMetadataObject;
 use Splash\Connectors\Sellsy\Models\Metadata as ApiModels;
+use Splash\Models\Objects\IntelParserTrait;
 use Splash\OpenApi\Action\Json;
+use Splash\OpenApi\Models\Metadata\AbstractApiMetadataObject;
 
 class Webhook extends AbstractApiMetadataObject
 {

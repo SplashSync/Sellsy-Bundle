@@ -1,8 +1,20 @@
 <?php
 
+/*
+ *  This file is part of SplashSync Project.
+ *
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
+
 namespace Splash\Connectors\Sellsy\Test\Controller;
 
-use ContainerAUH01tT\getKnpu_Oauth2_Client_SellsyPrivateService;
 use Splash\Connectors\Sellsy\Connector\SellsyConnector;
 use Splash\Connectors\Sellsy\Dictionary\WebhookArgs;
 use Splash\Tests\Tools\TestCase;
@@ -111,16 +123,16 @@ class S01WebHookTest extends TestCase
             $hooks["PRD-UPDATED"] = self::getProductWebHook(SPL_A_UPDATE, WebhookArgs::UPDATED, uniqid());
             $hooks["PRD-ANYTHING"] = self::getProductWebHook(SPL_A_UPDATE, WebhookArgs::ANYTHING, uniqid());
             $hooks["PRD-DELETED"] = self::getProductWebHook(SPL_A_DELETE, WebhookArgs::DELETED, uniqid());
-//
-//            //====================================================================//
-//            // Add Order & Invoices WebHook Test
-//            $hooks[] = self::getInvoiceWebHook(SPL_A_CREATE, "orders/create", uniqid());
-//            $hooks[] = self::getInvoiceWebHook(SPL_A_UPDATE, "orders/cancelled", uniqid());
-//            $hooks[] = self::getInvoiceWebHook(SPL_A_UPDATE, "orders/fulfilled", uniqid());
-//            $hooks[] = self::getInvoiceWebHook(SPL_A_UPDATE, "orders/paid", uniqid());
-//            $hooks[] = self::getInvoiceWebHook(SPL_A_UPDATE, "orders/partially_fulfilled", uniqid());
-//            $hooks[] = self::getInvoiceWebHook(SPL_A_UPDATE, "orders/updated", uniqid());
-//            $hooks[] = self::getInvoiceWebHook(SPL_A_DELETE, "orders/delete", uniqid());
+            //
+            //            //====================================================================//
+            //            // Add Order & Invoices WebHook Test
+            //            $hooks[] = self::getInvoiceWebHook(SPL_A_CREATE, "orders/create", uniqid());
+            //            $hooks[] = self::getInvoiceWebHook(SPL_A_UPDATE, "orders/cancelled", uniqid());
+            //            $hooks[] = self::getInvoiceWebHook(SPL_A_UPDATE, "orders/fulfilled", uniqid());
+            //            $hooks[] = self::getInvoiceWebHook(SPL_A_UPDATE, "orders/paid", uniqid());
+            //            $hooks[] = self::getInvoiceWebHook(SPL_A_UPDATE, "orders/partially_fulfilled", uniqid());
+            //            $hooks[] = self::getInvoiceWebHook(SPL_A_UPDATE, "orders/updated", uniqid());
+            //            $hooks[] = self::getInvoiceWebHook(SPL_A_DELETE, "orders/delete", uniqid());
         }
 
         return $hooks;
@@ -139,9 +151,9 @@ class S01WebHookTest extends TestCase
     /**
      * Generate Fake ThirdParty Inputs for WebHook Request
      *
-     * @param string      $action
-     * @param string      $eventName
-     * @param string      $objectId
+     * @param string $action
+     * @param string $eventName
+     * @param string $objectId
      *
      * @return array
      */
@@ -165,9 +177,9 @@ class S01WebHookTest extends TestCase
     /**
      * Generate Fake Address Inputs for WebHook Request
      *
-     * @param string      $action
-     * @param string      $eventName
-     * @param string      $objectId
+     * @param string $action
+     * @param string $eventName
+     * @param string $objectId
      *
      * @return array
      */

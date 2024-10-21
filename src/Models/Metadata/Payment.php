@@ -1,9 +1,21 @@
 <?php
 
+/*
+ *  This file is part of SplashSync Project.
+ *
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
+
 namespace Splash\Connectors\Sellsy\Models\Metadata;
 
 use JMS\Serializer\Annotation as JMS;
-use Splash\Connectors\Sellsy\Models\Metadata\Common\RowsAwareTrait;
 use Splash\Metadata\Attributes as SPL;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -27,6 +39,7 @@ class Payment
         JMS\Type("string"),
         SPL\Field(desc: "Transaction Number"),
         SPL\Microdata("http://schema.org/Invoice", "paymentMethodId"),
+        SPL\IsReadOnly
     ]
     public ?string $number = null;
 
@@ -37,6 +50,7 @@ class Payment
         JMS\Groups(array("Read")),
         SPL\Field(type: SPL_T_DATETIME, desc: "Payment date (ISO 8601)"),
         SPL\Microdata("http://schema.org/PaymentChargeSpecification", "validFrom"),
+        SPL\IsReadOnly
     ]
     public \DateTime $paidAt;
 
@@ -56,6 +70,7 @@ class Payment
         JMS\Type("integer"),
         SPL\Field(type: SPL_T_VARCHAR, desc: "Payment method id (cf get./payments/methods)"),
         SPL\Microdata("http://schema.org/Invoice", "PaymentMethod"),
+        SPL\IsReadOnly
     ]
     public int $paymentMethodId;
 
@@ -68,6 +83,7 @@ class Payment
         JMS\SerializedName("currency"),
         JMS\Type("string"),
         SPL\Field(type: SPL_T_CURRENCY, desc: "Payment Currency Code"),
+        SPL\IsReadOnly
     ]
     public string $currency = "EUR";
 
@@ -79,6 +95,7 @@ class Payment
         JMS\SerializedName("note"),
         JMS\Type("string"),
         SPL\Field(type: SPL_T_TEXT, desc: "Invoice Note"),
+        SPL\IsReadOnly
     ]
     protected ?string $note = null;
 }

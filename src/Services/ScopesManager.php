@@ -17,7 +17,6 @@ namespace Splash\Connectors\Sellsy\Services;
 
 use Exception;
 use Splash\Client\Splash;
-use Splash\Connectors\Sellsy\Connector\SellsyConnector;
 use Splash\Connectors\Sellsy\Models\Connector\SellsyConnectorAwareTrait;
 
 /**

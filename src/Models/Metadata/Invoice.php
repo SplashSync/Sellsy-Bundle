@@ -35,7 +35,7 @@ class Invoice
     use Invoice\DatesTrait;
     use Invoice\MainTrait;
     use Invoice\RelationsTrait;
-//    use Invoice\ExtraInfosTrait;
+    //    use Invoice\ExtraInfosTrait;
     use Invoice\MetadataTrait;
     use Invoice\LinksTraits;
     use RowsAwareTrait;

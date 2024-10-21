@@ -15,8 +15,8 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Common\Rows;
 
-use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\Models\ProductRow;
 use JMS\Serializer\Annotation as JMS;
+use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\Models\ProductRow;
 use Splash\Metadata\Attributes as SPL;
 use Symfony\Component\Validator\Constraints as Assert;
 

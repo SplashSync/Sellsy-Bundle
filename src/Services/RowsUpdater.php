@@ -1,5 +1,18 @@
 <?php
 
+/*
+ *  This file is part of SplashSync Project.
+ *
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
+
 namespace Splash\Connectors\Sellsy\Services;
 
 use Psr\Cache\InvalidArgumentException;
@@ -37,7 +50,7 @@ class RowsUpdater
      * Update Object Rows with received Data
      *
      * @param AbstractRow[] $rows
-     * @param array[] $rowsData
+     * @param array[]       $rowsData
      *
      * @return AbstractRow[]
      */
@@ -73,14 +86,6 @@ class RowsUpdater
         }
 
         return $rows;
-    }
-
-    /**
-     * Reset Parser Cursor (Index)
-     */
-    private function reset(): void
-    {
-        $this->rowsCursor = -1;
     }
 
     /**
@@ -125,7 +130,7 @@ class RowsUpdater
         //====================================================================//
         // Should be a Catalog Row => Related Changed ?
         $objectId = $rowData["related"] ?? null;
-        if(($row instanceof CatalogRow) && ($objectId == $row->related->toSplash())) {
+        if (($row instanceof CatalogRow) && ($objectId == $row->related->toSplash())) {
             return $row;
         }
         //====================================================================//
@@ -133,9 +138,10 @@ class RowsUpdater
         if (!$productData = $this->getProductInfos(ObjectsHelper::id($objectId))) {
             return new SingleRow();
         }
+
         //====================================================================//
         // New product Found
-        return match($productData["type"]) {
+        return match ($productData["type"]) {
             "shipping" => new ShippingRow(),
             "packaging" => new PackagingRow(),
             default => new CatalogRow(),
@@ -217,7 +223,7 @@ class RowsUpdater
         if ($productData) {
             //====================================================================//
             // Configure
-            $row->rowType = in_array($productData["type"], array("shipping", "packaging"))
+            $row->rowType = in_array($productData["type"], array("shipping", "packaging"), true)
                 ? $productData["type"]
                 : "catalog"
             ;
@@ -243,11 +249,13 @@ class RowsUpdater
         //====================================================================//
         // Build cache key
         $cacheKey = sprintf("Sellsy-%s-Product-%s", $this->connector->getWebserviceId(), md5($productId));
+
         //====================================================================//
         // Load Product Informations with Caching
         try {
             return $this->appCache->get($cacheKey, function (ItemInterface $item) use ($productId): ?array {
                 $item->expiresAfter(10);
+
                 //====================================================================//
                 // Load Product Informations from API
                 return $this->connector->getObject(
@@ -259,5 +267,13 @@ class RowsUpdater
         } catch (InvalidArgumentException) {
             return null;
         }
+    }
+
+    /**
+     * Reset Parser Cursor (Index)
+     */
+    private function reset(): void
+    {
+        $this->rowsCursor = -1;
     }
 }

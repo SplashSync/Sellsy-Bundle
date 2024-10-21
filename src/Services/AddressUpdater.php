@@ -20,8 +20,6 @@ use Splash\Connectors\Sellsy\Models\Connector\SellsyConnectorAwareTrait;
 use Splash\Connectors\Sellsy\Models\Metadata\Address;
 use Splash\Connectors\Sellsy\Models\Metadata\Company;
 use Splash\Connectors\Sellsy\Models\Metadata\Contact;
-use Splash\OpenApi\Hydrator\Hydrator;
-use Splash\OpenApi\Models\Connexion\ConnexionInterface;
 
 /**
  * Manage Updates of Companies Addresses

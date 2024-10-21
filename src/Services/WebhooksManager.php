@@ -1,5 +1,18 @@
 <?php
 
+/*
+ *  This file is part of SplashSync Project.
+ *
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
+
 namespace Splash\Connectors\Sellsy\Services;
 
 use Splash\Connectors\Sellsy\Dictionary\WebhookConfig;
@@ -74,6 +87,7 @@ class WebhooksManager
                 ));
             }
         }
+
         //====================================================================//
         // Add Splash WebHooks
         return (false !== $this->connector->setObject(
@@ -82,7 +96,6 @@ class WebhooksManager
             $webhookConfig->getConfiguration($this->connector, $webhookUrl)
         ));
     }
-
 
     /**
      * Get List of Installed Webhooks
@@ -105,7 +118,6 @@ class WebhooksManager
         return $webHooks;
     }
 
-
     /**
      * Get Connector Url for Webhooks
      */
@@ -122,6 +134,7 @@ class WebhooksManager
             ->setHost($this->getHostname())
             ->setScheme("https")
         ;
+
         //====================================================================//
         // Generate WebHook Url
         return $this->router->generate(
@@ -163,5 +176,4 @@ class WebhooksManager
 
         return $hostName;
     }
-
 }

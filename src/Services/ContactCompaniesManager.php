@@ -19,7 +19,6 @@ use Splash\Client\Splash;
 use Splash\Connectors\Sellsy\Models\Connector\SellsyConnectorAwareTrait;
 use Splash\Connectors\Sellsy\Models\Metadata\Contact;
 use Splash\Connectors\Sellsy\Models\Metadata\Contact\CompanyLink;
-use Splash\OpenApi\Models\Connexion\ConnexionInterface;
 
 class ContactCompaniesManager
 {

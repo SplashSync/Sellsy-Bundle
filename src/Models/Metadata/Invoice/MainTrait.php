@@ -25,41 +25,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 trait MainTrait
 {
     /**
-     * Invoice's date.
-     */
-    #[
-        Assert\NotNull,
-        Assert\Type("string<date>"),
-        JMS\SerializedName("date"),
-        JMS\Type("string<date>"),
-        SPL\Field(type: SPL_T_DATE, desc: "Date of the invoice"),
-    ]
-    public string $date = "";
-
-    /**
-     * Invoice's shipping date.
-     */
-    #[
-        Assert\Type("string<date>"),
-        JMS\SerializedName("shipping_date"),
-        JMS\Type("string<date>"),
-        SPL\Field(type: SPL_T_DATE, desc: "Shipping Date of the invoice"),
-    ]
-    public ?string $shippingDate = "";
-
-    /**
-     * Invoice's due date.
-     */
-    #[
-        Assert\NotNull,
-        Assert\Type("date"),
-        JMS\SerializedName("due_date"),
-        JMS\Type("string<date>"),
-        SPL\Field(type: SPL_T_DATE, desc: "Due Date of the invoice"),
-    ]
-    public string $dueDate = "";
-
-    /**
      * Invoice's currency.
      */
     #[
@@ -82,17 +47,17 @@ trait MainTrait
     ]
     protected ?string $subject = null;
 
-//    /**
-//     * Invoice's order reference.
-//     */
-//    #[
-//        Assert\Type("string"),
-//        JMS\SerializedName("third_reference"),
-//        JMS\Type("string"),
-//        JMS\Groups(array("Write")),
-//        SPL\Field(desc: "Invoice client Reference"),
-//    ]
-//    public ?string $clientReference = "CUSTO-REf";
+    //    /**
+    //     * Invoice's order reference.
+    //     */
+    //    #[
+    //        Assert\Type("string"),
+    //        JMS\SerializedName("third_reference"),
+    //        JMS\Type("string"),
+    //        JMS\Groups(array("Write")),
+    //        SPL\Field(desc: "Invoice client Reference"),
+    //    ]
+    //    public ?string $clientReference = "CUSTO-REf";
 
     /**
      * Invoice's order reference.

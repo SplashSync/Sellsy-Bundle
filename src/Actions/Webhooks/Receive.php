@@ -1,5 +1,18 @@
 <?php
 
+/*
+ *  This file is part of SplashSync Project.
+ *
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
+
 namespace Splash\Connectors\Sellsy\Actions\Webhooks;
 
 use Exception;
@@ -8,8 +21,8 @@ use Splash\Bundle\Models\Local\ActionsTrait;
 use Splash\Connectors\Sellsy\Dictionary\WebhookArgs;
 use Splash\Connectors\Sellsy\Dictionary\WebhookConfig;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Webmozart\Assert\Assert;
 
@@ -23,12 +36,12 @@ class Receive extends AbstractController
     /**
      * Execute WebHook Actions
      *
-     * @param Request $request
+     * @param Request           $request
      * @param AbstractConnector $connector
      *
-     * @return JsonResponse
+     * @throws BadRequestHttpException|Exception
      *
-     * @throws Exception|BadRequestHttpException
+     * @return JsonResponse
      */
     public function __invoke(
         Request $request,

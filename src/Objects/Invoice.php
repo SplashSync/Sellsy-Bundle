@@ -92,36 +92,33 @@ class Invoice extends AbstractApiMetadataObject
     {
         //====================================================================//
         // Execute Generic Save
-//                dd($this->visitor->getHydrator()->extract($this->object));
-//                dump($this->visitor->getHydrator()->extract($this->object));
-//
+        //                dd($this->visitor->getHydrator()->extract($this->object));
+        //                dump($this->visitor->getHydrator()->extract($this->object));
+        //
 
-
-
-        $objectId = parent::update($needed);
-//        //====================================================================//
-//        // Update Invoicing Address
-//        if (!$objectId) {
-//            return $objectId;
-//        }
-//        //====================================================================//
-//        // Update Invoicing Address
-//        if ($this->isToUpdate("InvoicingAddress")) {
-//            $this->connector
-//                ->getAddressUpdater()
-//                ->createOrUpdateInvoicingAddress($this->object)
-//            ;
-//        }
-//        //====================================================================//
-//        // Update Delivery Address
-//        if ($this->isToUpdate("DeliveryAddress")) {
-//            $this->connector
-//                ->getAddressUpdater()
-//                ->createOrUpdateDeliveryAddress($this->object)
-//            ;
-//        }
-//
-        return $objectId;
+        return parent::update($needed);
+        //        //====================================================================//
+        //        // Update Invoicing Address
+        //        if (!$objectId) {
+        //            return $objectId;
+        //        }
+        //        //====================================================================//
+        //        // Update Invoicing Address
+        //        if ($this->isToUpdate("InvoicingAddress")) {
+        //            $this->connector
+        //                ->getAddressUpdater()
+        //                ->createOrUpdateInvoicingAddress($this->object)
+        //            ;
+        //        }
+        //        //====================================================================//
+        //        // Update Delivery Address
+        //        if ($this->isToUpdate("DeliveryAddress")) {
+        //            $this->connector
+        //                ->getAddressUpdater()
+        //                ->createOrUpdateDeliveryAddress($this->object)
+        //            ;
+        //        }
+        //
     }
 
     /**
@@ -136,7 +133,6 @@ class Invoice extends AbstractApiMetadataObject
             //====================================================================//
             // Load Invoice Linked Payments
             $object->payments = $this->fetchPayments($objectId);
-
         }
 
         return $object;
@@ -153,9 +149,6 @@ class Invoice extends AbstractApiMetadataObject
         // Fetch RAW List of Invoice Payements
         $rawList = $this->visitor->getConnexion()->get("/invoices/".$objectId."/payments?limit=100");
 
-
         return $this->visitor->getHydrator()->hydrateMany($rawList['data'], ApiModels\Payment::class);
     }
-
-
 }

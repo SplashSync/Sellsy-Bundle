@@ -23,28 +23,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 trait MainTrait
 {
     /**
-     * Invoice's Date
-     */
-    #[
-        Assert\NotNull,
-        Assert\Type("string"),
-        ORM\Column(),
-        Serializer\Groups("read")
-    ]
-    public string $date;
-
-    /**
-     * Invoice's Due Date
-     */
-    #[
-        Assert\NotNull,
-        Assert\Type("string"),
-        ORM\Column(),
-        Serializer\Groups("read")
-    ]
-    public string $due_date;
-
-    /**
      * Invoice's Shipping Date
      */
     #[
@@ -86,58 +64,24 @@ trait MainTrait
         ORM\Column(type: Types::JSON),
         Serializer\Groups("read")
     ]
-    public array $taxes = array(
-        "label" => "",
-        "id" => 0,
-        "rate" => "",
-        "amount" => ""
-    );
+    public array $taxes = array();
 
     /**
      * Invoice's Discount
      */
     #[
-        Assert\NotNull,
         Assert\Type("array"),
-        Assert\All(
-            new Assert\Collection(
-                fields: array(
-                    "percent" => new Assert\Type("string"),
-                    "amount" => new Assert\Type("string"),
-                    "type" => new Assert\Choice(array("percent", "amount"))
-                )
+        Assert\Collection(
+            fields: array(
+                "percent" => new Assert\Type("string"),
+                "amount" => new Assert\Type("string"),
+                "type" => new Assert\Choice(array("percent", "amount"))
             )
         ),
-        ORM\Column(type: Types::JSON),
+        ORM\Column(type: Types::JSON, nullable: true),
         Serializer\Groups("read")
     ]
-    public array $discount = array(
-        "percent" => "",
-        "amount" => "",
-        "type" => ""
-    );
-
-    /**
-     * Invoice's Linked Objects
-     */
-    #[
-        Assert\NotNull,
-        Assert\Type("array"),
-        Assert\All(
-            new Assert\Collection(
-                fields: array(
-                    "id" => new Assert\Type("integer"),
-                    "type" => new Assert\Choice(array("company", "individual", "contact", "opportunity"))
-                )
-            )
-        ),
-        ORM\Column(type: Types::JSON),
-        Serializer\Groups("read")
-    ]
-    public array $related = array(
-        "id" => 0,
-        "type" => ""
-    );
+    public ?array $discount = null;
 
     /**
      * Invoice's Owner
@@ -148,10 +92,7 @@ trait MainTrait
         ORM\Column(type: Types::JSON),
         Serializer\Groups("read")
     ]
-    public array $owner = array(
-        "id" => 0,
-        "type" => ""
-    );
+    public array $owner = array();
 
     /**
      * Invoice's PDF Link
@@ -159,7 +100,7 @@ trait MainTrait
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        ORM\Column(),
+        ORM\Column(type: Types::STRING),
         Serializer\Groups("read")
     ]
     public string $pdf_link;
@@ -170,7 +111,7 @@ trait MainTrait
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        ORM\Column(),
+        ORM\Column(type: Types::TEXT),
         Serializer\Groups("read")
     ]
     public string $note;

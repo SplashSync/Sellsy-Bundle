@@ -13,31 +13,29 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Connectors\Sellsy\Models\Metadata\Common;
+namespace App\Entity\Common\Rows;
 
-use JMS\Serializer\Annotation as JMS;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * Describe relation from an Object to Another
- */
 class Relation
 {
     #[
         Assert\NotNull,
         Assert\Type("int"),
-        JMS\SerializedName("id"),
-        JMS\Groups(array("Read", "Write", "Required")),
-        JMS\Type("int"),
+        ORM\Column(type: Types::INTEGER, nullable: false),
+        ORM\Id,
+        Serializer\Groups(array("read", "write", "required"))
     ]
     public int $id;
 
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("type"),
-        JMS\Groups(array("Read", "Write", "Required")),
-        JMS\Type("string"),
+        ORM\Column(nullable: false),
+        Serializer\Groups(array("read", "write", "required"))
     ]
     public string $type;
 }

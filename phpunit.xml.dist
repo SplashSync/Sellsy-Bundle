@@ -34,7 +34,9 @@
 
         <!-- Only Test Specified Sequence -->
         <const  name="SPLASH_SEQUENCE"  value="Sellsy Sandbox" />
-<!--        <const  name="SPLASH_TYPES"     value="Address" />-->
+<!-- Je change la config pour juste tester les factures sur le stagging               -->
+<!--        <const  name="SPLASH_SEQUENCE"  value="Sellsy Staging" />-->
+        <const  name="SPLASH_TYPES"     value="Invoice" />
 <!--        <const  name="SPLASH_FIELDS"     value="civility" />-->
     </php>
 

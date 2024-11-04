@@ -16,8 +16,9 @@
 namespace Splash\Connectors\Sellsy\Models\Metadata\Invoice;
 
 use JMS\Serializer\Annotation as JMS;
-use Splash\Connectors\Sellsy\Models\Metadata\Payment;
+use Splash\Client\Splash;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Relation;
+use Splash\Connectors\Sellsy\Models\Metadata\Payment;
 use Splash\Metadata\Attributes as SPL;
 use Splash\Models\Helpers\ObjectsHelper;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -25,18 +26,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 trait RelationsTrait
 {
     /**
-     * @var null|Relation[]
+     * @var Relation[]
      */
     #[
         Assert\Type("array"),
         JMS\SerializedName("related"),
-        JMS\Groups(array("Read")),
+        JMS\Groups(array("Read", "Write", "Required")),
         JMS\Type("array<".Relation::class.">"),
     ]
-    public ?array $related = null;
+    public array $related = array();
 
     /**
-     * @var Payment[]|null
+     * @var null|Payment[]
      */
     #[
         Assert\Type("array"),
@@ -44,7 +45,8 @@ trait RelationsTrait
         JMS\Groups(array("Read")),
         JMS\Type("array<".Payment::class.">"),
         SPL\ListResource(targetClass: Payment::class),
-        SPL\Manual(read: false, write: true),
+        //        SPL\Manual(read: false, write: true),
+        SPL\IsReadOnly
     ]
     public ?array $payments = null;
 
@@ -60,12 +62,15 @@ trait RelationsTrait
     ]
     public Amounts $amounts;
 
-
     #[
+        JMS\Groups(array("Read")),
+        JMS\Type("string"),
+        JMS\Accessor(setter: "setCustomer"),
         SPL\Field(
             type: SPL_T_ID.IDSPLIT."ThirdParty",
             desc: "Invoice Customer Company"
         ),
+        SPL\IsRequired(),
     ]
     public ?array $customer = null;
 
@@ -78,10 +83,11 @@ trait RelationsTrait
 
         //====================================================================//
         // Identify First Company
-        foreach ($this->related ?? array() as $related)
-        {
-            if ($related->type === "company") {
+        foreach ($this->related ?? array() as $related) {
+            if ("company" === $related->type) {
                 $relation = $related;
+
+                break;
             }
         }
 
@@ -93,19 +99,34 @@ trait RelationsTrait
      */
     public function setCustomer(?string $objectId): static
     {
-        $relation = null;
+        //====================================================================//
+        // Ensure objectId is not null before continuing
+        if (!$objectId = ObjectsHelper::id((string) $objectId)) {
+            Splash::log()->err("Customer ID cannot be null.");
+
+            return $this;
+        }
+        //====================================================================//
+        // Search for existing Company Relation
+        $companiesRelations = array_filter($this->related, fn ($rel) => "company" === $rel->type);
+        $relation = array_shift($companiesRelations);
 
         //====================================================================//
-        // Check if Company already exists
-        foreach ($this->related ?? array() as $related) {
-            if ("company" === $related->type && $related->id === ObjectsHelper::id($objectId)) {
-                $relation = $related;
-            }
+        // Compare with New Value
+        if (($relation instanceof Relation) && ($relation->id == $objectId)) {
+            return $this;
         }
 
-        // If Not Found, Create Company Relation
-        $this->customer = $relation ? ObjectsHelper::encode("ThirdParty", ObjectsHelper::id($objectId)) : null;
+        //====================================================================//
+        // Update company relation
+        $relation ??= new Relation();
+        $relation->type = "company";
+        $relation->id = $objectId;
+        // Update company relations
+        $this->related = array($relation);
 
         return $this;
+        //            // Remove any old company relations
+        //            $this->related = array_filter($this->related, fn ($rel) => "company" !== $rel->type);
     }
 }

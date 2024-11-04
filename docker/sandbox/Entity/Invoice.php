@@ -16,6 +16,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata as API;
+use App\Entity\Common\Rows\RowsAwareTrait;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation as Serializer;
@@ -40,6 +41,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 ]
 class Invoice extends AbstractSellsyObject
 {
+    use Invoice\MainTrait;
+    use Invoice\MetadataTrait;
+    use Invoice\ExtraInfosTrait;
+    use RowsAwareTrait;
+
     /**
      * Unique Identifier.
      */

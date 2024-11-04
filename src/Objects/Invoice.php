@@ -19,10 +19,12 @@ use Exception;
 use Splash\Connectors\Sellsy\Connector\SellsyConnector;
 use Splash\Connectors\Sellsy\Models\Actions\SellsyListAction;
 use Splash\Connectors\Sellsy\Models\Metadata as ApiModels;
+use Splash\Connectors\Sellsy\Models\Metadata\Payment;
 use Splash\Connectors\Sellsy\Objects\Common\RowsParserTrait;
 use Splash\Models\Objects\IntelParserTrait;
 use Splash\OpenApi\Action\Json;
 use Splash\OpenApi\Models\Metadata\AbstractApiMetadataObject;
+use Webmozart\Assert\Assert;
 
 /**
  * OpenApi Implementation for Sellsy Invoice Object
@@ -148,7 +150,12 @@ class Invoice extends AbstractApiMetadataObject
         //====================================================================//
         // Fetch RAW List of Invoice Payements
         $rawList = $this->visitor->getConnexion()->get("/invoices/".$objectId."/payments?limit=100");
+        if (!$rawList) {
+            return array();
+        }
+        $payments = $this->visitor->getHydrator()->hydrateMany($rawList['data'] ?? array(), Payment::class);
+        Assert::allIsInstanceOf($payments, Payment::class);
 
-        return $this->visitor->getHydrator()->hydrateMany($rawList['data'], ApiModels\Payment::class);
+        return $payments;
     }
 }

@@ -16,8 +16,8 @@
 namespace Splash\Connectors\Sellsy\Models\Metadata\Invoice;
 
 use JMS\Serializer\Annotation as JMS;
-use Splash\Connectors\Sellsy\Models\Metadata\Payment;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Relation;
+use Splash\Connectors\Sellsy\Models\Metadata\Payment;
 use Splash\Metadata\Attributes as SPL;
 use Splash\Models\Helpers\ObjectsHelper;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -36,7 +36,7 @@ trait RelationsTrait
     public ?array $related = null;
 
     /**
-     * @var Payment[]|null
+     * @var null|Payment[]
      */
     #[
         Assert\Type("array"),
@@ -60,7 +60,6 @@ trait RelationsTrait
     ]
     public Amounts $amounts;
 
-
     #[
         SPL\Field(
             type: SPL_T_ID.IDSPLIT."ThirdParty",
@@ -78,9 +77,8 @@ trait RelationsTrait
 
         //====================================================================//
         // Identify First Company
-        foreach ($this->related ?? array() as $related)
-        {
-            if ($related->type === "company") {
+        foreach ($this->related ?? array() as $related) {
+            if ("company" === $related->type) {
                 $relation = $related;
             }
         }
@@ -89,7 +87,7 @@ trait RelationsTrait
     }
 
     /**
-     * Get First Related Company
+     * Set First Related Company
      */
     public function setCustomer(?string $objectId): static
     {
@@ -98,13 +96,14 @@ trait RelationsTrait
         //====================================================================//
         // Check if Company already exists
         foreach ($this->related ?? array() as $related) {
-            if ("company" === $related->type && $related->id === ObjectsHelper::id($objectId)) {
+            if ("company" === $related->type && $related->id === ObjectsHelper::id((string) $objectId)) {
                 $relation = $related;
             }
         }
 
         // If Not Found, Create Company Relation
-        $this->customer = $relation ? ObjectsHelper::encode("ThirdParty", ObjectsHelper::id($objectId)) : null;
+        // TODO: On fait quoi là??
+        // $this->customer = $relation ? ObjectsHelper::encode("ThirdParty", ObjectsHelper::id($objectId)) : null;
 
         return $this;
     }

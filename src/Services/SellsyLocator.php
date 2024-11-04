@@ -49,7 +49,6 @@ class SellsyLocator implements ServiceSubscriberInterface
      */
     public function getScopesManager(): ScopesManager
     {
-        /** @var ScopesManager $service */
         Assert::isInstanceOf(
             $service = $this->locator->get(ScopesManager::class),
             ScopesManager::class
@@ -63,7 +62,6 @@ class SellsyLocator implements ServiceSubscriberInterface
      */
     public function getTaxManager(): TaxManager
     {
-        /** @var TaxManager $service */
         Assert::isInstanceOf(
             $service = $this->locator->get(TaxManager::class),
             TaxManager::class
@@ -77,7 +75,6 @@ class SellsyLocator implements ServiceSubscriberInterface
      */
     public function getAddressUpdater(): AddressUpdater
     {
-        /** @var AddressUpdater $service */
         Assert::isInstanceOf(
             $service = $this->locator->get(AddressUpdater::class),
             AddressUpdater::class
@@ -91,7 +88,6 @@ class SellsyLocator implements ServiceSubscriberInterface
      */
     public function getContactCompaniesManager(): ContactCompaniesManager
     {
-        /** @var ContactCompaniesManager $service */
         Assert::isInstanceOf(
             $service = $this->locator->get(ContactCompaniesManager::class),
             ContactCompaniesManager::class
@@ -105,7 +101,6 @@ class SellsyLocator implements ServiceSubscriberInterface
      */
     public function getRowsUpdater(): RowsUpdater
     {
-        /** @var RowsUpdater $service */
         Assert::isInstanceOf(
             $service = $this->locator->get(RowsUpdater::class),
             RowsUpdater::class
@@ -119,7 +114,6 @@ class SellsyLocator implements ServiceSubscriberInterface
      */
     public function getWebhooksManager(): WebhooksManager
     {
-        /** @var WebhooksManager $service */
         Assert::isInstanceOf(
             $service = $this->locator->get(WebhooksManager::class),
             WebhooksManager::class

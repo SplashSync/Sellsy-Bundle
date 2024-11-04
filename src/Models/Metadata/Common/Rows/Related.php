@@ -57,12 +57,12 @@ class Related
 
     public function toSplash(): ?string
     {
-        return ObjectsHelper::encode("Product", $this->id);
+        return ObjectsHelper::encode("Product", (string) $this->id);
     }
 
     public function fromSplash(?string $productId): static
     {
-        $this->id = ObjectsHelper::id($productId);
+        $this->id = (int) ObjectsHelper::id((string) $productId);
         $this->type ??= "product";
         $this->declinationId = null;
 

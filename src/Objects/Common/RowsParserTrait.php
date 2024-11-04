@@ -33,7 +33,7 @@ trait RowsParserTrait
         unset($this->in[$key]);
         //====================================================================//
         // Verify List is Not Empty
-        if (!is_array($rows = $this->object->getProductRows())) {
+        if (empty($rows = $this->object->getProductRows())) {
             return;
         }
         //====================================================================//

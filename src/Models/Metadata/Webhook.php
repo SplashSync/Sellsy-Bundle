@@ -22,6 +22,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Api Metadata Model for Sellsy Webhook.
+ *
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 #[SPL\SplashObject(
     name: "Webhook",

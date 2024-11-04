@@ -91,7 +91,7 @@ trait RelationsTrait
             }
         }
 
-        return $relation ? ObjectsHelper::encode("ThirdParty", $relation->id) : null;
+        return $relation ? ObjectsHelper::encode("ThirdParty", (string) $relation->id) : null;
     }
 
     /**
@@ -121,7 +121,7 @@ trait RelationsTrait
         // Update company relation
         $relation ??= new Relation();
         $relation->type = "company";
-        $relation->id = $objectId;
+        $relation->id = (int) $objectId;
         // Update company relations
         $this->related = array($relation);
 

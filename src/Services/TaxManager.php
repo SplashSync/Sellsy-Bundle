@@ -113,7 +113,7 @@ class TaxManager
         //====================================================================//
         // Walk on Defined tax Rates
         foreach ($taxList as $tax) {
-            if ($label == $tax["label"] ?? null) {
+            if ($label == ($tax["label"] ?? null)) {
                 return $tax['id'];
             }
         }

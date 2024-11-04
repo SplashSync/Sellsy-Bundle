@@ -95,7 +95,7 @@ trait RelationsTrait
     }
 
     /**
-     * Get First Related Company
+     * Set First Related Company
      */
     public function setCustomer(?string $objectId): static
     {

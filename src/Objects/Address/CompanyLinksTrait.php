@@ -72,7 +72,11 @@ trait CompanyLinksTrait
         }
         //====================================================================//
         // Fill List with Data
-        foreach ($this->connector->getLocator()->getContactCompaniesManager()->getAll($this->object) as $index => $companyLink) {
+        $companyLinks = $this->connector->getLocator()
+            ->getContactCompaniesManager()
+            ->getAll($this->object)
+        ;
+        foreach ($companyLinks as $index => $companyLink) {
             //====================================================================//
             // READ Fields
             $value = match ($fieldId) {

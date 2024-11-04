@@ -25,8 +25,6 @@ use Splash\Connectors\Sellsy\Actions\Webhooks\Setup;
 use Splash\Connectors\Sellsy\Oauth2\PrivateClient;
 use Splash\Connectors\Sellsy\Oauth2\SandboxClient;
 use Splash\Connectors\Sellsy\Objects;
-use Splash\Connectors\Sellsy\Services\AddressUpdater;
-use Splash\Connectors\Sellsy\Services\ContactCompaniesManager;
 use Splash\Connectors\Sellsy\Services\SellsyLocator;
 use Splash\Connectors\Sellsy\Widgets;
 use Splash\Core\SplashCore as Splash;
@@ -91,8 +89,6 @@ class SellsyConnector extends AbstractOauth2Connector
     private string $metaDir;
 
     public function __construct(
-        private readonly AddressUpdater $addressUpdater,
-        private readonly ContactCompaniesManager $contactCompaniesManager,
         protected readonly MetadataAdapter   $metadataAdapter,
         protected readonly SellsyLocator   $locator,
         Oauth2ClientManager $oauth2ClientManager,

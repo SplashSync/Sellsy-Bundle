@@ -223,25 +223,25 @@ class S01WebHookTest extends TestCase
         );
     }
 
-    /**
-     * Generate Fake Order & Invoice Inputs for WebHook Request
-     *
-     * @param string $action
-     * @param string $eventName
-     * @param string $invoice
-     *
-     * @return array
-     */
-    private static function getInvoiceWebHook(string $action, string $eventName, string $invoice) : array
-    {
-        return array(
-            $eventName,
-            array(
-                "id" => $invoice,
-            ),
-            "Invoice",
-            $action,
-            $invoice,
-        );
-    }
+    //    /**
+    //     * Generate Fake Order & Invoice Inputs for WebHook Request
+    //     *
+    //     * @param string $action
+    //     * @param string $eventName
+    //     * @param string $invoice
+    //     *
+    //     * @return array
+    //     */
+    //    private static function getInvoiceWebHook(string $action, string $eventName, string $invoice) : array
+    //    {
+    //        return array(
+    //            $eventName,
+    //            array(
+    //                "id" => $invoice,
+    //            ),
+    //            "Invoice",
+    //            $action,
+    //            $invoice,
+    //        );
+    //    }
 }

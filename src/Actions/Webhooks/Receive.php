@@ -55,7 +55,7 @@ class Receive extends AbstractController
 
         //==============================================================================
         // Safety Check
-        $notification = $this->verify($request, $connector);
+        $notification = $this->verify($request);
 
         //====================================================================//
         // Walk on Known Webhook Configs
@@ -83,14 +83,9 @@ class Receive extends AbstractController
     /**
      * Verify Request & Extract Notification
      *
-     * @param Request           $request
-     * @param AbstractConnector $connector
-     *
      * @throws Exception
-     *
-     * @return array
      */
-    private function verify(Request $request, AbstractConnector $connector) : array
+    private function verify(Request $request) : array
     {
         //====================================================================//
         // Verify Request is POST

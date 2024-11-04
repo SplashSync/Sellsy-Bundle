@@ -125,17 +125,17 @@ class RowsUpdater
         //====================================================================//
         // Should be a Single Row
         if ($isSimple) {
-            return (!$row instanceof SingleRow) ? $row : new SingleRow();
+            return ($row instanceof SingleRow) ? $row : new SingleRow();
         }
         //====================================================================//
         // Should be a Catalog Row => Related Changed ?
         $objectId = $rowData["related"] ?? null;
-        if (($row instanceof CatalogRow) && ($objectId == $row->related->toSplash())) {
+        if (($row instanceof CatalogRow) && ($objectId == $row->related?->toSplash())) {
             return $row;
         }
         //====================================================================//
         // New product Not Found
-        if (!$productData = $this->getProductInfos(ObjectsHelper::id($objectId))) {
+        if (!$productData = $this->getProductInfos((string) ObjectsHelper::id($objectId))) {
             return new SingleRow();
         }
 
@@ -177,7 +177,8 @@ class RowsUpdater
         //====================================================================//
         // Update of Unit Price
         if (array_key_exists("unitAmount", $rowData)) {
-            $row->unitAmount = PricesHelper::taxExcluded($rowData["unitAmount"]);
+            $unitAmount = PricesHelper::taxExcluded($rowData["unitAmount"]);
+            $row->unitAmount = $unitAmount ? (string) $unitAmount : null;
         }
         //====================================================================//
         // Update of Tax ID
@@ -186,7 +187,7 @@ class RowsUpdater
                 $row->taxId = $newTaxId;
             }
         } elseif (array_key_exists("unitAmount", $rowData)) {
-            if ($newTaxId = $taxManager->findClosestTaxRate(PricesHelper::taxPercent($rowData["unitAmount"]))) {
+            if ($newTaxId = $taxManager->findClosestTaxRate((float) PricesHelper::taxPercent($rowData["unitAmount"]))) {
                 $row->taxId = $newTaxId;
             }
         }
@@ -217,7 +218,7 @@ class RowsUpdater
         }
         //====================================================================//
         // Load New Product Informations with Caching
-        $productData = $this->getProductInfos(ObjectsHelper::id($objectId));
+        $productData = $this->getProductInfos((string) ObjectsHelper::id($objectId));
         //====================================================================//
         // Update of Connected Product
         if ($productData) {
@@ -253,7 +254,9 @@ class RowsUpdater
         //====================================================================//
         // Load Product Informations with Caching
         try {
-            return $this->appCache->get($cacheKey, function (ItemInterface $item) use ($productId): ?array {
+            $productInfo = $this->appCache->get($cacheKey, function (ItemInterface $item) use ($productId): ?array {
+                //====================================================================//
+                // Setup a Short Cache Storage
                 $item->expiresAfter(10);
 
                 //====================================================================//
@@ -264,6 +267,8 @@ class RowsUpdater
                     array("type", "reference", "description")
                 );
             });
+
+            return is_array($productInfo) ? $productInfo : null;
         } catch (InvalidArgumentException) {
             return null;
         }

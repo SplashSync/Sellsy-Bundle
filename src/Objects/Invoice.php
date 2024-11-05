@@ -19,12 +19,10 @@ use Exception;
 use Splash\Connectors\Sellsy\Connector\SellsyConnector;
 use Splash\Connectors\Sellsy\Models\Actions\SellsyListAction;
 use Splash\Connectors\Sellsy\Models\Metadata as ApiModels;
-use Splash\Connectors\Sellsy\Models\Metadata\Payment;
 use Splash\Connectors\Sellsy\Objects\Common\RowsParserTrait;
 use Splash\Models\Objects\IntelParserTrait;
 use Splash\OpenApi\Action\Json;
 use Splash\OpenApi\Models\Metadata\AbstractApiMetadataObject;
-use Webmozart\Assert\Assert;
 
 /**
  * OpenApi Implementation for Sellsy Invoice Object
@@ -33,13 +31,14 @@ class Invoice extends AbstractApiMetadataObject
 {
     use IntelParserTrait;
     use RowsParserTrait;
+    use Invoice\CrudTrait;
 
     //====================================================================//
     // General Class Variables
     //====================================================================//
 
     /**
-     * @var ApiModels\Invoice
+     * @phpstan-var ApiModels\Invoice
      */
     protected object $object;
 
@@ -79,83 +78,4 @@ class Invoice extends AbstractApiMetadataObject
         );
     }
 
-    //====================================================================//
-    // DEBUG
-    //====================================================================//
-
-    /**
-     * Update Request Object
-     *
-     * @param bool $needed Is This Update Needed
-     *
-     * @return null|string Object ID of False if Failed to Update
-     */
-    public function update(bool $needed): ?string
-    {
-        //====================================================================//
-        // Execute Generic Save
-        //                        dd($this->visitor->getHydrator()->extract($this->object));
-        //                dump($this->visitor->getHydrator()->extract($this->object));
-        //
-
-        return parent::update($needed);
-        //        //====================================================================//
-        //        // Update Invoicing Address
-        //        if (!$objectId) {
-        //            return $objectId;
-        //        }
-        //        //====================================================================//
-        //        // Update Invoicing Address
-        //        if ($this->isToUpdate("InvoicingAddress")) {
-        //            $this->connector
-        //                ->getAddressUpdater()
-        //                ->createOrUpdateInvoicingAddress($this->object)
-        //            ;
-        //        }
-        //        //====================================================================//
-        //        // Update Delivery Address
-        //        if ($this->isToUpdate("DeliveryAddress")) {
-        //            $this->connector
-        //                ->getAddressUpdater()
-        //                ->createOrUpdateDeliveryAddress($this->object)
-        //            ;
-        //        }
-        //
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function load(string $objectId): ?object
-    {
-        //====================================================================//
-        // Load Remote Object
-        $object = parent::load($objectId);
-        if ($object instanceof ApiModels\Invoice) {
-            //====================================================================//
-            // Load Invoice Linked Payments
-            $object->payments = $this->fetchPayments($objectId);
-        }
-
-        return $object;
-    }
-
-    /**
-     * Load Invoice Linked Payments
-     *
-     * @return ApiModels\Payment[]
-     */
-    public function fetchPayments(string $objectId): array
-    {
-        //====================================================================//
-        // Fetch RAW List of Invoice Payements
-        $rawList = $this->visitor->getConnexion()->get("/invoices/".$objectId."/payments?limit=100");
-        if (!$rawList) {
-            return array();
-        }
-        $payments = $this->visitor->getHydrator()->hydrateMany($rawList['data'] ?? array(), Payment::class);
-        Assert::allIsInstanceOf($payments, Payment::class);
-
-        return $payments;
-    }
 }

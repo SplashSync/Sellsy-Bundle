@@ -16,7 +16,6 @@
 namespace Splash\Connectors\Sellsy\Models\Metadata\Invoice;
 
 use JMS\Serializer\Annotation as JMS;
-use Splash\Client\Splash;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Relation;
 use Splash\Connectors\Sellsy\Models\Metadata\Payment;
 use Splash\Metadata\Attributes as SPL;
@@ -37,20 +36,6 @@ trait RelationsTrait
     public array $related = array();
 
     /**
-     * @var null|Payment[]
-     */
-    #[
-        Assert\Type("array"),
-        JMS\SerializedName("payments"),
-        JMS\Groups(array("Read")),
-        JMS\Type("array<".Payment::class.">"),
-        SPL\ListResource(targetClass: Payment::class),
-        //        SPL\Manual(read: false, write: true),
-        SPL\IsReadOnly
-    ]
-    public ?array $payments = null;
-
-    /**
      * @var Amounts
      */
     #[
@@ -63,14 +48,10 @@ trait RelationsTrait
     public Amounts $amounts;
 
     #[
-        JMS\Groups(array("Read")),
-        JMS\Type("string"),
-        JMS\Accessor(setter: "setCustomer"),
         SPL\Field(
             type: SPL_T_ID.IDSPLIT."ThirdParty",
             desc: "Invoice Customer Company"
         ),
-        SPL\IsRequired(),
     ]
     public ?array $customer = null;
 

@@ -82,4 +82,12 @@ abstract class ProductRow extends AbstractRow
 
     #[JMS\Exclude()]
     public ?Related $related = null;
+
+    /**
+     * Compute Product Row Checksum to Detect Changes
+     */
+    public function getChecksum(): string
+    {
+        return md5(serialize($this));
+    }
 }

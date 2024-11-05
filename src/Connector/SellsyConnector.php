@@ -22,6 +22,7 @@ use Splash\Bundle\Models\Connectors\GenericObjectMapperTrait;
 use Splash\Bundle\Models\Connectors\GenericWidgetMapperTrait;
 use Splash\Connectors\Sellsy\Actions\Webhooks\Receive;
 use Splash\Connectors\Sellsy\Actions\Webhooks\Setup;
+use Splash\Connectors\Sellsy\Form\SellsyEditForm;
 use Splash\Connectors\Sellsy\Oauth2\PrivateClient;
 use Splash\Connectors\Sellsy\Oauth2\SandboxClient;
 use Splash\Connectors\Sellsy\Objects;
@@ -33,7 +34,6 @@ use Splash\OpenApi\Action;
 use Splash\OpenApi\Connexion\JsonHalConnexion;
 use Splash\OpenApi\Hydrator\Hydrator;
 use Splash\OpenApi\Models\Connexion\ConnexionInterface;
-use Splash\Security\Oauth2\Form\PrivateAppConfigurationForm;
 use Splash\Security\Oauth2\Model\AbstractOauth2Connector;
 use Splash\Security\Oauth2\Services\Oauth2ClientManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -154,6 +154,11 @@ class SellsyConnector extends AbstractOauth2Connector
         //====================================================================//
         // Get List of Available Taxes
         if (!$this->getLocator()->getTaxManager()->fetchTaxesLists()) {
+            return false;
+        }
+        //====================================================================//
+        // Get List of Available Payment Methods
+        if (!$this->getLocator()->getPaymentMethodsManager()->fetchMethodsLists()) {
             return false;
         }
 
@@ -280,16 +285,8 @@ class SellsyConnector extends AbstractOauth2Connector
     {
         $this->selfTest();
 
-        return PrivateAppConfigurationForm::class;
+        return SellsyEditForm::class;
     }
-
-    //    /**
-    //     * {@inheritdoc}
-    //     */
-    //    public function getMasterAction(): ?string
-    //    {
-    //        return \Splash\Security\Oauth2\Actions\Master::class;
-    //    }
 
     /**
      * {@inheritdoc}

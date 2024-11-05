@@ -41,6 +41,8 @@ class SellsyLocator implements ServiceSubscriberInterface
             ContactCompaniesManager::class,
             RowsUpdater::class,
             WebhooksManager::class,
+            Invoice\PaymentsManager::class,
+            Invoice\PaymentMethodsManager::class,
         );
     }
 
@@ -117,6 +119,32 @@ class SellsyLocator implements ServiceSubscriberInterface
         Assert::isInstanceOf(
             $service = $this->locator->get(WebhooksManager::class),
             WebhooksManager::class
+        );
+
+        return $service->configure($this->connector);
+    }
+
+    /**
+     * Get Sellsy Webhooks Manager
+     */
+    public function getPaymentsManager(): Invoice\PaymentsManager
+    {
+        Assert::isInstanceOf(
+            $service = $this->locator->get(Invoice\PaymentsManager::class),
+            Invoice\PaymentsManager::class
+        );
+
+        return $service->configure($this->connector);
+    }
+
+    /**
+     * Get Sellsy Webhooks Manager
+     */
+    public function getPaymentMethodsManager(): Invoice\PaymentMethodsManager
+    {
+        Assert::isInstanceOf(
+            $service = $this->locator->get(Invoice\PaymentMethodsManager::class),
+            Invoice\PaymentMethodsManager::class
         );
 
         return $service->configure($this->connector);

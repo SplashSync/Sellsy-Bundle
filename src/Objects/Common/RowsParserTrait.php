@@ -75,11 +75,14 @@ trait RowsParserTrait
         }
         //====================================================================//
         // Update Rows using Rows Updater
-        $this->connector
+        $updated = $this->connector
             ->getLocator()
             ->getRowsUpdater()
             ->update($this->object->rows, $fieldData ?? array())
         ;
+        if ($updated) {
+            $this->needUpdate();
+        }
 
         unset($this->in[$fieldName]);
     }

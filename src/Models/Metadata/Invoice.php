@@ -35,9 +35,10 @@ class Invoice
     use Invoice\DatesTrait;
     use Invoice\MainTrait;
     use Invoice\RelationsTrait;
-    //    use Invoice\ExtraInfosTrait;
+    use Invoice\PaymentsTrait;
     use Invoice\MetadataTrait;
     use Invoice\LinksTraits;
+    use Invoice\StatusTrait;
     use RowsAwareTrait;
 
     #[
@@ -59,23 +60,4 @@ class Invoice
         SPL\Flags(listed: true),
     ]
     public string $number;
-
-    #[
-        Assert\NotNull,
-        Assert\Type("string"),
-        JMS\SerializedName("status"),
-        JMS\Type("string"),
-        JMS\Groups(array("Read", "List")),
-        SPL\Field(desc: "Third Party Id"),
-        SPL\Flags(listed: true),
-        SPL\Choices(array(
-            "draft" => "Draft",
-            "due" => "Due",
-            "payinprogress" => "Pay In Progress",
-            "paid" => "Paid",
-            "late" => "Late",
-            "canceled" => "Canceled",
-        )),
-    ]
-    public string $status;
 }

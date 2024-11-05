@@ -15,7 +15,9 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata;
 
+use DateTime;
 use JMS\Serializer\Annotation as JMS;
+use Splash\Connectors\Sellsy\Models\Metadata\Payment\Amount;
 use Splash\Metadata\Attributes as SPL;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -39,40 +41,52 @@ class Payment
         JMS\Type("string"),
         SPL\Field(desc: "Transaction Number"),
         SPL\Microdata("http://schema.org/Invoice", "paymentMethodId"),
-        SPL\IsReadOnly
     ]
     public ?string $number = null;
+
+    #[
+        Assert\Type("array"),
+        JMS\SerializedName("amount"),
+        JMS\Type(Amount::class),
+        SPL\Field(type: SPL_T_DOUBLE, desc: "Payment Amount"),
+        SPL\Microdata("http://schema.org/PaymentChargeSpecification", "price"),
+    ]
+    public ?Amount $amount = null;
 
     #[
         Assert\Type("datetime"),
         JMS\SerializedName("paid_at"),
         JMS\Type("DateTime"),
         JMS\Groups(array("Read")),
-        SPL\Field(type: SPL_T_DATETIME, desc: "Payment date (ISO 8601)"),
+        SPL\Field(type: SPL_T_DATE, desc: "Payment date (ISO 8601)"),
         SPL\Microdata("http://schema.org/PaymentChargeSpecification", "validFrom"),
-        SPL\IsReadOnly
     ]
-    public \DateTime $paidAt;
-
-    #[
-        Assert\Type("string"),
-        JMS\SerializedName("status"),
-        JMS\Type("string"),
-        SPL\Field(desc: "Payment status"),
-        SPL\IsReadOnly,
-    ]
-    public ?string $status = null;
+    public DateTime $paidAt;
 
     #[
         Assert\NotNull,
         Assert\Type("integer"),
         JMS\SerializedName("payment_method_id"),
         JMS\Type("integer"),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Payment method id (cf get./payments/methods)"),
-        SPL\Microdata("http://schema.org/Invoice", "PaymentMethod"),
+        SPL\Field(
+            type: SPL_T_VARCHAR,
+            name: "Method ID",
+            desc: "Sellsy Payment Method Id"
+        ),
         SPL\IsReadOnly
     ]
-    public int $paymentMethodId;
+    public ?int $paymentMethodId = null;
+
+    #[
+        JMS\Exclude(),
+        SPL\Field(
+            type: SPL_T_VARCHAR,
+            name: "Method",
+            desc: "Payment Method Code / Name"
+        ),
+        SPL\Microdata("http://schema.org/Invoice", "PaymentMethod"),
+    ]
+    public ?string $method = null;
 
     /**
      * Payment currency.
@@ -83,9 +97,21 @@ class Payment
         JMS\SerializedName("currency"),
         JMS\Type("string"),
         SPL\Field(type: SPL_T_CURRENCY, desc: "Payment Currency Code"),
-        SPL\IsReadOnly
     ]
-    public string $currency = "EUR";
+    public ?string $currency = "EUR";
+
+    //====================================================================//
+    // Read Only Informations
+    //====================================================================//
+
+    #[
+        Assert\Type("string"),
+        JMS\SerializedName("status"),
+        JMS\Type("string"),
+        SPL\Field(desc: "Payment status"),
+        SPL\IsReadOnly,
+    ]
+    public ?string $status = null;
 
     /**
      * Payment note.
@@ -97,5 +123,130 @@ class Payment
         SPL\Field(type: SPL_T_TEXT, desc: "Invoice Note"),
         SPL\IsReadOnly
     ]
-    protected ?string $note = null;
+    public ?string $note = null;
+
+    /**
+     * Indicate this Payement was updated
+     */
+    private bool $updated = false;
+
+    //====================================================================//
+    // State Checkers
+    //====================================================================//
+
+    #[JMS\PostDeserialize]
+    public function postDeserialize(): void
+    {
+        $this->updated = false;
+    }
+
+    /**
+     * This Payment needs to be Created
+     */
+    public function isToCreate(): bool
+    {
+        return $this->updated;
+    }
+
+    /**
+     * This Payment needs to be Deleted before Creation
+     *
+     * @return bool
+     */
+    public function isToDelete(): bool
+    {
+        return
+            // Payment was Updated
+            (!empty($this->id) && $this->updated)
+            // Payment needs to be Deleted
+            || (SPL_A_DELETE == $this->status)
+        ;
+    }
+
+    //====================================================================//
+    // Getters & Setters
+    //====================================================================//
+
+    /**
+     * Update Number with Change Detection
+     */
+    public function setNumber(string $number): static
+    {
+        if ($number && $number != $this->number) {
+            $this->number = $number;
+            $this->updated = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Update Payment Method ID with Change Detection
+     */
+    public function setPaymentMethodId(?int $methodId): static
+    {
+        if ($methodId && $methodId != $this->paymentMethodId) {
+            $this->paymentMethodId = $methodId;
+            $this->updated = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Extract Payment Amount from Amount Object
+     */
+    public function getAmount(): float
+    {
+        return $this->amount ? (float) $this->amount->value : 0.0;
+    }
+
+    /**
+     * Update Amount object with Payment Amount
+     */
+    public function setAmount(float $amount): static
+    {
+        if (abs($amount - $this->getAmount()) > 1E-3) {
+            $this->amount ??= new Amount();
+            $this->amount->value = (string) $amount;
+            $this->updated = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Update Amount object with Payment Currency
+     */
+    public function setPaidAt(?DateTime $paidAt): static
+    {
+        if ($paidAt && ($paidAt != $this->paidAt)) {
+            $this->paidAt = $paidAt;
+            $this->updated = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Extract Payment Currency from Amount Object
+     */
+    public function getCurrency(): string
+    {
+        return $this->amount?->currency ?? "EUR";
+    }
+
+    /**
+     * Update Amount object with Payment Currency
+     */
+    public function setCurrency(?string $currency): static
+    {
+        if ($currency != $this->getCurrency()) {
+            $this->amount ??= new Amount();
+            $this->amount->currency = $currency ?? "EUR";
+            $this->updated = true;
+        }
+
+        return $this;
+    }
 }

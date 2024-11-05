@@ -1,5 +1,14 @@
 
 admin:
+    payments:
+        methods:
+            default:
+                title:      "Select Default Payment Method"
+                help:       "This method will be used if Splash was unable to detect given payment method"
+            associations:
+                title:      "Payment Method Associations"
+                help:       "Associate payment method in order to parse received invoices"
+
     webhooks:
         setup:
             title:  "Webhooks Configuration"

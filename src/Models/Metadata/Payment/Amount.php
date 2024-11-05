@@ -29,10 +29,10 @@ class Amount
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("total"),
+        JMS\SerializedName("value"),
         JMS\Type("string"),
     ]
-    public string $value = "";
+    public string $value = "0.0";
 
     /**
      * Payment remaining amount.
@@ -40,8 +40,8 @@ class Amount
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("total"),
+        JMS\SerializedName("currency"),
         JMS\Type("string"),
     ]
-    public string $currency = "";
+    public string $currency = "EUR";
 }

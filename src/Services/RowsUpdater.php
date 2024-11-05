@@ -41,6 +41,11 @@ class RowsUpdater
      */
     private int $rowsCursor = -1;
 
+    /**
+     * Rows Updated
+     */
+    private bool $updated = false;
+
     public function __construct(
         private readonly CacheInterface $appCache,
     ) {
@@ -52,9 +57,9 @@ class RowsUpdater
      * @param AbstractRow[] $rows
      * @param array[]       $rowsData
      *
-     * @return AbstractRow[]
+     * @return bool True if Rows Updated
      */
-    public function update(array &$rows, array $rowsData): array
+    public function update(array &$rows, array $rowsData): bool
     {
         //====================================================================//
         // Reset Rows Cursor before Writing
@@ -68,6 +73,7 @@ class RowsUpdater
             //====================================================================//
             // Ensure Row is from Correct Type, or Create a new one
             $row = $this->updateRowClass($row, $rowData);
+            $checksum = $row->getChecksum();
             //====================================================================//
             // Update Row Contents
             $this
@@ -78,14 +84,18 @@ class RowsUpdater
             //====================================================================//
             // Push updated Row to Rows
             $rows[$this->rowsCursor] = $row;
+            if ($checksum != $row->getChecksum()) {
+                $this->updated = true;
+            }
         }
         //====================================================================//
         // Delete Remaining Lines
         while ($this->getNextProductRow($rows)) {
             unset($rows[$this->rowsCursor]);
+            $this->updated = true;
         }
 
-        return $rows;
+        return $this->updated;
     }
 
     /**
@@ -162,7 +172,7 @@ class RowsUpdater
             $row->description = $rowData["description"];
         }
         if (array_key_exists("quantity", $rowData)) {
-            $row->quantity = $rowData["quantity"];
+            $row->quantity = sprintf("%.2f", $rowData["quantity"]);
         }
 
         return $this;
@@ -178,11 +188,11 @@ class RowsUpdater
         // Update of Unit Price
         if (array_key_exists("unitAmount", $rowData)) {
             $unitAmount = PricesHelper::taxExcluded($rowData["unitAmount"]);
-            $row->unitAmount = $unitAmount ? (string) $unitAmount : null;
+            $row->unitAmount = sprintf("%.2f", $unitAmount ?: 0.0);
         }
         //====================================================================//
         // Update of Tax ID
-        if (array_key_exists("taxId", $rowData)) {
+        if (array_key_exists("taxId", $rowData) && !empty($rowData["taxId"])) {
             if ($newTaxId = $taxManager->findByLabel((string) $rowData["taxId"])) {
                 $row->taxId = $newTaxId;
             }
@@ -280,5 +290,6 @@ class RowsUpdater
     private function reset(): void
     {
         $this->rowsCursor = -1;
+        $this->updated = false;
     }
 }

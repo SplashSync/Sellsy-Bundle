@@ -15,7 +15,6 @@
 
 namespace Splash\Connectors\Sellsy\Services\Invoice;
 
-use Splash\Client\Splash;
 use Splash\Connectors\Sellsy\Models\Connector\SellsyApiV1AwareTrait;
 use Splash\Connectors\Sellsy\Models\Connector\SellsyConnectorAwareTrait;
 use Splash\Connectors\Sellsy\Models\Metadata\Invoice;

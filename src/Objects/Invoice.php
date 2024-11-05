@@ -77,5 +77,4 @@ class Invoice extends AbstractApiMetadataObject
             )
         );
     }
-
 }

@@ -16,8 +16,8 @@
 namespace Splash\Connectors\Sellsy\Models\Metadata\Invoice;
 
 use JMS\Serializer\Annotation as JMS;
+use Splash\Client\Splash;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Relation;
-use Splash\Connectors\Sellsy\Models\Metadata\Payment;
 use Splash\Metadata\Attributes as SPL;
 use Splash\Models\Helpers\ObjectsHelper;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -53,7 +53,7 @@ trait RelationsTrait
             desc: "Invoice Customer Company"
         ),
     ]
-    public ?array $customer = null;
+    public ?string $customer = null;
 
     /**
      * Get First Related Company
@@ -107,7 +107,5 @@ trait RelationsTrait
         $this->related = array($relation);
 
         return $this;
-        //            // Remove any old company relations
-        //            $this->related = array_filter($this->related, fn ($rel) => "company" !== $rel->type);
     }
 }

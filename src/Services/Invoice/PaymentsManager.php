@@ -22,7 +22,7 @@ use Splash\Connectors\Sellsy\Models\Metadata\Payment;
 use Webmozart\Assert\Assert;
 
 /**
- * Manager CRUD of V1 Payements
+ * Manager CRUD of V1 Payments
  */
 class PaymentsManager
 {

@@ -16,11 +16,14 @@
 namespace App\Entity\Invoice;
 
 use App\Entity\Common\Rows\Related;
+use App\Entity\Company;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Splash\Client\Splash;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Relation;
 use Splash\Models\Helpers\ObjectsHelper;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -42,7 +45,7 @@ trait RelationsTrait
             )
         ),
         ORM\Column(type: Types::JSON, nullable: false),
-        Serializer\Groups("read")
+        Serializer\Groups(array("read", "write")),
     ]
     public array $related = array();
 
@@ -61,10 +64,9 @@ trait RelationsTrait
     public array $amounts = array();
 
     #[
-        Assert\Type("array"),
-        ORM\Column(type: Types::JSON),
+        ORM\ManyToOne(targetEntity: Company::class),
     ]
-    public ?array $customer = null;
+    public ?Company $customer = null;
 
     public function get_customer(): ?string
     {
@@ -112,5 +114,38 @@ trait RelationsTrait
         }
 
         return $this;
+    }
+
+    /**
+     * Update Customer relation based on received Relation Array
+     */
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function updateCustomer(LifecycleEventArgs $event): void
+    {
+        //====================================================================//
+        // Extract Company from Related
+        $customerId = null;
+        //        foreach ($this->related as $item) {
+        //
+        //        }
+        //====================================================================//
+        // Check if Changed
+        $current = $this->shipping_address->id ?? null;
+        $new = $this->shipping_address_id ?? 1;
+        if ($current && $new && ($current == $new)) {
+            return;
+        }
+        //====================================================================//
+        // Identify New
+        $address = $event->getObjectManager()->getRepository(Company::class)->find($customerId);
+        if (!$address) {
+            throw new NotFoundHttpException(
+                sprintf("Target Address %s not found", $new)
+            );
+        }
+        //====================================================================//
+        // Update
+        $this->shipping_address = $address;
     }
 }

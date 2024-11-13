@@ -126,7 +126,7 @@ class Payment
     public ?string $note = null;
 
     /**
-     * Indicate this Payement was updated
+     * Indicate this Payment was updated
      */
     private bool $updated = false;
 

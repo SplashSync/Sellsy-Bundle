@@ -52,6 +52,7 @@ trait RelationsTrait
             type: SPL_T_ID.IDSPLIT."ThirdParty",
             desc: "Invoice Customer Company"
         ),
+        SPL\IsRequired
     ]
     public ?string $customer = null;
 

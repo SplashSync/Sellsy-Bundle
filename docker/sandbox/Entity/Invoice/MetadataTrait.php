@@ -15,6 +15,8 @@
 
 namespace App\Entity\Invoice;
 
+use DateTime;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -27,30 +29,29 @@ trait MetadataTrait
     #[
         Assert\NotNull,
         Assert\Type("datetime"),
-        ORM\Column(),
-        Serializer\Groups("read")
+        ORM\Column(type: Types::DATE_MUTABLE),
+        Serializer\Groups("read"),
+        //        Serializer\Context(array('datetime_format' => 'Y-m-d')),
     ]
-    public string $date;
+    public DateTime $date;
 
     /**
      * Invoice's Due Date
      */
     #[
-        Assert\NotNull,
         Assert\Type("datetime"),
-        ORM\Column(),
+        ORM\Column(type: Types::DATE_MUTABLE, nullable: true),
         Serializer\Groups("read")
     ]
-    public string $due_date;
+    public ?DateTime $due_date = null;
 
     /**
      * Invoice's Created Date
      */
     #[
-        Assert\NotNull,
-        Assert\Type("string"),
-        ORM\Column(),
+        Assert\Type("datetime"),
+        ORM\Column(type: Types::DATETIME_MUTABLE),
         Serializer\Groups("read")
     ]
-    public string $created;
+    public DateTime $created;
 }

@@ -77,4 +77,13 @@ class Invoice extends AbstractApiMetadataObject
             )
         );
     }
+
+    public function create(): ?object
+    {
+        $object = parent::create();
+
+        dd($this->visitor->getLastResponse());
+
+        return $object;
+    }
 }

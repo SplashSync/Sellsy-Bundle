@@ -17,6 +17,7 @@ namespace App\Entity\Common\Rows;
 
 use App\Entity\Common\Rows\Models\AbstractRow;
 use App\Entity\Common\Rows\Models\ProductRow;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -24,23 +25,33 @@ use Symfony\Component\Validator\Constraints as Assert;
 trait RowsAwareTrait
 {
     /**
-     * @var AbstractRow[]
+     * @var AbstractRow[] Array of row items of type AbstractRow or its subclasses
      */
-    #[
-        Assert\Type("array<".AbstractRow::class.">"),
-        Assert\NotNull,
-        ORM\Column(),
-        Serializer\Groups("read")
-    ]
+    #[Assert\NotNull]
+    #[Assert\All(array(
+        new Assert\Type(type: AbstractRow::class)
+    ))]
+    #[ORM\Column(type: Types::JSON)]
+    #[Serializer\Groups("read")]
     public array $rows = array();
 
     /**
+     * Returns only rows of type ProductRow.
+     *
      * @return ProductRow[]
      */
     public function getProductRows(): array
     {
-        return array_filter($this->rows, function (AbstractRow $row) {
-            return $row instanceof ProductRow;
-        });
+        return array_filter($this->rows, fn (AbstractRow $row) => $row instanceof ProductRow);
+    }
+
+    /**
+     * Sets rows, ensuring they are of type AbstractRow or a subclass.
+     *
+     * @param AbstractRow[] $rows
+     */
+    public function setRows(array $rows): void
+    {
+        $this->rows = array_filter($rows, fn ($row) => $row instanceof AbstractRow);
     }
 }

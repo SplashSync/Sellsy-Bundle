@@ -30,6 +30,7 @@ trait DatesTrait
         JMS\SerializedName("date"),
         JMS\Type("DateTime<'Y-m-d'>"),
         SPL\Field(type: SPL_T_DATE, desc: "Date of the invoice"),
+        SPL\IsRequired,
     ]
     public \DateTime $date;
 

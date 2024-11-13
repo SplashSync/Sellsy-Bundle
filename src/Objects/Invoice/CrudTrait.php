@@ -26,19 +26,15 @@ trait CrudTrait
     {
         //====================================================================//
         // Load Remote Object
-        $object = parent::load($objectId);
+        return parent::load($objectId);
         //====================================================================//
         // Invoice Found
-        if ($object instanceof ApiModels\Invoice) {
-            //====================================================================//
-            // Load Invoice Linked Payments
-            $object->payments = $this->connector->getLocator()
-                ->getPaymentsManager()
-                ->fetchPayments($objectId)
-            ;
-        }
-
-        return $object;
+        //        if ($object instanceof ApiModels\Invoice) {
+        //            //====================================================================//
+        //            // Load Invoice Linked Payments
+        //            $paymentsManager = $this->connector->getLocator()->getPaymentsManager();
+        //            $object->loadPayments($paymentsManager->fetchPayments($objectId));
+        //        }
     }
 
     /**

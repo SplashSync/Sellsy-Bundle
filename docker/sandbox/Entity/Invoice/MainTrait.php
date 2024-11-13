@@ -26,34 +26,32 @@ trait MainTrait
      * Invoice's Shipping Date
      */
     #[
-        Assert\NotNull,
         Assert\Type("string"),
-        ORM\Column(),
+        Assert\Regex(pattern: "/\\d{4}-\\d{2}-\\d{2}/"),
+        ORM\Column(type: Types::STRING, nullable: true),
         Serializer\Groups("read")
     ]
-    public string $shipping_date;
+    public ?string $shipping_date = null;
 
     /**
      * Invoice's Subject
      */
     #[
-        Assert\NotNull,
         Assert\Type("string"),
-        ORM\Column(),
+        ORM\Column(type: Types::STRING, length: 255, nullable: true),
         Serializer\Groups("read")
     ]
-    public string $subject;
+    public ?string $subject = null;
 
     /**
      * Invoice's Currency Code
      */
     #[
-        Assert\NotNull,
         Assert\Type("string"),
-        ORM\Column(),
-        Serializer\Groups("read")
+        Serializer\Groups("read"),
+        ORM\Column(type: Types::STRING, length: 3),
     ]
-    public string $currency;
+    public ?string $currency = "EUR";
 
     /**
      * Invoice's Taxes
@@ -98,12 +96,12 @@ trait MainTrait
      * Invoice's PDF Link
      */
     #[
-        Assert\NotNull,
         Assert\Type("string"),
-        ORM\Column(type: Types::STRING),
+        Assert\Url,
+        ORM\Column(type: Types::STRING, nullable: true),
         Serializer\Groups("read")
     ]
-    public string $pdf_link;
+    public ?string $pdf_link = null;
 
     /**
      * Invoice's Note
@@ -114,5 +112,5 @@ trait MainTrait
         ORM\Column(type: Types::TEXT),
         Serializer\Groups("read")
     ]
-    public string $note;
+    public string $note = "";
 }

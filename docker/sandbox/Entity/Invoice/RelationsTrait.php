@@ -20,9 +20,7 @@ use App\Entity\Company;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
-use Splash\Client\Splash;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Relation;
-use Splash\Models\Helpers\ObjectsHelper;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -49,12 +47,12 @@ trait RelationsTrait
     ]
     public array $related = array();
 
-    #[
-        Assert\Type("array"),
-        ORM\Column(type: Types::JSON),
-        Serializer\Groups(array("read")),
-    ]
-    public ?array $payments = null;
+    //    #[
+    //        Assert\Type("array"),
+    //        ORM\Column(type: Types::JSON),
+    //        Serializer\Groups(array("read")),
+    //    ]
+    //    public ?array $payments = null;
 
     #[
         Assert\Type("array"),
@@ -68,54 +66,6 @@ trait RelationsTrait
     ]
     public ?Company $customer = null;
 
-    public function get_customer(): ?string
-    {
-        $relation = null;
-
-        foreach ($this->related as $related) {
-            if ('company' === $related['type']) {
-                $relation = $related;
-
-                break;
-            }
-        }
-
-        return $relation ? ObjectsHelper::encode('ThirdParty', $relation->id) : null;
-    }
-
-    public function set_customer(?string $customerId): static
-    {
-        //====================================================================//
-        // Ensure objectId is not null before continuing
-        if (!$customerId = ObjectsHelper::id((string) $customerId)) {
-            Splash::log()->err("Customer ID cannot be null.");
-
-            return $this;
-        }
-
-        //====================================================================//
-        // Search for existing Company Relation
-        $companiesRelations = array_filter($this->related, fn ($rel) => "company" === $rel->type);
-        $relation = array_shift($companiesRelations);
-
-        //====================================================================//
-        // Compare with New Value
-        if (($relation instanceof Relation) && ($relation->id == $customerId)) {
-            return $this;
-        }
-
-        if ($relation) {
-            $relation->id = $customerId;
-        } else {
-            $relation = new Related();
-            $relation->id = $customerId;
-            $relation->type = "company";
-            $this->related[] = $relation;
-        }
-
-        return $this;
-    }
-
     /**
      * Update Customer relation based on received Relation Array
      */
@@ -126,26 +76,31 @@ trait RelationsTrait
         //====================================================================//
         // Extract Company from Related
         $customerId = null;
-        //        foreach ($this->related as $item) {
-        //
-        //        }
+        foreach ($this->related as $related) {
+            if ('company' === $related['type']) {
+                $customerId = $related['id'];
+
+                break;
+            }
+        }
+
         //====================================================================//
-        // Check if Changed
-        $current = $this->shipping_address->id ?? null;
-        $new = $this->shipping_address_id ?? 1;
-        if ($current && $new && ($current == $new)) {
+        // Ensure Customer Id is Valid
+        $current = $this->customer->id ?? null;
+        if ($current && $customerId && ($current == $customerId)) {
             return;
         }
+
         //====================================================================//
-        // Identify New
-        $address = $event->getObjectManager()->getRepository(Company::class)->find($customerId);
-        if (!$address) {
+        // Identify New Customer
+        $company = $event->getObjectManager()->getRepository(Company::class)->find($customerId);
+        if (!$company) {
             throw new NotFoundHttpException(
-                sprintf("Target Address %s not found", $new)
+                sprintf("Target Company %s not found", $customerId)
             );
         }
+
         //====================================================================//
-        // Update
-        $this->shipping_address = $address;
+        $this->customer = $company;
     }
 }

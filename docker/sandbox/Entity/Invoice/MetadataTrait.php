@@ -31,7 +31,7 @@ trait MetadataTrait
         Assert\Type("datetime"),
         ORM\Column(type: Types::DATE_MUTABLE),
         Serializer\Groups("read"),
-        //        Serializer\Context(array('datetime_format' => 'Y-m-d')),
+        Serializer\Context(array('datetime_format' => SPL_T_DATECAST)),
     ]
     public DateTime $date;
 

@@ -18,6 +18,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata as API;
 use App\Entity\Common\Rows\RowsAwareTrait;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation as Serializer;
@@ -45,6 +46,7 @@ class Invoice extends AbstractSellsyObject
     use Invoice\MainTrait;
     use Invoice\MetadataTrait;
     use Invoice\ExtraInfosTrait;
+    use Invoice\RelationsTrait;
     //    use RowsAwareTrait;
 
     /**
@@ -84,15 +86,16 @@ class Invoice extends AbstractSellsyObject
     // Lifecycle Events
     //====================================================================//
 
+    //    public function __construct()
+    //    {
+    //        $this->rows = new ArrayCollection();
+    //    }
+
     #[ORM\PrePersist()]
     public function onPrePersist(): void
     {
         $this->created = new DateTime();
         $this->number ??= uniqid();
         $this->status ??= "draft";
-
-        // TODO: Faire en sorte que les rows se normalisent de manière automatique et correcte, erreur 500 pour l'instant
-        // L'erreur de validation arrive avant le prePersist, donc on ne peut pas faire de setRows() ici
-        //        $this->rows = $this->getProductRows();
     }
 }

@@ -109,4 +109,12 @@ trait RelationsTrait
 
         return $this;
     }
+
+    #[JMS\PostDeserialize()]
+    public function setPostDeserialize(): void
+    {
+        if (!empty($this->customer)) {
+            $this->setCustomer($this->customer);
+        }
+    }
 }

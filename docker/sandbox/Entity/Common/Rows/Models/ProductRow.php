@@ -15,12 +15,22 @@
 
 namespace App\Entity\Common\Rows\Models;
 
+use App\Entity\Common\Rows\CatalogRow;
 use App\Entity\Common\Rows\Related;
+use App\Entity\Common\Rows\SingleRow;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation as Serializer;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
+#[ORM\MappedSuperclass()]
+#[Serializer\DiscriminatorMap(
+    typeProperty: "type",
+    mapping: array(
+        SingleRow::DATATYPE => SingleRow::class,
+        CatalogRow::DATATYPE => CatalogRow::class,
+    )
+)]
 abstract class ProductRow extends AbstractRow
 {
     /**

@@ -68,6 +68,18 @@ abstract class ProductRow extends AbstractRow
     ]
     public string $quantity;
 
+    //    /**
+    //     * Discount.
+    //     */
+    //    #[
+    //        Assert\Type(Discount::class),
+    //        JMS\SerializedName("discount"),
+    //        JMS\Type(Discount::class),
+    //        SPL\Field(type: SPL_T_DOUBLE, desc: "Discount %"),
+    //        SPL\Microdata("http://schema.org/Order", "discount"),
+    //    ]
+    //    public ?Discount $discount = null;
+
     /**
      * Product Row Tax ID.
      */

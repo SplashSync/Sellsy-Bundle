@@ -15,11 +15,13 @@
 
 namespace App\Entity\Common\Rows\Models;
 
+use App\Entity\Invoice;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
+#[ORM\MappedSuperclass]
 abstract class AbstractRow implements RowInterface
 {
     #[
@@ -32,12 +34,17 @@ abstract class AbstractRow implements RowInterface
     public int $id;
 
     #[
+        ORM\ManyToOne(targetEntity: Invoice::class, inversedBy: "rows"),
+    ]
+    public Invoice $invoice;
+
+    #[
         Assert\NotNull,
         Assert\Type("string"),
-        ORM\Column(),
+        //        ORM\Column(),
         Serializer\Groups("read")
     ]
-    public string $row_type;
+    public string $rowType;
 
     /**
      * @inheritDoc
@@ -52,6 +59,6 @@ abstract class AbstractRow implements RowInterface
      */
     public function getType(): ?string
     {
-        return $this->row_type ?? static::DATATYPE;
+        return $this->rowType ?? static::DATATYPE;
     }
 }

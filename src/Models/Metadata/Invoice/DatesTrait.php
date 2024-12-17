@@ -29,6 +29,7 @@ trait DatesTrait
         Assert\Type("date"),
         JMS\SerializedName("date"),
         JMS\Type("DateTime<'Y-m-d'>"),
+        JMS\Groups(array("Read", "Write", "Required")),
         SPL\Field(type: SPL_T_DATE, desc: "Date of the invoice"),
         SPL\IsRequired,
     ]

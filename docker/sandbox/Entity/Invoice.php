@@ -47,7 +47,7 @@ class Invoice extends AbstractSellsyObject
     use Invoice\MetadataTrait;
     use Invoice\ExtraInfosTrait;
     use Invoice\RelationsTrait;
-    //    use RowsAwareTrait;
+    use RowsAwareTrait;
 
     /**
      * Unique Identifier.
@@ -86,10 +86,10 @@ class Invoice extends AbstractSellsyObject
     // Lifecycle Events
     //====================================================================//
 
-    //    public function __construct()
-    //    {
-    //        $this->rows = new ArrayCollection();
-    //    }
+    public function __construct()
+    {
+        $this->rows = new ArrayCollection();
+    }
 
     #[ORM\PrePersist()]
     public function onPrePersist(): void

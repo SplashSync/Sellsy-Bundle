@@ -15,22 +15,17 @@
 
 namespace App\Entity\Common\Rows\Models;
 
-use App\Entity\Common\Rows\CatalogRow;
 use App\Entity\Common\Rows\Related;
-use App\Entity\Common\Rows\SingleRow;
+use App\Entity\Taxe;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Attribute as Serializer;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\MappedSuperclass()]
-#[Serializer\DiscriminatorMap(
-    typeProperty: "type",
-    mapping: array(
-        SingleRow::DATATYPE => SingleRow::class,
-        CatalogRow::DATATYPE => CatalogRow::class,
-    )
-)]
+#[ORM\HasLifecycleCallbacks()]
 abstract class ProductRow extends AbstractRow
 {
     /**
@@ -38,7 +33,7 @@ abstract class ProductRow extends AbstractRow
      */
     #[
         Assert\Type("string"),
-        ORM\Column(type: Types::STRING),
+        ORM\Column(type: Types::STRING, nullable: true),
         Serializer\Groups("read")
     ]
     public ?string $reference = null;
@@ -48,7 +43,7 @@ abstract class ProductRow extends AbstractRow
      */
     #[
         Assert\Type("string"),
-        ORM\Column(type: Types::STRING),
+        ORM\Column(type: Types::STRING, nullable: true),
         Serializer\Groups("read")
     ]
     public ?string $description = null;
@@ -61,7 +56,7 @@ abstract class ProductRow extends AbstractRow
         ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2),
         Serializer\Groups("read")
     ]
-    public ?string $unit_amount = null;
+    public float $unit_amount = 0.0;
 
     /**
      * Row's quantity
@@ -69,7 +64,7 @@ abstract class ProductRow extends AbstractRow
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        ORM\Column(type: Types::INTEGER),
+        ORM\Column(type: Types::STRING),
         Serializer\Groups("read")
     ]
     public string $quantity;
@@ -80,10 +75,10 @@ abstract class ProductRow extends AbstractRow
     #[
         Assert\NotNull,
         Assert\Type("integer"),
-        ORM\Column(),
+        ORM\Column(type: Types::INTEGER),
         Serializer\Groups("read")
     ]
-    public int $tax_id = 0;
+    public int $taxId = 0;
 
     /**
      * Row's quantity
@@ -92,4 +87,33 @@ abstract class ProductRow extends AbstractRow
         Serializer\Ignore()
     ]
     public ?Related $related = null;
+
+    /**
+     * Set Unit Amount as Float
+     */
+    public function setUnitAmount(string $value): void
+    {
+        $this->unit_amount = (float) $value;
+    }
+
+    /**
+     * Verify received Tax ID Exits on DB
+     */
+    #[ORM\PrePersist()]
+    #[ORM\PreUpdate()]
+    public function validateTaxId(LifecycleEventArgs $event): void
+    {
+        //====================================================================//
+        // No Tax ID
+        if (!$this->taxId) {
+            return;
+        }
+        //====================================================================//
+        // Load Tax ID
+        if (!$event->getObjectManager()->getRepository(Taxe::class)->find($this->taxId)) {
+            throw new NotFoundHttpException(
+                sprintf("Requested Tax ID %s was not found", $this->taxId)
+            );
+        }
+    }
 }

@@ -13,51 +13,46 @@
  *  file that was distributed with this source code.
  */
 
-namespace App\Entity\Common\Rows\Models;
+namespace App\Entity;
 
-use App\Entity\Invoice;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata as API;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\MappedSuperclass]
-abstract class AbstractRow implements RowInterface
+/**
+ * Class representing the Payment Methods model.
+ */
+#[
+    ORM\Entity(),
+    ApiResource(
+        uriTemplate: "payments/methods",
+        operations: array(
+            new API\GetCollection(),
+        ),
+    )
+]
+class PaymentMethod extends AbstractSellsyObject
 {
+    /**
+     * Unique Identifier.
+     */
     #[
         Assert\Type("integer"),
         ORM\Id,
         ORM\GeneratedValue,
         ORM\Column(type: Types::INTEGER),
-        Serializer\Groups(array("read", "write"))
     ]
     public int $id;
 
-    #[
-        ORM\ManyToOne(targetEntity: Invoice::class, inversedBy: "rows"),
-    ]
-    public ?Invoice $invoice;
-
+    /**
+     * Payment Method Label.
+     */
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        Serializer\Groups("read")
+        ORM\Column(type: Types::STRING, nullable: false),
     ]
-    public string $type;
-
-    /**
-     * @inheritDoc
-     */
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getType(): ?string
-    {
-        return static::DATATYPE;
-    }
+    public string $label;
 }

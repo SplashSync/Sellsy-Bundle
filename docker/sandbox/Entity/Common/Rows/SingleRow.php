@@ -26,6 +26,7 @@ use Doctrine\ORM\Mapping as ORM;
     SingleRow::DATATYPE => SingleRow::class,
     CatalogRow::DATATYPE => CatalogRow::class,
 ))]
+#[ORM\HasLifecycleCallbacks()]
 class SingleRow extends ProductRow
 {
     public const DATATYPE = "single";

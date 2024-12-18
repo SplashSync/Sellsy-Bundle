@@ -18,6 +18,7 @@ namespace App\Entity\Common\Rows;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity()]
+#[ORM\HasLifecycleCallbacks()]
 class CatalogRow extends SingleRow
 {
     public const DATATYPE = "catalog";

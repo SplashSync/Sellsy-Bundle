@@ -29,25 +29,11 @@ class Discount
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("percent"),
-        JMS\Type("string"),
+        JMS\SerializedName("value"),
+        JMS\Groups(array("Read", "Write", "Required")),
         SPL\Field(type: SPL_T_DOUBLE, desc: "Discount Percentage"),
     ]
-    public string $percent = "";
-
-    /**
-     * Discount amount
-     *
-     * @var string
-     */
-    #[
-        Assert\NotNull,
-        Assert\Type("string"),
-        JMS\SerializedName("amount"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_DOUBLE, desc: "Discount Amount"),
-    ]
-    public string $amount = "";
+    public string $value;
 
     /**
      * Discount type
@@ -59,6 +45,7 @@ class Discount
         Assert\Type("string"),
         JMS\SerializedName("type"),
         JMS\Type("string"),
+        JMS\Groups(array("Read", "Write", "Required")),
         SPL\Field(desc: "Discount Type"),
         SPL\Choices(array(
             "percent" => "Percent",

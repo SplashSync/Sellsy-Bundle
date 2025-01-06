@@ -84,7 +84,7 @@ abstract class ProductRow extends AbstractRow
             setter: "setDiscount"
         )
     ]
-    public ?Discount $discount;
+    public ?Discount $discount = null;
 
     /**
      * Product Row Tax ID.
@@ -112,74 +112,27 @@ abstract class ProductRow extends AbstractRow
     /**
      * Set Discount Data through an SPL Accessor
      *
-     * @param ?Discount $discount
+     * @param null|float $discount
      *
      * @return self
      */
-    public function setDiscount(?Discount $discount): self
+    public function setDiscount(?float $discount): self
     {
+        //====================================================================//
+        // Ensure Discount Object Exists
+        $this->discount ??= new Discount();
+        //====================================================================//
         // Process and set the discount
-        $this->processDiscount($discount);
+        $this->discount->updateDiscount($discount, $this);
 
-//        dd($this);
-
-        return $this; // Fluent interface
-    }
-
-    /**
-     * Process incoming discount data and set it properly
-     *
-     * @param ?Discount $discount
-     *
-     * @return void
-     */
-    private function processDiscount(?Discount $discount): void
-    {
-        if (null !== $discount) {
-            // Handle the conversion if discount type is "amount"
-            if ($discount->type === "amount") {
-                $referencePrice = $this->getReferencePrice();
-                if ($referencePrice > 0) {
-                    // Convert amount to percentage
-                    $discount->value = (string)round((float)$discount->value / $referencePrice * 100, 2);
-                } else {
-                    // If no valid reference price, fallback to 0% discount
-                    $discount->value = "0.00";
-                }
-                // Set the type to "percent" after conversion
-                $discount->type = "percent";
-            }
-
-            // Ensure `value` is formatted as a float string
-            $discount->value = (string)round((float)$discount->value, 2);
-
-            // Validate the discount type
-            if ($discount->type !== "percent") {
-                $discount->type = "percent";
-            }
-        }
-        $this->discount = $discount;
+        return $this;
     }
 
     /**
      * Get the Discount Data through an SPL Accessor
-     *
-     * @return ?Discount
      */
-    public function getDiscount(): ?Discount
+    public function getDiscount(?array $splPrice): ?float
     {
-        return $this->discount;
-    }
-
-    /**
-     * Mock method to get the reference price for discount conversion
-     *
-     *
-     * @return float
-     */
-    private function getReferencePrice(): float
-    {
-        // Return the base price (mocked here)
-        return 100.00; // Assume the item's original price is 100
+        return $this->discount?->getPercentile($splPrice, $this->quantity);
     }
 }

@@ -36,7 +36,6 @@ trait RowsParserTrait
         if (empty($rows = $this->object->getProductRows())) {
             return;
         }
-//        dd($rows);
         //====================================================================//
         // Fill List with Data
         foreach ($rows as $index => $row) {
@@ -51,7 +50,7 @@ trait RowsParserTrait
                 "quantity" => (int) $row->quantity,
                 "unitAmount" => $this->getSplashPrice($row),
                 "taxId" => $this->connector->getLocator()->getTaxManager()->getLabel($row->taxId),
-                "discount" => $row->discount,
+                "discount" => $row->getDiscount($this->getSplashPrice($row)),
                 default => null,
             };
             //====================================================================//
@@ -101,19 +100,4 @@ trait RowsParserTrait
             $this->object->currency ?: $this->connector->getDefaultCurrency()
         );
     }
-
-//    private function getDiscountPercent(ProductRow $row): float|int|string
-//    {
-//        $row->discount->type = "percent";
-//        $row->discount->value = "100";
-//        $row->discount->value = (float) $row->discount->value;
-//
-//        if ($row->discount->type == "percent") {
-//            return $row->discount->value;
-//        }
-//
-//        $discountAmount = $row->discount->value;
-//        $discountAmount = $discountAmount / 100;
-//        return $row->unitAmount * $discountAmount;
-//    }
 }

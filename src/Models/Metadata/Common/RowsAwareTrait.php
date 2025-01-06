@@ -42,7 +42,6 @@ trait RowsAwareTrait
     public function getProductRows(): array
     {
         return array_filter($this->rows, static function (AbstractRow $row) {
-//            dd($row);
             return $row instanceof ProductRow;
         });
     }

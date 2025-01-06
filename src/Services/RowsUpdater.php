@@ -175,6 +175,10 @@ class RowsUpdater
             $row->quantity = sprintf("%.2f", $rowData["quantity"]);
         }
 
+        if (array_key_exists("discount", $rowData)) {
+            $row->setDiscount($rowData["discount"]);
+        }
+
         return $this;
     }
 

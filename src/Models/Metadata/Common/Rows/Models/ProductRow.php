@@ -133,6 +133,6 @@ abstract class ProductRow extends AbstractRow
      */
     public function getDiscount(?array $splPrice): ?float
     {
-        return $this->discount?->getPercentile($splPrice, $this->quantity);
+        return $this->discount?->getPercentile($splPrice, (int)$this->quantity);
     }
 }

@@ -34,7 +34,7 @@ class Discount
         JMS\Groups(array("Read", "Write", "Required")),
         SPL\Field(type: SPL_T_DOUBLE, desc: "Discount Percentage"),
     ]
-    public string $value;
+    public string $value = "0.00";
 
     /**
      * Discount type
@@ -70,6 +70,8 @@ class Discount
             if ("amount" === $this->type) {
                 $this->convertAmountToPercentage($row);
             }
+
+            $this->value = (string)$discount;
 
             // Ensure `value` is formatted as a float string
             $this->value = (string)round((float)$this->value, 2);

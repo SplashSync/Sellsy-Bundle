@@ -113,17 +113,23 @@ abstract class ProductRow extends AbstractRow
      * Set Discount Data through an SPL Accessor
      *
      * @param null|float $discount
+     * @param null|array $splPrice
      *
      * @return self
      */
-    public function setDiscount(?float $discount): self
+    public function setDiscount(?float $discount, ?array $splPrice): self
     {
+        // No Discount, erase array
+        if (empty($discount)) {
+            $this->discount = null;
+            return $this;
+        }
         //====================================================================//
         // Ensure Discount Object Exists
         $this->discount ??= new Discount();
         //====================================================================//
         // Process and set the discount
-        $this->discount->updateDiscount($discount, $this);
+        $this->discount->updateDiscount($discount, $splPrice, (int) $this->quantity);
 
         return $this;
     }
@@ -133,6 +139,6 @@ abstract class ProductRow extends AbstractRow
      */
     public function getDiscount(?array $splPrice): ?float
     {
-        return $this->discount?->getPercentile($splPrice, (int)$this->quantity);
+        return $this->discount?->getPercentile($splPrice, (int) $this->quantity);
     }
 }

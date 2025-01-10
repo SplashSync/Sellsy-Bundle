@@ -80,6 +80,7 @@ class RowsUpdater
                 ->updateScalarValues($row, $rowData)
                 ->updatePrice($row, $rowData)
                 ->updateRelated($row, $rowData)
+                ->updateDiscount($row, $rowData)
             ;
             //====================================================================//
             // Push updated Row to Rows
@@ -175,10 +176,6 @@ class RowsUpdater
             $row->quantity = sprintf("%.2f", $rowData["quantity"]);
         }
 
-        if (array_key_exists("discount", $rowData)) {
-            $row->setDiscount($rowData["discount"]);
-        }
-
         return $this;
     }
 
@@ -206,6 +203,26 @@ class RowsUpdater
             }
         }
 
+        return $this;
+    }
+
+    /**
+     * Update Row Discount from received Splash Data
+     */
+    public function updateDiscount(ProductRow &$row, array $rowData): static
+    {
+        if (!array_key_exists("discount", $rowData)) {
+            return $this;
+        }
+
+        $splPrice = PricesHelper::encode(
+            (float) $row->unitAmount,
+            $this->connector->getLocator()->getTaxManager()->getRate($row->taxId),
+            null,
+            "EUR"
+        );
+
+        $row->setDiscount($rowData["discount"], $splPrice);
         return $this;
     }
 

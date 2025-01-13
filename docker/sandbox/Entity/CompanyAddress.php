@@ -68,7 +68,6 @@ class CompanyAddress extends AbstractSellsyObject
      * Link to Parent Company
      */
     #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'addresses')]
-    #[Serializer\Ignore]
     protected ?Company $company;
 
     //====================================================================//

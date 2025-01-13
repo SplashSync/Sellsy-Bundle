@@ -122,6 +122,7 @@ abstract class ProductRow extends AbstractRow
         // No Discount, erase array
         if (empty($discount)) {
             $this->discount = null;
+
             return $this;
         }
         //====================================================================//

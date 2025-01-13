@@ -118,13 +118,17 @@ trait PriceTrait
                                 ?? $this->object->taxId;
                         }
                     }
+
                     $this->needUpdate();
                 }
 
                 break;
             case "price-wholesale":
-                $this->object->purchaseAmount = (string) (self::prices()->taxExcluded($fieldData) ?? 0.0);
-                $this->needUpdate();
+                $purchaseAmount = self::prices()->taxExcluded($fieldData) ?? 0.0;
+                if (abs($purchaseAmount - (float) $this->object->purchaseAmount) > 0.001) {
+                    $this->object->purchaseAmount = (string) $purchaseAmount;
+                    $this->needUpdate();
+                }
 
                 break;
             default:
@@ -153,7 +157,7 @@ trait PriceTrait
     {
         return self::prices()->encode(
             (float) $this->object->purchaseAmount,
-            0.00,
+            $this->connector->getLocator()->getTaxManager()->getRate($this->object->taxId),
             null,
             $this->object->currency ?: $this->connector->getDefaultCurrency()
         );

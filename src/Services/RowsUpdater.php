@@ -223,6 +223,7 @@ class RowsUpdater
         );
 
         $row->setDiscount($rowData["discount"], $splPrice);
+
         return $this;
     }
 

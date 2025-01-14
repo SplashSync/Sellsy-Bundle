@@ -55,7 +55,7 @@ services:
     ################################################################################
     # Splash OpenApi Faker
     openapi:
-        image: 'splashsync/openapi-sandbox'
+        image: 'splashsync/openapi-sandbox:latest'
         container_name: sandbox.sellsy.local
         volumes:
              # Specify API Entities to Use

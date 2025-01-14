@@ -1,10 +1,23 @@
 <?php
 
+/*
+ *  This file is part of SplashSync Project.
+ *
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
+
 namespace App\Entity\Common\Rows\Traits;
 
 use App\Entity\Common\Rows\Models\Discount;
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation as Serializer;
 
 /**
@@ -13,14 +26,6 @@ use Symfony\Component\Serializer\Annotation as Serializer;
 
 trait DiscountTrait
 {
-    /**
-     * Row's Discount Storage
-     */
-    #[
-        Serializer\Groups(array("read", "write")),
-    ]
-    private ?Discount $discount = null;
-
     /**
      * Discount Type
      */
@@ -32,6 +37,14 @@ trait DiscountTrait
      */
     #[ORM\Column(type: Types::STRING, nullable: true)]
     public ?string $discountValue = null;
+
+    /**
+     * Row's Discount Storage
+     */
+    #[
+        Serializer\Groups(array("read", "write")),
+    ]
+    private ?Discount $discount = null;
 
     /**
      * Set Item Discount
@@ -63,5 +76,4 @@ trait DiscountTrait
 
         return null;
     }
-
 }

@@ -88,7 +88,7 @@ class Payment
             desc: "Payment Method Code / Name"
         ),
         SPL\Microdata("http://schema.org/Invoice", "PaymentMethod"),
-        Spl\IsNotTested
+        SPL\IsNotTested
     ]
     public ?string $method = null;
 
@@ -101,7 +101,7 @@ class Payment
         JMS\SerializedName("currency"),
         JMS\Type("string"),
         SPL\Field(type: SPL_T_CURRENCY, desc: "Payment Currency Code"),
-        Spl\IsNotTested
+        SPL\IsNotTested
     ]
     public ?string $currency = "EUR";
 
@@ -215,7 +215,6 @@ class Payment
             $this->amount ??= new Amount();
             $this->amount->value = (string) $amount;
             $this->updated = true;
-
         }
 
         return $this;

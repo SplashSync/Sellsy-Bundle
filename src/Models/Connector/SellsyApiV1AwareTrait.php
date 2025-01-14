@@ -18,8 +18,8 @@ namespace Splash\Connectors\Sellsy\Models\Connector;
 use Splash\Client\Splash;
 use Splash\Connectors\Sellsy\Connector\SellsyConnector;
 use Splash\Connectors\Sellsy\Connexion\SellsyApiV1Connexion;
-use Splash\OpenApi\Models\Connexion\ConnexionInterface;
 use Splash\OpenApi\Connexion\JsonHalConnexion;
+use Splash\OpenApi\Models\Connexion\ConnexionInterface;
 
 /**
  * Use API V2 Connexion to build an API V1 Connexion

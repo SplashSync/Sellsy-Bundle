@@ -15,12 +15,12 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata as API;
+use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use DateTime;
 use Symfony\Component\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
-use ApiPlatform\Metadata as API;
 
 /**
  * Class representing the Payment model.
@@ -92,8 +92,6 @@ class Payment extends AbstractSellsyObject
         ORM\Column(type: Types::INTEGER),
     ]
     public int $paymentMethodId;
-
-
 
     //====================================================================//
     // Read Only Informations

@@ -13,28 +13,20 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Connectors\Sellsy\Models\Connector;
+namespace Splash\Connectors\Sellsy\Form;
 
-use Splash\Connectors\Sellsy\Services\TaxManager;
+use Symfony\Component\Form\FormBuilderInterface;
 
-/**
- * Manage Access to Sellsy Account Taxes
- */
-trait ConnectorTaxesTrait
+class SellsyEditForm extends AbstractSellsyType
 {
     /**
-     * Get Sellsy Taxes Manager
+     * @inheritdoc
      */
-    public function getTaxManager(): TaxManager
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        return $this->taxManager->configure($this);
-    }
+        parent::buildForm($builder, $options);
 
-    /**
-     * Get Sellsy Taxes from API
-     */
-    public function fetchTaxesLists(): bool
-    {
-        return $this->taxManager->fetchTaxesLists($this);
+        $this->addDefaultPaymentMethodsField($builder, $options);
+        $this->addPaymentMethodsField($builder, $options);
     }
 }

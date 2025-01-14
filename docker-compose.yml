@@ -40,22 +40,19 @@ services:
             - './config/packages/splash.yaml:/app/config/packages/splash.yaml:ro'
             # Uncomment to use Local Sources instead of Release
             - './src:/app/connectors/Sellsy/:ro'
-#            - '/home/william/splash/Php-Core:/app/vendor/splash/phpcore/:ro'
-#            - '/mnt/data/WebDesign/GitHub/Splash/Php-Oauth2:/app/vendor/splash/oauth2/:ro'
-#            - './vendor/league/oauth2-client:/app/vendor/league/oauth2-client/:ro'
-#            - './tests/Controller:/app/tests/Controller/:ro'
+            - './tests/Controller:/app/tests/Controller/:ro'
             - './phpunit.xml.dist:/app/phpunit.xml.dist:ro'
         env_file:
             - .env
         hostname:           toolkit.sellsy.local
         networks:
-            shippingbo:     { ipv4_address: 172.118.0.100, aliases: [ toolkit.sellsy.local ] }
+            sellsy:         { ipv4_address: 172.118.0.100, aliases: [ toolkit.sellsy.local ] }
             splashsync:     { aliases: [ toolkit.sellsy.local ] }
 
     ################################################################################
     # Splash OpenApi Faker
     openapi:
-        image: 'splashsync/openapi-sandbox'
+        image: 'splashsync/openapi-sandbox:latest'
         container_name: sandbox.sellsy.local
         volumes:
              # Specify API Entities to Use
@@ -70,7 +67,7 @@ services:
             - 'OAUTH2_CLIENT_SECRET=SellsySandboxSecret'
             - 'OAUTH2_CLIENT_REDIRECT_URI=http://toolkit.sellsy.local/ws/sellsy'
         networks:
-            shippingbo:     { ipv4_address: 172.118.0.200, aliases: [ sandbox.sellsy.local ] }
+            sellsy:         { ipv4_address: 172.118.0.200, aliases: [ sandbox.sellsy.local ] }
             splashsync:     { aliases: [ sandbox.sellsy.local ] }
 
     ################################################################################
@@ -85,7 +82,7 @@ services:
 networks:
     ################################################################################
     # Default Private Network
-    shippingbo:
+    sellsy:
         driver: bridge
         ipam:
             config:

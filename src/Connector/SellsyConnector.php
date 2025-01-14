@@ -20,15 +20,13 @@ use Exception;
 use Psr\Log\LoggerInterface;
 use Splash\Bundle\Models\Connectors\GenericObjectMapperTrait;
 use Splash\Bundle\Models\Connectors\GenericWidgetMapperTrait;
-use Splash\Connectors\Sellsy\Models\Connector\ConnectorScopesTrait;
-use Splash\Connectors\Sellsy\Models\Connector\ConnectorTaxesTrait;
+use Splash\Connectors\Sellsy\Actions\Webhooks\Receive;
+use Splash\Connectors\Sellsy\Actions\Webhooks\Setup;
+use Splash\Connectors\Sellsy\Form\SellsyEditForm;
 use Splash\Connectors\Sellsy\Oauth2\PrivateClient;
 use Splash\Connectors\Sellsy\Oauth2\SandboxClient;
 use Splash\Connectors\Sellsy\Objects;
-use Splash\Connectors\Sellsy\Services\AddressUpdater;
-use Splash\Connectors\Sellsy\Services\ContactCompaniesManager;
-use Splash\Connectors\Sellsy\Services\ScopesManager;
-use Splash\Connectors\Sellsy\Services\TaxManager;
+use Splash\Connectors\Sellsy\Services\SellsyLocator;
 use Splash\Connectors\Sellsy\Widgets;
 use Splash\Core\SplashCore as Splash;
 use Splash\Metadata\Services\MetadataAdapter;
@@ -36,7 +34,6 @@ use Splash\OpenApi\Action;
 use Splash\OpenApi\Connexion\JsonHalConnexion;
 use Splash\OpenApi\Hydrator\Hydrator;
 use Splash\OpenApi\Models\Connexion\ConnexionInterface;
-use Splash\Security\Oauth2\Form\PrivateAppConfigurationForm;
 use Splash\Security\Oauth2\Model\AbstractOauth2Connector;
 use Splash\Security\Oauth2\Services\Oauth2ClientManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -51,8 +48,6 @@ class SellsyConnector extends AbstractOauth2Connector
 {
     use GenericObjectMapperTrait;
     use GenericWidgetMapperTrait;
-    use ConnectorScopesTrait;
-    use ConnectorTaxesTrait;
 
     /**
      * Objects Type Class Map
@@ -63,7 +58,8 @@ class SellsyConnector extends AbstractOauth2Connector
         "ThirdParty" => Objects\ThirdParty::class,
         "Address" => Objects\Address::class,
         "Product" => Objects\Product::class,
-        //        "Invoice" => Objects\ThirdParty::class,
+        "Invoice" => Objects\Invoice::class,
+        "Webhook" => Objects\Webhook::class,
     );
 
     /**
@@ -93,11 +89,8 @@ class SellsyConnector extends AbstractOauth2Connector
     private string $metaDir;
 
     public function __construct(
-        private readonly AddressUpdater $addressUpdater,
-        private readonly ContactCompaniesManager $contactCompaniesManager,
         protected readonly MetadataAdapter   $metadataAdapter,
-        protected readonly ScopesManager   $scopesManager,
-        protected readonly TaxManager   $taxManager,
+        protected readonly SellsyLocator   $locator,
         Oauth2ClientManager $oauth2ClientManager,
         EventDispatcherInterface $eventDispatcher,
         LoggerInterface          $logger
@@ -155,12 +148,17 @@ class SellsyConnector extends AbstractOauth2Connector
         }
         //====================================================================//
         // Get Scopes Information
-        if (!$this->fetchAccessScopes()) {
+        if (!$this->getLocator()->getScopesManager()->fetchAccessScopes()) {
             return false;
         }
         //====================================================================//
         // Get List of Available Taxes
-        if (!$this->fetchTaxesLists()) {
+        if (!$this->getLocator()->getTaxManager()->fetchTaxesLists()) {
+            return false;
+        }
+        //====================================================================//
+        // Get List of Available Payment Methods
+        if (!$this->getLocator()->getPaymentMethodsManager()->fetchMethodsLists()) {
             return false;
         }
 
@@ -287,16 +285,8 @@ class SellsyConnector extends AbstractOauth2Connector
     {
         $this->selfTest();
 
-        return PrivateAppConfigurationForm::class;
+        return SellsyEditForm::class;
     }
-
-    //    /**
-    //     * {@inheritdoc}
-    //     */
-    //    public function getMasterAction(): ?string
-    //    {
-    //        return \Splash\Security\Oauth2\Actions\Master::class;
-    //    }
 
     /**
      * {@inheritdoc}
@@ -304,23 +294,33 @@ class SellsyConnector extends AbstractOauth2Connector
     public function getPublicActions() : array
     {
         return array(
-            //            "webhook" => Master::class,
-            //            "connect" => \Splash\Security\Oauth2\Actions\Connect::class,
+            "index" => Receive::class,
         );
     }
 
-    //    /**
-    //     * {@inheritdoc}
-    //     */
-    //    public function getSecuredActions() : array
-    //    {
-    //        return array(
-    //            "connect" => \Splash\Security\Oauth2\Actions\Connect::class,
-    //        );
-    //    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getSecuredActions() : array
+    {
+        return array_merge_recursive(
+            parent::getSecuredActions(),
+            array(
+                "webhooks" => Setup::class,
+            )
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getConnectedTemplate() : string
+    {
+        return "@Sellsy/Profile/connected.html.twig";
+    }
 
     //====================================================================//
-    // ReCommerce Connector Specific
+    // Sellsy Connector Specific
     //====================================================================//
 
     /**
@@ -407,24 +407,15 @@ class SellsyConnector extends AbstractOauth2Connector
     }
 
     /**
-     * Get Sellsy Address Updater
+     * Get Sellsy Services Locator
      */
-    public function getAddressUpdater(): AddressUpdater
+    public function getLocator(): SellsyLocator
     {
-        return $this
-            ->addressUpdater
-            ->configure($this->getConnexion(), $this->getHydrator())
-        ;
+        return $this->locator->configure($this);
     }
 
-    /**
-     * Get Sellsy Contacts Companies Manager
-     */
-    public function getContactCompaniesManager(): ContactCompaniesManager
+    public function getDefaultCurrency(): string
     {
-        return $this
-            ->contactCompaniesManager
-            ->configure($this->getConnexion())
-        ;
+        return "EUR"; // TODO: Get Default Currency from Sellsy and/or User local settings
     }
 }

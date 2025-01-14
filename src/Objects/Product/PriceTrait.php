@@ -98,7 +98,7 @@ trait PriceTrait
         switch ($fieldName) {
             case "price":
                 $current = $this->getSplashPrice();
-                $taxManager = $this->connector->getTaxManager();
+                $taxManager = $this->connector->getLocator()->getTaxManager();
 
                 if (!self::prices()->compare($current, $fieldData)) {
                     //====================================================================//
@@ -118,13 +118,17 @@ trait PriceTrait
                                 ?? $this->object->taxId;
                         }
                     }
+
                     $this->needUpdate();
                 }
 
                 break;
             case "price-wholesale":
-                $this->object->purchaseAmount = (string) (self::prices()->taxExcluded($fieldData) ?? 0.0);
-                $this->needUpdate();
+                $purchaseAmount = self::prices()->taxExcluded($fieldData) ?? 0.0;
+                if (abs($purchaseAmount - (float) $this->object->purchaseAmount) > 0.001) {
+                    $this->object->purchaseAmount = (string) $purchaseAmount;
+                    $this->needUpdate();
+                }
 
                 break;
             default:
@@ -140,9 +144,9 @@ trait PriceTrait
     {
         return self::prices()->encode(
             (float) $this->object->referencePriceTaxesExc,
-            $this->connector->getTaxManager()->getRate($this->object->taxId),
+            $this->connector->getLocator()->getTaxManager()->getRate($this->object->taxId),
             null,
-            $this->object->currency ?: $this->getDefaultCurrency()
+            $this->object->currency ?: $this->connector->getDefaultCurrency()
         );
     }
 
@@ -153,14 +157,9 @@ trait PriceTrait
     {
         return self::prices()->encode(
             (float) $this->object->purchaseAmount,
-            0.00,
+            $this->connector->getLocator()->getTaxManager()->getRate($this->object->taxId),
             null,
-            $this->object->currency ?: $this->getDefaultCurrency()
+            $this->object->currency ?: $this->connector->getDefaultCurrency()
         );
-    }
-
-    private function getDefaultCurrency(): string
-    {
-        return "EUR"; // TODO: Get Default Currency from Sellsy and/or User local settings
     }
 }

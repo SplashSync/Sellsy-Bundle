@@ -31,7 +31,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 class Company
 {
-    use Company\FullnameTrait;
+    use Company\FullNameTrait;
     use Company\MainTrait;
     use Company\ExtraInfosTrait;
     use Company\EmbedTrait;

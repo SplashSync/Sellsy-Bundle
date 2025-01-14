@@ -16,23 +16,13 @@
 namespace Splash\Connectors\Sellsy\Services;
 
 use Splash\Client\Splash;
+use Splash\Connectors\Sellsy\Models\Connector\SellsyConnectorAwareTrait;
 use Splash\Connectors\Sellsy\Models\Metadata\Contact;
 use Splash\Connectors\Sellsy\Models\Metadata\Contact\CompanyLink;
-use Splash\OpenApi\Models\Connexion\ConnexionInterface;
 
 class ContactCompaniesManager
 {
-    private ConnexionInterface $connexion;
-
-    /**
-     * Configure with Current API Connexion Settings
-     */
-    public function configure(ConnexionInterface $connexion): static
-    {
-        $this->connexion = $connexion;
-
-        return $this;
-    }
+    use SellsyConnectorAwareTrait;
 
     /**
      * Gte List of All Contact attached Companies
@@ -49,11 +39,7 @@ class ContactCompaniesManager
         $contact->companiesLinks = array();
         //====================================================================//
         // Init Contact Companies
-        $compagnies = $this->connexion->get(sprintf("/contacts/%s/companies", $contact->id));
-
-        //        dd($compagnies);
-        //        dump($this->connexion->getLastResponse());
-
+        $compagnies = $this->connector->getConnexion()->get(sprintf("/contacts/%s/companies", $contact->id));
         if (!is_array($compagnies['data'] ?? null) || empty($compagnies['data'])) {
             return $contact->companiesLinks;
         }
@@ -118,13 +104,13 @@ class ContactCompaniesManager
         }
         //====================================================================//
         // Send Request
-        $this->connexion->post(
+        $this->connector->getConnexion()->post(
             sprintf("/companies/%d/contacts/%d", $companyId, $contact->id),
             array()
         );
         //====================================================================//
         // Check response
-        if ($this->connexion->getLastResponse()?->hasErrors()) {
+        if ($this->connector->getConnexion()->getLastResponse()?->hasErrors()) {
             return Splash::log()->errTrace("Unable to attach Contact to Company.");
         }
 
@@ -157,12 +143,12 @@ class ContactCompaniesManager
         }
         //====================================================================//
         // Send Request
-        $this->connexion->delete(
+        $this->connector->getConnexion()->delete(
             sprintf("/companies/%d/contacts/%d", $companyId, $contact->id),
         );
         //====================================================================//
         // Check response
-        if ($this->connexion->getLastResponse()?->hasErrors()) {
+        if ($this->connector->getConnexion()->getLastResponse()?->hasErrors()) {
             return Splash::log()->errTrace("Unable to detach Contact from Company.");
         }
 

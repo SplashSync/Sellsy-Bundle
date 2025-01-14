@@ -38,6 +38,8 @@ splash:
                 apiSecret:          SellsySandboxSecret
                 timezone:           UTC
                 isSandbox:          true
+                # Use Second Payment Method as Default Method
+                PaymentMethodDefault: 2
 
         ########################################################################
         # Sellsy Staging

@@ -42,11 +42,12 @@ trait PriceTrait
         JMS\SerializedName("reference_price_taxes_exc"),
         JMS\Type("string"),
         JMS\Groups(array("Read")),
-        SPL\IsReadOnly,
         SPL\Field(
             type: SPL_T_VARCHAR,
             desc: "Product's reference price excluding taxes",
-        )
+            group: "Pricing",
+        ),
+        SPL\IsReadOnly,
     ]
     public string $referencePriceTaxesExc = "0.00";
 
@@ -59,11 +60,12 @@ trait PriceTrait
         JMS\SerializedName("reference_price_taxes_inc"),
         JMS\Type("string"),
         JMS\Groups(array("Read")),
-        SPL\IsReadOnly,
         SPL\Field(
             type: SPL_T_VARCHAR,
             desc: "Product's reference price including taxes",
-        )
+            group: "Pricing"
+        ),
+        SPL\IsReadOnly,
     ]
     public string $referencePriceTaxesInc = "0.00";
 
@@ -102,8 +104,12 @@ trait PriceTrait
         JMS\SerializedName("currency"),
         JMS\Type("string"),
         JMS\Groups(array("Read")),
-        SPL\Flags(read: false, write: false),
-        SPL\Field(type: SPL_T_CURRENCY, desc: "Currency code"),
+        SPL\Field(
+            type: SPL_T_CURRENCY,
+            desc: "Currency code",
+            group: "Pricing",
+        ),
+        SPL\IsReadOnly,
     ]
     public ?string $currency = null;
 }

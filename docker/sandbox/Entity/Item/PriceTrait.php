@@ -16,67 +16,70 @@
 namespace App\Entity\Item;
 
 use App\Entity\Taxe;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
-use Splash\Models\Objects\PricesTrait;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 trait PriceTrait
 {
-    use PricesTrait;
-
     /**
      * Product's wholesale price in Splash format
      */
     #[
-        ORM\Column(nullable: true),
+        Assert\Type("string"),
+        ORM\Column(type: Types::STRING),
+        Serializer\Groups(array("read", "write")),
     ]
-    public ?float $reference_price = null;
+    public string $referencePrice = "0.0";
 
     /**
      * Product's reference price excluding taxes
      */
     #[
-        ORM\Column(),
+        ORM\Column(type: Types::FLOAT),
         Serializer\Groups("read"),
     ]
-    public float $reference_price_taxes_exc = 0.0;
+    public float $referencePriceTaxesExc = 0.0;
 
     /**
      * Product's reference price excluding taxes
      */
     #[
-        ORM\Column(),
+        ORM\Column(type: Types::FLOAT),
         Serializer\Groups("read"),
     ]
-    public float $reference_price_taxes_inc = 0.0;
+    public float $referencePriceTaxesInc = 0.0;
 
     /**
      * Is Reference Price Taxes Free
      */
     #[
         Assert\Type("boolean"),
-        ORM\Column(),
+        ORM\Column(type: Types::BOOLEAN),
+        Serializer\Groups(array("read", "write")),
     ]
-    public bool $is_reference_price_taxes_free = true;
+    public bool $isReferencePriceTaxesFree = true;
 
     /**
      * Product's purchase amount
      */
     #[
         Assert\Type("string"),
-        ORM\Column(nullable: false),
-        Serializer\Groups("read"),
+        ORM\Column(type: Types::STRING),
+        Serializer\Groups(array("read", "write")),
     ]
-    public string $purchase_amount = "0.00";
+    public string $purchaseAmount = "0.0";
 
     /**
      * Product's currency code
      */
     #[
         Assert\Type("string"),
-        ORM\Column(nullable: true),
-        Serializer\Groups("read"),
+        ORM\Column(type: Types::STRING),
+        Serializer\Groups(array("read", "write")),
     ]
     public ?string $currency = "EUR";
 
@@ -86,40 +89,36 @@ trait PriceTrait
     #[
         Assert\Type("integer"),
         ORM\Column(nullable: false),
-        Serializer\Groups("read"),
+        Serializer\Groups(array("read", "write")),
     ]
-    public int $tax_id = 0;
+    public int $taxId = 0;
 
-    private ?Taxe $tax = null;
-
-    public function getSplashPrice(): ?array
+    #[ORM\PreUpdate()]
+    public function updatePriceFields(PreUpdateEventArgs $event): void
     {
-        return self::prices()->encode(
-            $this->is_reference_price_taxes_free ? $this->reference_price : null,
-            $this->isTaxCreated($this->tax_id) ? $this->tax->rate : 0.00,
-            !$this->is_reference_price_taxes_free ? $this->reference_price : null,
-            $this->currency ?: "EUR"
-        );
-    }
-
-    public function isTaxCreated(int $tax_id): bool
-    {
-        if (null === $this->tax || 0 === $tax_id) {
-            return false;
+        //====================================================================//
+        // No Tax ID
+        if (!$this->taxId) {
+            return;
         }
-
-        return true;
+        //====================================================================//
+        // Identify VAT Rate
+        $tax = $event->getObjectManager()->getRepository(Taxe::class)->find($this->taxId);
+        if (!$tax) {
+            throw new NotFoundHttpException(
+                sprintf("Requested Tax ID %s was not found", $this->taxId)
+            );
+        }
+        //====================================================================//
+        // Compute VAT Amounts
+        if ($this->isReferencePriceTaxesFree) {
+            $this->referencePriceTaxesExc = $this->referencePrice;
+            $this->referencePriceTaxesInc = $this->referencePrice;
+            $this->referencePriceTaxesInc += $this->referencePrice * $tax->rate / 100;
+        } else {
+            $this->referencePriceTaxesInc = $this->referencePrice;
+            $this->referencePriceTaxesExc = $this->referencePrice;
+            $this->referencePriceTaxesExc += $this->referencePrice * $tax->rate / 100;
+        }
     }
-
-    //    #[ORM\PreUpdate()]
-    //    public function updatePriceFields(): static
-    //    {
-    ////        self::prices()->encode();
-    //        $this->reference_price_taxes_exc = $this->is_reference_price_taxes_free
-    //            ? $this->reference_price
-    //            : $this->reference_price - $tva
-    //        ;
-    //
-    //        return $this;
-    //    }
 }

@@ -14,8 +14,8 @@ api_platform:
             - { name: "X-API-VERSION", type: "header" }
     collection:
         pagination:
-            client_items_per_page: true                     # Disabled by default
-            items_per_page_parameter_name: limit            # Default value
+            client_items_per_page:          true        # Disabled by default
+            items_per_page_parameter_name:  limit       # Default value
 
     ########################################################################
     # Enable CamelCase To SnakeCase Conversion

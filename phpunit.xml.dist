@@ -17,7 +17,6 @@
 
     <testsuites>
         <testsuite name="All">
-<!--            <directory>tests/Controller/S00MinimalObjectsTest.php</directory>-->
             <directory>vendor/splash/phpcore/Tests/*</directory>
             <directory>vendor/splash/php-bundle/phpunit/*</directory>
             <directory>tests/*</directory>
@@ -34,10 +33,9 @@
 
         <!-- Only Test Specified Sequence -->
         <const  name="SPLASH_SEQUENCE"  value="Sellsy Sandbox" />
-<!-- Je change la config pour juste tester les factures sur le stagging               -->
-<!--        <const  name="SPLASH_SEQUENCE"  value="Sellsy Staging" />-->
-        <const  name="SPLASH_TYPES"     value="Invoice" />
-<!--        <const  name="SPLASH_FIELDS"     value="civility" />-->
+        <!-- Only Test Specified Objects -->
+        <!--        <const  name="SPLASH_TYPES"     value="Invoice" />-->
+        <!--        <const  name="SPLASH_TYPES"     value="ThirdParty,Address" />-->
     </php>
 
 </phpunit>

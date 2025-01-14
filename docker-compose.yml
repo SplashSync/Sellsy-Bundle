@@ -40,6 +40,7 @@ services:
             - './config/packages/splash.yaml:/app/config/packages/splash.yaml:ro'
             # Uncomment to use Local Sources instead of Release
             - './src:/app/connectors/Sellsy/:ro'
+            - './tests/Controller:/app/tests/Controller/:ro'
             - './phpunit.xml.dist:/app/phpunit.xml.dist:ro'
         env_file:
             - .env

@@ -114,11 +114,11 @@ trait PriceTrait
         if ($this->isReferencePriceTaxesFree) {
             $this->referencePriceTaxesExc = $this->referencePrice;
             $this->referencePriceTaxesInc = $this->referencePrice;
-            $this->referencePriceTaxesInc += $this->referencePrice * $this->tax->rate / 100;
+            $this->referencePriceTaxesInc += $this->referencePrice * $tax->rate / 100;
         } else {
             $this->referencePriceTaxesInc = $this->referencePrice;
             $this->referencePriceTaxesExc = $this->referencePrice;
-            $this->referencePriceTaxesExc += $this->referencePrice * $this->tax->rate / 100;
+            $this->referencePriceTaxesExc += $this->referencePrice * $tax->rate / 100;
         }
     }
 }

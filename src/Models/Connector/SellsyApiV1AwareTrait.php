@@ -19,6 +19,7 @@ use Splash\Client\Splash;
 use Splash\Connectors\Sellsy\Connector\SellsyConnector;
 use Splash\Connectors\Sellsy\Connexion\SellsyApiV1Connexion;
 use Splash\OpenApi\Models\Connexion\ConnexionInterface;
+use Splash\OpenApi\Connexion\JsonHalConnexion;
 
 /**
  * Use API V2 Connexion to build an API V1 Connexion
@@ -48,9 +49,9 @@ trait SellsyApiV1AwareTrait
         //====================================================================//
         // Detect API Error
         if (!empty($response["error"])) {
-            return Splash::log()->errNull($response["error"]);
+            return Splash::log()->errNull(print_r($response["error"], true));
         }
-        if (($response["error"] ?? false) == "success") {
+        if (($response["status"] ?? false) == "success") {
             return $response;
         }
 
@@ -65,7 +66,10 @@ trait SellsyApiV1AwareTrait
         //====================================================================//
         // Only When using Live Connexion
         if ($connector->isSandbox()) {
-            return $connexion;
+            return new JsonHalConnexion(
+                $connexion->getEndPoint()."/v1",
+                $connexion->getTemplate()->headers,
+            );
         }
 
         //====================================================================//

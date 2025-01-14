@@ -32,6 +32,7 @@ abstract class ProductRow extends AbstractRow
         JMS\Type("string"),
         SPL\Field(desc: "Row reference"),
         SPL\Microdata("http://schema.org/Product", "sku"),
+        SPL\Associations(array("quantity@rows")),
     ]
     public ?string $reference = null;
 
@@ -44,6 +45,7 @@ abstract class ProductRow extends AbstractRow
         JMS\Type("string"),
         SPL\Field(desc: "Row description"),
         SPL\Microdata("http://schema.org/partOfInvoice", "description"),
+        SPL\Associations(array("quantity@rows")),
     ]
     public ?string $description = null;
 
@@ -56,6 +58,7 @@ abstract class ProductRow extends AbstractRow
         JMS\Type("string"),
         SPL\Field(type: SPL_T_PRICE, desc: "Unit amount without tax"),
         SPL\Microdata("http://schema.org/PriceSpecification", "price"),
+        SPL\Associations(array("quantity@rows")),
     ]
     public ?string $unitAmount = null;
 
@@ -82,7 +85,8 @@ abstract class ProductRow extends AbstractRow
         SPL\Accessor(
             getter: "getDiscount",
             setter: "setDiscount"
-        )
+        ),
+        SPL\Associations(array("quantity@rows")),
     ]
     public ?Discount $discount = null;
 
@@ -95,6 +99,7 @@ abstract class ProductRow extends AbstractRow
         JMS\Type("integer"),
         SPL\Field(type: SPL_T_VARCHAR, desc: "Tax Name"),
         SPL\Microdata("http://schema.org/PriceSpecification", "valueAddedTaxName"),
+        SPL\IsNotTested,
     ]
     public int $taxId = 0;
 

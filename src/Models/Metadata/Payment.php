@@ -41,6 +41,7 @@ class Payment
         JMS\Type("string"),
         SPL\Field(desc: "Transaction Number"),
         SPL\Microdata("http://schema.org/Invoice", "paymentMethodId"),
+        SPL\Associations(array("number@payments", "amount@payments", "paidAt@payments")),
     ]
     public ?string $number = null;
 
@@ -50,6 +51,7 @@ class Payment
         JMS\Type(Amount::class),
         SPL\Field(type: SPL_T_DOUBLE, desc: "Payment Amount"),
         SPL\Microdata("http://schema.org/PaymentChargeSpecification", "price"),
+        SPL\Associations(array("number@payments", "amount@payments", "paidAt@payments")),
     ]
     public ?Amount $amount = null;
 
@@ -60,6 +62,7 @@ class Payment
         JMS\Groups(array("Read")),
         SPL\Field(type: SPL_T_DATE, desc: "Payment date (ISO 8601)"),
         SPL\Microdata("http://schema.org/PaymentChargeSpecification", "validFrom"),
+        SPL\Associations(array("number@payments", "amount@payments", "paidAt@payments")),
     ]
     public DateTime $paidAt;
 
@@ -85,6 +88,7 @@ class Payment
             desc: "Payment Method Code / Name"
         ),
         SPL\Microdata("http://schema.org/Invoice", "PaymentMethod"),
+        Spl\IsNotTested
     ]
     public ?string $method = null;
 
@@ -97,6 +101,7 @@ class Payment
         JMS\SerializedName("currency"),
         JMS\Type("string"),
         SPL\Field(type: SPL_T_CURRENCY, desc: "Payment Currency Code"),
+        Spl\IsNotTested
     ]
     public ?string $currency = "EUR";
 
@@ -172,7 +177,7 @@ class Payment
      */
     public function setNumber(string $number): static
     {
-        if ($number && $number != $this->number) {
+        if ($number && ($number != $this->number)) {
             $this->number = $number;
             $this->updated = true;
         }
@@ -210,6 +215,7 @@ class Payment
             $this->amount ??= new Amount();
             $this->amount->value = (string) $amount;
             $this->updated = true;
+
         }
 
         return $this;
@@ -220,7 +226,7 @@ class Payment
      */
     public function setPaidAt(?DateTime $paidAt): static
     {
-        if ($paidAt && ($paidAt != $this->paidAt)) {
+        if ($paidAt && ($paidAt != ($this->paidAt ?? null))) {
             $this->paidAt = $paidAt;
             $this->updated = true;
         }

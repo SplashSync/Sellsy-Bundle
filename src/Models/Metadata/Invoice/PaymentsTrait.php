@@ -15,6 +15,7 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Invoice;
 
+use JMS\Serializer\Annotation as JMS;
 use Splash\Connectors\Sellsy\Models\Metadata\Payment;
 use Splash\Metadata\Attributes as SPL;
 use Webmozart\Assert\Assert;
@@ -28,6 +29,7 @@ trait PaymentsTrait
      * @var Payment[]
      */
     #[
+        JMS\Groups(array("None")),
         SPL\ListResource(targetClass: Payment::class),
         SPL\Accessor(
             factory: "createPayment",

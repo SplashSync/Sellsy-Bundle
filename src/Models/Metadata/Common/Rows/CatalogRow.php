@@ -33,6 +33,7 @@ class CatalogRow extends ProductRow
         JMS\Type(Related::class),
         SPL\Field(type: SPL_T_ID."::Product", desc: "Catalog Product ID"),
         SPL\Microdata("http://schema.org/Product", "productID"),
+        SPL\Associations(array("quantity@rows")),
     ]
     public ?Related $related = null;
 }

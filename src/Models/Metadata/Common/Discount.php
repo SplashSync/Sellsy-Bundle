@@ -65,7 +65,7 @@ class Discount
             return;
         }
 
-        $this->type ??= "percent";
+        $this->type = "percent";
         $this->value = (string) $discount;
     }
 
@@ -80,11 +80,13 @@ class Discount
         }
 
         // Calculate percentage based on $splPrice and $qty
-        $taxIncludedPrice = $splPrice ? PricesHelper::taxIncluded($splPrice) : 0;
+        $taxExcludedPrice = $splPrice ? PricesHelper::taxExcluded($splPrice) : 0;
 
-        if ("amount" === $this->type && $taxIncludedPrice > 0 && $qty > 0) {
-            $referencePrice = (float) $taxIncludedPrice * $qty; // Total price for all items
-            $amountDiscount = (float) $this->value; // Total discount for all items
+        if ("amount" === $this->type && $taxExcludedPrice > 0 && $qty > 0) {
+            // Total price for all items
+            $referencePrice = (float) $taxExcludedPrice * $qty;
+            // Total discount for all items
+            $amountDiscount = (float) $this->value;
 
             // Calculate and return the percentage
             return $amountDiscount / $referencePrice * 100;
@@ -93,34 +95,4 @@ class Discount
         // Fallback to 0 if necessary information is missing
         return 0.0;
     }
-    //
-    //    /**
-    //     * Convert fixed discount amount into a percentage-based discount.
-    //     *
-    //     * @param ProductRow $row The product row containing unit price and quantity information
-    //     *
-    //     * @return void
-    //     */
-    //    private function convertAmountToPercentage(ProductRow $row): void
-    //    {
-    //        // Get the unit price excluding tax from the ProductRow
-    //        $unitPrice = isset($row->unitAmount)
-    //            ? (float)$row->unitAmount // Ensure 'ht' is used for unit price
-    //            : 0.0;
-    //        $quantity = isset($row->quantity) ? (int) $row->quantity : 0;
-    //
-    //        // Calculate the total reference price (unit price * quantity)
-    //        $referencePrice = $unitPrice * $quantity;
-    //
-    //        if ($referencePrice > 0) {
-    //            // Convert the fixed discount amount to a percentage
-    //            $this->value = (string)round(((float)$this->value / $referencePrice) * 100, 2);
-    //        } else {
-    //            // If the reference price is invalid, default to a 0% discount
-    //            $this->value = "0.00";
-    //        }
-    //
-    //        // Update the discount type to "percent"
-    //        $this->type = "percent";
-    //    }
 }

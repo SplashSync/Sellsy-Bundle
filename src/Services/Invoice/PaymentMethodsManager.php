@@ -150,7 +150,7 @@ class PaymentMethodsManager
             return null;
         }
 
-        return $this->associations[$methodName] ?: null;
+        return $this->associations[$methodName] ?? null;
     }
 
     /**

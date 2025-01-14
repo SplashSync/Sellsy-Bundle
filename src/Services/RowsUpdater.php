@@ -251,6 +251,7 @@ class RowsUpdater
         //====================================================================//
         // Load New Product Informations with Caching
         $productData = $this->getProductInfos((string) ObjectsHelper::id($objectId));
+
         //====================================================================//
         // Update of Connected Product
         if ($productData) {
@@ -264,7 +265,7 @@ class RowsUpdater
             // Configure Related
             $row->related ??= new Related();
             $row->related->fromSplash($objectId);
-            $row->related->type = $productData["type"];
+            $row->related->type = (string) $productData["type"];
             //====================================================================//
             // Configure Ref. & Description
             $row->reference ??= $productData["reference"];

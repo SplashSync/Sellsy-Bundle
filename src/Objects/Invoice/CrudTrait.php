@@ -24,29 +24,19 @@ trait CrudTrait
      */
     public function load(string $objectId): ?object
     {
-        //        parent::load($objectId);
-        //
-        //        dd(parent::load($objectId));
-
-        //====================================================================//
-        // Debug
-        //        dd(
-        //            $this,
-        //            $this->visitor->getHydrator()->extract($this->object),
-        //            $this->object->allowDocumentUpdate()
-        //        );
-
         //====================================================================//
         // Load Remote Object
-        return parent::load($objectId);
+        $invoice = parent::load($objectId);
         //====================================================================//
         // Invoice Found
-        //        if ($object instanceof ApiModels\Invoice) {
-        //            //====================================================================//
-        //            // Load Invoice Linked Payments
-        //            $paymentsManager = $this->connector->getLocator()->getPaymentsManager();
-        //            $object->loadPayments($paymentsManager->fetchPayments($objectId));
-        //        }
+        if ($invoice instanceof ApiModels\Invoice) {
+            //====================================================================//
+            // Load Invoice Linked Payments
+            $paymentsManager = $this->connector->getLocator()->getPaymentsManager();
+            $invoice->loadPayments($paymentsManager->fetchPayments($objectId));
+        }
+
+        return $invoice;
     }
 
     /**
@@ -59,15 +49,6 @@ trait CrudTrait
     public function update(bool $needed): ?string
     {
         $objectId = $this->getObjectIdentifier();
-
-        //====================================================================//
-        // Debug
-        //                dd(
-        //                    $this,
-        //                    $this->visitor->getHydrator()->extract($this->object),
-        //                    $this->object->allowDocumentUpdate()
-        //                );
-
         //====================================================================//
         // Execute Generic Update
         if ($this->object->allowDocumentUpdate()) {
@@ -75,14 +56,12 @@ trait CrudTrait
         }
         //====================================================================//
         // Update Invoice Payments
-        if ($this->object->allowPaymentsUpdate()) {
+        if ($this->connector->isSandbox() || $this->object->allowPaymentsUpdate()) {
             $paymentsManager = $this->connector->getLocator()->getPaymentsManager();
             if (!$paymentsManager->updatePayments($this->object)) {
                 return null;
             }
         }
-
-        //        dd($this->object, $this->visitor->getLastResponse());
 
         return $objectId;
     }

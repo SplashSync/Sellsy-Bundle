@@ -54,7 +54,7 @@ class Invoice
         Assert\NotNull,
         Assert\Type("string"),
         JMS\SerializedName("number"),
-        JMS\Groups(array("Read", "List")),
+        JMS\Groups(array("Read", "Write", "List")),
         JMS\Type("string"),
         SPL\Field(desc: "Invoice Number"),
         SPL\Flags(listed: true),

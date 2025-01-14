@@ -44,6 +44,8 @@ trait MainTrait
         JMS\SerializedName("subject"),
         JMS\Type("string"),
         SPL\Field(desc: "Invoice Subject"),
+        SPL\Microdata("http://schema.org/Invoice", "confirmationNumber"),
+        SPL\IsRequired,
     ]
     protected ?string $subject = null;
 
@@ -67,6 +69,7 @@ trait MainTrait
         JMS\SerializedName("order_reference"),
         JMS\Type("string"),
         SPL\Field(desc: "Invoice Order Reference"),
+        SPL\Microdata("http://schema.org/Order", "orderNumber"),
     ]
     protected ?string $orderReference = null;
 

@@ -33,6 +33,7 @@ trait StatusTrait
         SPL\Field(desc: "Third Party Id"),
         SPL\Flags(listed: true),
         SPL\Choices(InvoiceStatus::CHOICES),
+        SPL\IsNotTested,
     ]
     public string $status;
 

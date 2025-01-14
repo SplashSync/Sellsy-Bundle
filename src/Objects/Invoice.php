@@ -20,6 +20,7 @@ use Splash\Connectors\Sellsy\Connector\SellsyConnector;
 use Splash\Connectors\Sellsy\Models\Actions\SellsyListAction;
 use Splash\Connectors\Sellsy\Models\Metadata as ApiModels;
 use Splash\Connectors\Sellsy\Objects\Common\RowsParserTrait;
+use Splash\Core\SplashCore as Splash;
 use Splash\Models\Objects\IntelParserTrait;
 use Splash\OpenApi\Action\Json;
 use Splash\OpenApi\Models\Metadata\AbstractApiMetadataObject;
@@ -76,13 +77,5 @@ class Invoice extends AbstractApiMetadataObject
                 "offsetKey" => "offset"
             )
         );
-    }
-
-    public function create(): ?object
-    {
-        return parent::create();
-        //                dump($this);
-        //                dump($object);
-        //                dd($this->visitor->getLastResponse());
     }
 }

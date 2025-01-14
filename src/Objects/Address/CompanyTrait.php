@@ -52,12 +52,12 @@ trait CompanyTrait
         // READ FIELD
         switch ($fieldName) {
             case "company":
-                $manager = $this->connector->getContactCompaniesManager();
+                $manager = $this->connector->getLocator()->getContactCompaniesManager();
                 $this->out[$fieldName] = $manager->getFirst($this->object)?->getObjectId();
 
                 break;
             case "company_single":
-                $manager = $this->connector->getContactCompaniesManager();
+                $manager = $this->connector->getLocator()->getContactCompaniesManager();
                 $this->out[$fieldName] = null;
                 if (1 == count($manager->getAll($this->object))) {
                     $this->out[$fieldName] = $manager->getFirst($this->object)?->getObjectId();
@@ -80,7 +80,7 @@ trait CompanyTrait
         // READ FIELD
         switch ($fieldName) {
             case "company":
-                $manager = $this->connector->getContactCompaniesManager();
+                $manager = $this->connector->getLocator()->getContactCompaniesManager();
                 //====================================================================//
                 // Verify if Contact is Already Attached
                 if (!empty($fieldData) && !$manager->hasCompany($this->object, $fieldData)) {
@@ -89,7 +89,7 @@ trait CompanyTrait
 
                 // no break
             case "company_single":
-                $manager = $this->connector->getContactCompaniesManager();
+                $manager = $this->connector->getLocator()->getContactCompaniesManager();
                 //====================================================================//
                 // Compare Current Value
                 $companyId = $manager->getFirst($this->object)?->getObjectId();

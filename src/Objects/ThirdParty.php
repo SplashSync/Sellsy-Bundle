@@ -99,6 +99,7 @@ class ThirdParty extends AbstractApiMetadataObject
         // Update Invoicing Address
         if ($this->isToUpdate("InvoicingAddress")) {
             $this->connector
+                ->getLocator()
                 ->getAddressUpdater()
                 ->createOrUpdateInvoicingAddress($this->object)
             ;
@@ -107,6 +108,7 @@ class ThirdParty extends AbstractApiMetadataObject
         // Update Delivery Address
         if ($this->isToUpdate("DeliveryAddress")) {
             $this->connector
+                ->getLocator()
                 ->getAddressUpdater()
                 ->createOrUpdateDeliveryAddress($this->object)
             ;

@@ -75,32 +75,4 @@ class Product extends AbstractApiMetadataObject
             )
         );
     }
-
-    //====================================================================//
-    // DEBUG
-    //====================================================================//
-
-    /**
-     * {@inheritdoc}
-     */
-    //            public function objectsList(?string $filter = null, array $params = array()): array
-    //            {
-    //                $this->visitor->getConnexion()->get("/items") ?? array();
-    //        //        dd($this);
-    //
-    //                dd(json_decode($this->visitor->getLastResponse()->body, true));
-    //                return $this->visitor->list($filter, $params)->getArrayResults() ?? array();
-    //            }
-    /**
-     * //     * Update Request Object
-     * //     *
-     * //     * @param bool $needed Is This Update Needed
-     * //     *
-     * //     * @return null|string Object ID of False if Failed to Update
-     * //     */
-    //    public function update(bool $needed): ?string
-    //    {
-    //        dd($this->visitor->getHydrator()->extract($this->object));
-    //        return parent::update($needed);
-    //    }
 }

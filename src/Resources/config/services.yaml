@@ -15,12 +15,10 @@ services:
 
     ################################################################################
     # Auto-wiring for Actions
-#    Splash\Connectors\Sellsy\Models\Actions\:
-#        resource:   '../../Models/Actions'
-#        tags:
-#          - { name: 'controller.service_arguments' }
-#        arguments:
-#            $options: []
+    Splash\Connectors\Sellsy\Actions\:
+        resource:   '../../Actions'
+        tags:
+          - { name: 'controller.service_arguments' }
 
     ################################################################################
     # Auto-wiring for Services

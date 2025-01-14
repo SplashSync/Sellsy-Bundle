@@ -47,7 +47,6 @@ use Symfony\Component\Validator\Constraints as Assert;
     ),
     normalizationContext: array("groups" => array("read"))
 )]
-
 class CompanyAddress extends AbstractSellsyObject
 {
     use Address\MainTrait;
@@ -68,7 +67,6 @@ class CompanyAddress extends AbstractSellsyObject
      * Link to Parent Company
      */
     #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'addresses')]
-    #[Serializer\Ignore]
     protected ?Company $company;
 
     //====================================================================//

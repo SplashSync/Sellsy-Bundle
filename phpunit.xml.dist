@@ -17,7 +17,7 @@
 
     <testsuites>
         <testsuite name="All">
-<!--            <directory>tests/Controller/S00MinimalObjectsTest.php</directory>-->
+            <directory>tests/Controller/S00MinimalObjectsTest.php</directory>
             <directory>vendor/splash/phpcore/Tests/*</directory>
             <directory>vendor/splash/php-bundle/phpunit/*</directory>
             <directory>tests/*</directory>
@@ -34,8 +34,10 @@
 
         <!-- Only Test Specified Sequence -->
         <const  name="SPLASH_SEQUENCE"  value="Sellsy Sandbox" />
-<!--        <const  name="SPLASH_TYPES"     value="Address" />-->
-<!--        <const  name="SPLASH_FIELDS"     value="civility" />-->
+        <!-- Only Test Specified Objects -->
+        <!-- <const  name="SPLASH_TYPES"     value="Invoice" />-->
+        <!-- Only Test Specified Fields -->
+        <!-- <const  name="SPLASH_FIELDS"     value="my_field" />-->
     </php>
 
 </phpunit>

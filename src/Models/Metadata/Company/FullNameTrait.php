@@ -20,7 +20,7 @@ use Splash\Metadata\Attributes as SPL;
 use Splash\Models\Helpers\FullNameParser;
 use Symfony\Component\Validator\Constraints as Assert;
 
-trait FullnameTrait
+trait FullNameTrait
 {
     /**
      * Company's name.
@@ -143,7 +143,7 @@ trait FullnameTrait
     #[JMS\PostDeserialize()]
     public function decodeFullName(): void
     {
-        $this->fullNameParser ??= new FullNameParser($this->name);
+        $this->fullNameParser ??= new FullNameParser($this->name ?? null);
     }
 
     /**

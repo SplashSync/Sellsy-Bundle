@@ -106,10 +106,13 @@ class Company extends AbstractSellsyObject
 
     /**
      * Get Company Embedded Data
+     *
+     * @return array<string, null|CompanyAddress>
      */
     #[
         Serializer\Groups("read"),
         Serializer\SerializedName("_embed"),
+        Serializer\MaxDepth(1),
     ]
     public function getEmbed(): array
     {

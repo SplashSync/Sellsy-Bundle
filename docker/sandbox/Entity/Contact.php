@@ -85,11 +85,14 @@ class Contact extends AbstractSellsyObject
     }
 
     /**
-     * Get Company Embedded Data
+     * Get Contact Embedded Data
+     *
+     * @return array<string, null|ContactAddress>
      */
     #[
         Serializer\Groups("read"),
         Serializer\SerializedName("_embed"),
+        Serializer\MaxDepth(1),
     ]
     public function getEmbed(): array
     {

@@ -49,7 +49,7 @@ services:
             - .env
         hostname:           toolkit.sellsy.local
         networks:
-            shippingbo:     { ipv4_address: 172.118.0.100, aliases: [ toolkit.sellsy.local ] }
+            sellsy:         { ipv4_address: 172.118.0.100, aliases: [ toolkit.sellsy.local ] }
             splashsync:     { aliases: [ toolkit.sellsy.local ] }
 
     ################################################################################
@@ -70,7 +70,7 @@ services:
             - 'OAUTH2_CLIENT_SECRET=SellsySandboxSecret'
             - 'OAUTH2_CLIENT_REDIRECT_URI=http://toolkit.sellsy.local/ws/sellsy'
         networks:
-            shippingbo:     { ipv4_address: 172.118.0.200, aliases: [ sandbox.sellsy.local ] }
+            sellsy:         { ipv4_address: 172.118.0.200, aliases: [ sandbox.sellsy.local ] }
             splashsync:     { aliases: [ sandbox.sellsy.local ] }
 
     ################################################################################
@@ -85,7 +85,7 @@ services:
 networks:
     ################################################################################
     # Default Private Network
-    shippingbo:
+    sellsy:
         driver: bridge
         ipam:
             config:

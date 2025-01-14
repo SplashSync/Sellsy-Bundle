@@ -34,8 +34,9 @@
         <!-- Only Test Specified Sequence -->
         <const  name="SPLASH_SEQUENCE"  value="Sellsy Sandbox" />
         <!-- Only Test Specified Objects -->
-        <!--        <const  name="SPLASH_TYPES"     value="Invoice" />-->
-        <!--        <const  name="SPLASH_TYPES"     value="ThirdParty,Address" />-->
+        <!-- <const  name="SPLASH_TYPES"     value="Invoice" />-->
+        <!-- Only Test Specified Fields -->
+        <!-- <const  name="SPLASH_FIELDS"     value="my_field" />-->
     </php>
 
 </phpunit>

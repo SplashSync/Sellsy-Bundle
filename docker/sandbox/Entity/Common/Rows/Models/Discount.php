@@ -13,29 +13,37 @@
  *  file that was distributed with this source code.
  */
 
-namespace App\Entity\Common\Rows;
+namespace App\Entity\Common\Rows\Models;
 
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Relation
+/**
+ * Sellsy Sandbox Row Discount Storage
+ */
+class Discount
 {
-    #[
-        Assert\NotNull,
-        Assert\Type("int"),
-        ORM\Column(type: Types::INTEGER, nullable: false),
-        ORM\Id,
-        Serializer\Groups(array("read", "write", "required"))
-    ]
-    public int $id;
-
+    /**
+     * Discount percentage
+     *
+     * @var string
+     */
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        ORM\Column(nullable: false),
-        Serializer\Groups(array("read", "write", "required"))
+        Serializer\Groups("read")
     ]
-    public string $type;
+    public string $value = "0.00";
+
+    /**
+     * Discount type
+     *
+     * @var string
+     */
+    #[
+        Assert\NotNull,
+        Assert\Type("string"),
+        Serializer\Groups("read")
+    ]
+    public string $type = "percent";
 }

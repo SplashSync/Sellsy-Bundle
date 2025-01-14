@@ -15,12 +15,10 @@
 
 namespace App\Entity\Invoice;
 
-use App\Entity\Common\Rows\Related;
 use App\Entity\Company;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
-use Splash\Connectors\Sellsy\Models\Metadata\Common\Relation;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;

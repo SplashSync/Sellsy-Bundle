@@ -22,7 +22,7 @@ use Symfony\Component\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\MappedSuperclass]
-abstract class AbstractRow implements RowInterface
+abstract class AbstractRow
 {
     #[
         Assert\Type("integer"),
@@ -41,23 +41,16 @@ abstract class AbstractRow implements RowInterface
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        Serializer\Groups("read")
+        ORM\Column(type: Types::STRING),
+        Serializer\Groups(array("read", "write"))
     ]
     public string $type;
 
     /**
-     * @inheritDoc
+     * Get Row Entity ID
      */
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getType(): ?string
-    {
-        return static::DATATYPE;
     }
 }

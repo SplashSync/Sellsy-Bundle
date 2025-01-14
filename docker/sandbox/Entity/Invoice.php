@@ -47,6 +47,7 @@ class Invoice extends AbstractSellsyObject
     use Invoice\MetadataTrait;
     use Invoice\ExtraInfosTrait;
     use Invoice\RelationsTrait;
+    use Invoice\PaymentsTrait;
     use RowsAwareTrait;
 
     /**
@@ -67,7 +68,7 @@ class Invoice extends AbstractSellsyObject
     #[
         Assert\Type("string"),
         ORM\Column(),
-        Serializer\Groups("read")
+        Serializer\Groups(array("read","write"))
     ]
     public string $number;
 
@@ -89,6 +90,7 @@ class Invoice extends AbstractSellsyObject
     public function __construct()
     {
         $this->rows = new ArrayCollection();
+        $this->payments = new ArrayCollection();
     }
 
     #[ORM\PrePersist()]

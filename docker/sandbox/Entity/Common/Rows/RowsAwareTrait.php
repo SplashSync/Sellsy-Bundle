@@ -23,12 +23,12 @@ use Symfony\Component\Serializer\Annotation as Serializer;
 trait RowsAwareTrait
 {
     /**
-     * @var Collection<SingleRow> Array of row items of type AbstractRow or its subclasses
+     * @var Collection<SellsyRow> Array of row items of type AbstractRow or its subclasses
      */
     #[Serializer\Groups("read")]
     #[ORM\OneToMany(
         mappedBy: "invoice",
-        targetEntity: SingleRow::class,
+        targetEntity: SellsyRow::class,
         cascade: array("all"),
         orphanRemoval: true,
     )]

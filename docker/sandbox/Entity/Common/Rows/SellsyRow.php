@@ -13,21 +13,26 @@
  *  file that was distributed with this source code.
  */
 
-namespace App\Entity\Common\Rows\Models;
+namespace App\Entity\Common\Rows;
 
-use App\Entity\Common\Rows\Related;
-use App\Entity\Taxe;
+use App\Entity\Common\Rows\Models\AbstractRow;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Persistence\Event\LifecycleEventArgs;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\MappedSuperclass()]
+/**
+ * Generic Sellsy Row data Storage
+ */
+#[ORM\Entity()]
+#[ORM\Table("invoice_rows")]
 #[ORM\HasLifecycleCallbacks()]
-abstract class ProductRow extends AbstractRow
+class SellsyRow extends AbstractRow
 {
+    use Traits\RelatedTrait;
+    use Traits\DiscountTrait;
+    use Traits\TaxTrait;
+
     /**
      * Row's reference
      */
@@ -52,7 +57,7 @@ abstract class ProductRow extends AbstractRow
      * Row's quantity
      */
     #[
-        Assert\Type("string"),
+        Assert\Type(array("null", "string")),
         ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2),
         Serializer\Groups("read")
     ]
@@ -70,50 +75,10 @@ abstract class ProductRow extends AbstractRow
     public string $quantity;
 
     /**
-     * Row's quantity
-     */
-    #[
-        Assert\NotNull,
-        Assert\Type("integer"),
-        ORM\Column(type: Types::INTEGER),
-        Serializer\Groups("read")
-    ]
-    public int $taxId = 0;
-
-    /**
-     * Row's quantity
-     */
-    #[
-        Serializer\Ignore()
-    ]
-    public ?Related $related = null;
-
-    /**
      * Set Unit Amount as Float
      */
-    public function setUnitAmount(string $value): void
+    public function setUnitAmount(?string $value): void
     {
         $this->unit_amount = (float) $value;
-    }
-
-    /**
-     * Verify received Tax ID Exits on DB
-     */
-    #[ORM\PrePersist()]
-    #[ORM\PreUpdate()]
-    public function validateTaxId(LifecycleEventArgs $event): void
-    {
-        //====================================================================//
-        // No Tax ID
-        if (!$this->taxId) {
-            return;
-        }
-        //====================================================================//
-        // Load Tax ID
-        if (!$event->getObjectManager()->getRepository(Taxe::class)->find($this->taxId)) {
-            throw new NotFoundHttpException(
-                sprintf("Requested Tax ID %s was not found", $this->taxId)
-            );
-        }
     }
 }

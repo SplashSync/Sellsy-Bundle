@@ -27,7 +27,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[
     ORM\Entity(),
     ApiResource(
-        uriTemplate: "payments/methods",
+        uriTemplate: "/payments/methods",
         operations: array(
             new API\GetCollection(),
         ),

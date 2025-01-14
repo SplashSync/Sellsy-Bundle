@@ -44,6 +44,16 @@ trait MainTrait
     public ?string $subject = null;
 
     /**
+     * Invoice's order reference.
+     */
+    #[
+        Assert\Type("string"),
+        ORM\Column(type: Types::STRING, length: 255, nullable: true),
+        Serializer\Groups("read"),
+    ]
+    public ?string $orderReference = null;
+
+    /**
      * Invoice's Currency Code
      */
     #[

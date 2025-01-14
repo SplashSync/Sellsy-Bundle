@@ -47,7 +47,6 @@ use Symfony\Component\Validator\Constraints as Assert;
     ),
     normalizationContext: array("groups" => array("read"))
 )]
-
 class CompanyAddress extends AbstractSellsyObject
 {
     use Address\MainTrait;

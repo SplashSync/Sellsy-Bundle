@@ -60,7 +60,23 @@ class PrivateClient extends ConfigurableProvider
      */
     protected function getDefaultScopes(): array
     {
-        return array();
+        return array(
+            "companies.read", "companies.write",
+            "contacts.read", "contacts.write", "individuals.write",
+            "taxes.read",
+            "invoices.read", "invoices.write",
+            "orders.read", "orders.write",
+            "webhooks.read", "webhooks.write",
+            "payments.read", "payments.write",
+            "scopes.read",
+            "api-v1",
+            "catalog", "items.read", "items.write",
+        );
+    }
+
+    protected function getScopeSeparator()
+    {
+        return ' ';
     }
 
     /**

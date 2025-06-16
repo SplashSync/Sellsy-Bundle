@@ -33,8 +33,8 @@
     "require": {
         "php":                                          "^8.1",
         "ext-json":                                     "*",
-        "splash/openapi":                               "dev-master",
-        "splash/metadata":                              "dev-master",
+        "splash/openapi":                               "2.5.x-dev",
+        "splash/metadata":                              "2.0.x-dev",
         "splash/oauth2":                                "dev-main",
         "burgov/key-value-form-bundle":                 "@stable",
         "doctrine/annotations": "*",
@@ -42,8 +42,8 @@
     },
     
     "require-dev": {
-        "badpixxel/php-sdk":                            "~2.0",
-        "splash/toolkit":                               "dev-master",
+        "badpixxel/php-sdk":                            "^2.0",
+        "splash/toolkit":                               "2.5.x-dev",
         "knpuniversity/oauth2-client-bundle":           "~2.0",
         "api-platform/core":                            "^2.7",
         "doctrine/migrations":                          "^3.7"

@@ -35,7 +35,7 @@
         "ext-json":                                     "*",
         "splash/openapi":                               "2.5.x-dev",
         "splash/metadata":                              "2.0.x-dev",
-        "splash/oauth2":                                "dev-main",
+        "splash/oauth2":                                "2.0.x-dev",
         "burgov/key-value-form-bundle":                 "@stable",
         "doctrine/annotations": "*",
         "symfony/validator": "*"
@@ -76,6 +76,9 @@
         ]
     },
     "extra": {
-        "public-dir": "tests/public"
+        "public-dir": "tests/public",
+        "branch-alias": {
+            "dev-main":     "2.0.x-dev"
+        }
     }
 }

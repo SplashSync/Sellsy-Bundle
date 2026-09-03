@@ -17,4 +17,12 @@ return array(
     //==============================================================================
     // SPLASH BUNDLES
     Splash\Connectors\Sellsy\SellsyBundle::class => array("all" => true),
+    //==============================================================================
+    // Oauth2 Bundle & its Client Bundle
+    //
+    // The Toolkit requires both packages, but does not register their Bundles:
+    // activation is left to the project. Should the Toolkit register them one
+    // day, these two lines stay harmless: the Kernel merges bundles by class name.
+    KnpU\OAuth2ClientBundle\KnpUOAuth2ClientBundle::class => array("all" => true),
+    Splash\Security\Oauth2\SplashOauth2Bundle::class => array("all" => true),
 );

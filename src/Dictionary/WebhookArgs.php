@@ -15,6 +15,8 @@
 
 namespace Splash\Connectors\Sellsy\Dictionary;
 
+use Splash\Core\Dictionary\SplOperations;
+
 class WebhookArgs
 {
     /**
@@ -65,9 +67,9 @@ class WebhookArgs
     public static function toSplashAction(string $action) : string
     {
         return match ($action) {
-            "created" => SPL_A_CREATE,
-            "deleted" => SPL_A_DELETE,
-            default => SPL_A_UPDATE,
+            "created" => SplOperations::CREATE,
+            "deleted" => SplOperations::DELETE,
+            default => SplOperations::UPDATE,
         };
     }
 }

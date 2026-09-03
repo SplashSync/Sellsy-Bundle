@@ -15,7 +15,7 @@
 
 namespace Splash\Connectors\Sellsy\Dictionary;
 
-use Splash\Models\Objects\Invoice\Status;
+use Splash\Core\Dictionary\Objects\Invoice\Status;
 
 class InvoiceStatus
 {

@@ -32,7 +32,7 @@ class SellsyExtension extends Extension implements PrependExtensionInterface
     /**
      * {@inheritdoc}
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings(UnusedFormalParameter)
      */
     public function load(array $configs, ContainerBuilder $container): void
     {

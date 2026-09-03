@@ -15,7 +15,7 @@
 
 namespace Splash\Connectors\Sellsy\Dictionary;
 
-use Splash\Models\Objects\ThirdParty\Civility as BaseCivility;
+use Splash\Core\Dictionary\Objects\ThirdParty\Civility as BaseCivility;
 
 /**
  * Civility Types Dictionary

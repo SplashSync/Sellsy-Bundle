@@ -8,3 +8,6 @@
 /test-report.xml
 /tests/public/bundles/
 /.phpunit.result.cache
+
+# Symfony auto-generated config reference, pure noise in diffs
+/config/reference.php

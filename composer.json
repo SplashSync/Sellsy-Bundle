@@ -45,7 +45,8 @@
     "require-dev": {
         "badpixxel/php-sdk":                            "^3.0",
         "splash/toolkit":                               "^3.0",
-        "splash/bridge-builder":                        "^3.0"
+        "splash/bridge-builder":                        "^3.0",
+        "api-platform/core":                            "^4.0"
     },
 
     "config": {

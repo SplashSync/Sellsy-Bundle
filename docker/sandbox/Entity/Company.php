@@ -102,6 +102,7 @@ class Company extends AbstractSellsyObject
     public function __construct()
     {
         $this->addresses = new ArrayCollection();
+        $this->contacts = new ArrayCollection();
     }
 
     /**
@@ -136,5 +137,9 @@ class Company extends AbstractSellsyObject
     public function onPreUpdate(): void
     {
         $this->updated_at = new DateTime();
+        //====================================================================//
+        // A PUT rebuilds the entity from the payload, where creation date is
+        // never sent: keep the column filled whatever happens.
+        $this->created ??= $this->updated_at;
     }
 }

@@ -18,6 +18,7 @@ namespace App\Entity\Invoice;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Splash\Core\Helpers\DatesHelper;
 use Symfony\Component\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -31,7 +32,7 @@ trait MetadataTrait
         Assert\Type("datetime"),
         ORM\Column(type: Types::DATE_MUTABLE),
         Serializer\Groups("read"),
-        Serializer\Context(array('datetime_format' => SPL_T_DATECAST)),
+        Serializer\Context(array('datetime_format' => DatesHelper::DATE_CAST)),
     ]
     public DateTime $date;
 
@@ -53,5 +54,5 @@ trait MetadataTrait
         ORM\Column(type: Types::DATETIME_MUTABLE),
         Serializer\Groups("read")
     ]
-    public DateTime $created;
+    public ?DateTime $created = null;
 }

@@ -1,0 +1,44 @@
+################################################################################
+#
+#  This file is part of SplashSync Project.
+#
+#  Copyright (C) Splash Sync <www.splashsync.com>
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#
+#  For the full copyright and license information, please view the LICENSE
+#  file that was distributed with this source code.
+#
+#  @author Bernard Paquier <contact@splashsync.com>
+#
+################################################################################
+
+################################################################################
+# ngrok tunnel — opt-in via Compose profile "tunnel"
+#
+# Sellsy requires a public https url to register WebHooks, and to redirect
+# the Oauth2 authorization back to us.
+#
+# Usage:
+#   docker compose --profile tunnel up -d ngrok    # start tunnel
+#   docker compose stop ngrok                      # stop tunnel
+#   docker compose logs -f ngrok                   # follow logs
+#
+# Requires NGROK_AUTHTOKEN in .env (+ optional NGROK_URL for a
+# reserved subdomain — drop the --url flag when not pinned).
+################################################################################
+
+services:
+
+    ngrok:
+        image:              ngrok/ngrok:latest
+        container_name:     ngrok.sellsy.local
+        profiles:           [ "tunnel" ]
+        command:            http toolkit:80 --url=${NGROK_URL}
+        env_file:           ${PWD}/.env
+        depends_on:
+            - toolkit
+        networks:
+            - sellsy

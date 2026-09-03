@@ -1,0 +1,43 @@
+################################################################################
+#
+#  This file is part of SplashSync Project.
+#
+#  Copyright (C) Splash Sync <www.splashsync.com>
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#
+#  For the full copyright and license information, please view the LICENSE
+#  file that was distributed with this source code.
+#
+#  @author Bernard Paquier <contact@splashsync.com>
+#
+################################################################################
+
+################################################################################
+# Splash Toolkit 3.0 Container
+#
+# Hosts the Sellsy Connector, and exposes the Toolkit Mcp Server on /_mcp
+################################################################################
+
+services:
+
+    toolkit:
+        image:              'splashsync/toolkit:3.0'
+        container_name:     toolkit.sellsy.local
+        hostname:           toolkit.sellsy.local
+        volumes:
+            # Specify Local Configuration Files
+            - '${PWD}/.env:/app/.env:ro'
+            - '${PWD}/config/bundles.php:/app/config/bundles.php:ro'
+            - '${PWD}/config/packages/:/app/config/packages/:ro'
+            # Use Local Sources instead of Release
+            - '${PWD}/src/:/app/connectors/Sellsy/:ro'
+            # Push Bridge Connector
+            - '${PWD}/dist/:/app/bridges/:ro'
+        env_file:           ${PWD}/.env
+        tty:                true
+        networks:
+            sellsy:         { ipv4_address: 172.118.0.100, aliases: [ toolkit.sellsy.local ] }
+            splashsync:     { aliases: [ toolkit.sellsy.local ] }

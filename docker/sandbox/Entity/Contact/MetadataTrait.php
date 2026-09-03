@@ -33,7 +33,7 @@ trait MetadataTrait
         ORM\Column(nullable: false),
         Serializer\Groups("read"),
     ]
-    public DateTime $created;
+    public ?DateTime $created = null;
 
     /**
      * Last Update Date
@@ -43,7 +43,7 @@ trait MetadataTrait
         ORM\Column(nullable: false),
         Serializer\Groups("read"),
     ]
-    public DateTime $updated;
+    public ?DateTime $updated = null;
 
     /**
      * Is Contact Archived

@@ -15,8 +15,10 @@
 
 namespace App\Serializer;
 
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
+use ApiPlatform\Doctrine\Orm\Paginator;
+use ApiPlatform\Metadata\CollectionOperationInterface;
 use App\Entity\SellsyObjectInterface;
+use ArrayObject;
 use InvalidArgumentException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -47,9 +49,9 @@ final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface,
     /**
      * {@inheritDoc}
      */
-    public function supportsNormalization($data, $format = null): bool
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = array()): bool
     {
-        if ($this->decorated->supportsNormalization($data, $format)) {
+        if ($this->decorated->supportsNormalization($data, $format, $context)) {
             return true;
         }
         if ((self::FORMAT === $format) && ($data instanceof Paginator)) {
@@ -62,12 +64,15 @@ final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface,
     /**
      * {@inheritDoc}
      */
-    public function normalize($object, $format = null, array $context = array())
-    {
+    public function normalize(
+        mixed $object,
+        ?string $format = null,
+        array $context = array()
+    ): ArrayObject|array|string|int|float|bool|null {
         //====================================================================//
-        //  Check if Resource is Sbo Resource
+        //  Not a Sellsy Resource: let the decorated normalizer do its job
         if (!self::isManagedObject($context["resource_class"] ?? "")) {
-            return $object;
+            return $this->decorated->normalize($object, $format, $context);
         }
         //====================================================================//
         //  Collection Normalizer
@@ -85,35 +90,41 @@ final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface,
                 : $data;
         }
         //====================================================================//
-        //  Product Normalizer
-        if ("item" === $context["operation_type"]) {
-            /** @var SellsyObjectInterface $object */
+        //  Api Platform 3 dropped context["operation_type"]: the operation
+        //  object itself tells whether we are on a collection or on an item.
+        $operation = $context["operation"] ?? null;
+        //====================================================================//
+        //  Collection Normalizer
+        if ($operation instanceof CollectionOperationInterface) {
+            return $this->decorated->normalize($object, $format, $context);
+        }
+        //====================================================================//
+        //  Item Normalizer
+        if ($operation && ($object instanceof SellsyObjectInterface)) {
             return ($object::getItemIndex() && !isset($context["api_attribute"]))
                 ? array($object::getItemIndex() => $this->decorated->normalize($object, $format, $context))
                 : $this->decorated->normalize($object, $format, $context);
         }
 
-        //====================================================================//
-        //  Collection Normalizer
-        if ("collection" === $context["operation_type"]) {
-            return $this->decorated->normalize($object, $format, $context);
-        }
-
-        return $object;
+        return $this->decorated->normalize($object, $format, $context);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function supportsDenormalization($data, $type, $format = null): bool
-    {
-        return $this->decorated->supportsDenormalization($data, $type, $format);
+    public function supportsDenormalization(
+        mixed $data,
+        string $type,
+        ?string $format = null,
+        array $context = array()
+    ): bool {
+        return $this->decorated->supportsDenormalization($data, $type, $format, $context);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function denormalize($data, $class, $format = null, array $context = array())
+    public function denormalize(mixed $data, string $class, ?string $format = null, array $context = array()): mixed
     {
         //====================================================================//
         //  Check if Resource is Sbo Resource
@@ -122,6 +133,14 @@ final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface,
         }
 
         return $this->decorated->denormalize($data, $class, $format, $context);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getSupportedTypes(?string $format): array
+    {
+        return $this->decorated->getSupportedTypes($format);
     }
 
     /**

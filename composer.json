@@ -31,28 +31,29 @@
     },
 
     "require": {
-        "php":                                          "^8.1",
+        "php":                                          "^8.3",
         "ext-json":                                     "*",
-        "splash/openapi":                               "2.5.x-dev",
-        "splash/metadata":                              "2.0.x-dev",
-        "splash/oauth2":                                "2.0.x-dev",
-        "burgov/key-value-form-bundle":                 "@stable",
-        "doctrine/annotations": "*",
-        "symfony/validator": "*"
+        "splash/php-bundle":                            "^3.0",
+        "splash/openapi":                               "^3.0",
+        "splash/metadata":                              "^3.0",
+        "splash/oauth2":                                "^3.0",
+        "splash/scopes":                                "^1.0",
+        "symfony/translation":                          "^7.4",
+        "symfony/validator":                            "^7.4"
     },
     
     "require-dev": {
-        "badpixxel/php-sdk":                            "^2.0",
-        "splash/toolkit":                               "2.5.x-dev",
-        "knpuniversity/oauth2-client-bundle":           "~2.0",
-        "api-platform/core":                            "^2.7",
-        "doctrine/migrations":                          "^3.7"
+        "badpixxel/php-sdk":                            "^3.0",
+        "splash/toolkit":                               "^3.0",
+        "splash/bridge-builder":                        "^3.0"
     },
 
     "config": {
         "allow-plugins": {
-            "phpro/grumphp":    true,
-            "symfony/runtime":  true
+            "phpro/grumphp":            true,
+            "phpro/grumphp-shim":       true,
+            "symfony/runtime":          true,
+            "php-http/discovery":       true
         }
     },
 
@@ -65,7 +66,7 @@
             "php bin/console cache:clear",
             "php bin/console assets:install --relative",
             "php bin/console doctrine:schema:update --force --complete --no-interaction --no-debug",
-            "find var/cache/dev/*.xml | while read -r i; do cp \"$i\" var/cache/dev/testContainer.xml; done"
+            "find var/cache/dev/*.xml -not -name \"testContainer.xml\" | while read -r i; do cp \"$i\" var/cache/dev/testContainer.xml; done"
         ],
         "post-install-cmd": [
             "@auto-scripts",

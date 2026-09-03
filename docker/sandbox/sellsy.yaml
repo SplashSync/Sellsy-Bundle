@@ -1,21 +1,25 @@
 api_platform:
     title:  Sellsy API SandBox
+
+    ########################################################################
+    # Api Platform 4 syntax: formats are plain mime type lists
     formats:
-        json:
-            mime_types:
-                - application/json
-        html:
-            mime_types:
-                - text/html
+        json:   ['application/json']
+        html:   ['text/html']
+
+    ########################################################################
+    # Pagination moved from collection.pagination to defaults in Api Platform 3
+    defaults:
+        pagination_client_items_per_page:           true
+        pagination_items_per_page_parameter_name:   limit
+
+    ########################################################################
+    # Api Platform 4 syntax: api_keys is a map, each entry needs its own key
     swagger:
         api_keys:
-            - { name: "X-API-USER", type: "header" }
-            - { name: "X-API-TOKEN", type: "header" }
-            - { name: "X-API-VERSION", type: "header" }
-    collection:
-        pagination:
-            client_items_per_page:          true        # Disabled by default
-            items_per_page_parameter_name:  limit       # Default value
+            api_user:       { name: "X-API-USER", type: "header" }
+            api_token:      { name: "X-API-TOKEN", type: "header" }
+            api_version:    { name: "X-API-VERSION", type: "header" }
 
     ########################################################################
     # Enable CamelCase To SnakeCase Conversion

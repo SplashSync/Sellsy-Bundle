@@ -1,0 +1,46 @@
+################################################################################
+#
+#  This file is part of SplashSync Project.
+#
+#  Copyright (C) Splash Sync <www.splashsync.com>
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#
+#  For the full copyright and license information, please view the LICENSE
+#  file that was distributed with this source code.
+#
+#  @author Bernard Paquier <contact@splashsync.com>
+#
+################################################################################
+
+################################################################################
+# Sellsy Api SandBox Container
+#
+# Fakes the Sellsy Api V2. Left open (no Oauth2 required to read the Api), but
+# with a working Oauth2 server, so the connector Oauth2 flow can be exercised.
+#
+# Sources are also mounted, so that Entities & Controllers can be edited
+# without rebuilding the image.
+################################################################################
+
+services:
+
+    sandbox:
+        build:
+            context:        ${PWD}/docker/sandbox
+            dockerfile:     Dockerfile
+        container_name:     sandbox.sellsy.local
+        hostname:           sandbox.sellsy.local
+        tty:                true
+        volumes:
+            - '${PWD}/docker/sandbox/Entity/:/app/src/Entity/:ro'
+            - '${PWD}/docker/sandbox/Controller/:/app/src/Controller/:ro'
+            - '${PWD}/docker/sandbox/Serializer/:/app/src/Serializer/:ro'
+            - '${PWD}/docker/sandbox/EventListener/:/app/src/EventListener/:ro'
+            - '${PWD}/docker/sandbox/Migrations/:/app/migrations/:ro'
+            - '${PWD}/docker/sandbox/sellsy.yaml:/app/config/packages/sellsy.yaml:ro'
+        networks:
+            sellsy:         { ipv4_address: 172.118.0.200, aliases: [ sandbox.sellsy.local ] }
+            splashsync:     { aliases: [ sandbox.sellsy.local ] }

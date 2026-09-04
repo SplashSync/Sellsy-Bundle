@@ -15,9 +15,9 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Company;
 
-use JMS\Serializer\Annotation as JMS;
 use Splash\Connectors\Sellsy\Models\Metadata\Address;
 use Splash\Metadata\Attributes as SPL;
+use Symfony\Component\Serializer\Attribute as Serializer;
 
 /**
  * Manage Addresses for Companies && Contacts
@@ -26,14 +26,14 @@ use Splash\Metadata\Attributes as SPL;
 trait AddressesTrait
 {
     #[
-        JMS\Exclude,
+        Serializer\Ignore,
         SPL\SubResource(Address::class, write: true),
         SPL\Accessor(factory: "addInvoicingAddress"),
     ]
     public ?Address $invoicingAddress = null;
 
     #[
-        JMS\Exclude,
+        Serializer\Ignore,
         SPL\SubResource(Address::class, write: true),
         SPL\Accessor(factory: "addDeliveryAddress"),
     ]
@@ -42,7 +42,6 @@ trait AddressesTrait
     /**
      * Fetch Addresses from Embedded data on Post Deserialize
      */
-    #[JMS\PostDeserialize()]
     public function fetchAddresses(): void
     {
         //====================================================================//

@@ -15,7 +15,8 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Address;
 
-use JMS\Serializer\Annotation as JMS;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Geocode
@@ -25,8 +26,8 @@ class Geocode
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("lat"),
-        JMS\Type("double"),
+        Serializer\SerializedName("lat"),
+        Serializer\Groups(SplGroups::DEFAULT),
     ]
     public ?float $lat = null;
 
@@ -35,8 +36,8 @@ class Geocode
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("lng"),
-        JMS\Type("double"),
+        Serializer\SerializedName("lng"),
+        Serializer\Groups(SplGroups::DEFAULT),
     ]
     public ?float $lng = null;
 }

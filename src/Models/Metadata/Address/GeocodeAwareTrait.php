@@ -15,8 +15,10 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Address;
 
-use JMS\Serializer\Annotation as JMS;
+use Splash\Core\Dictionary\SplFields;
 use Splash\Metadata\Attributes as SPL;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -31,8 +33,10 @@ trait GeocodeAwareTrait
      */
     #[
         Assert\Type(Geocode::class),
-        JMS\SerializedName("geocode"),
-        JMS\Type(Geocode::class),
+        Serializer\SerializedName("geocode"),
+        // Geocode is computed by Sellsy: read it, never send it back.
+        // This is what JMS SkipWhenEmpty was guarding against.
+        Serializer\Groups(array(SplGroups::READ)),
     ]
     public ?Geocode $geocode = null;
 
@@ -40,8 +44,8 @@ trait GeocodeAwareTrait
      * Address Longitude
      */
     #[
-        JMS\Exclude(),
-        SPL\Field(type: SPL_T_DOUBLE, desc: "[Geocode] Address Latitude"),
+        Serializer\Ignore,
+        SPL\Field(type: SplFields::DOUBLE, desc: "[Geocode] Address Latitude"),
     ]
     private ?float $latitude = null;
 
@@ -49,8 +53,8 @@ trait GeocodeAwareTrait
      * Address Longitude
      */
     #[
-        JMS\Exclude(),
-        SPL\Field(type: SPL_T_DOUBLE, desc: "[Geocode] Address Longitude"),
+        Serializer\Ignore,
+        SPL\Field(type: SplFields::DOUBLE, desc: "[Geocode] Address Longitude"),
     ]
     private ?float $longitude = null;
 

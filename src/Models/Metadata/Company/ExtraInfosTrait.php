@@ -15,9 +15,10 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Company;
 
-use JMS\Serializer\Annotation as JMS;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\SocialUrls;
 use Splash\Metadata\Attributes as SPL;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -30,8 +31,8 @@ trait ExtraInfosTrait
      */
     #[
         Assert\Type(SocialUrls::class),
-        JMS\SerializedName("social"),
-        JMS\Type(SocialUrls::class),
+        Serializer\SerializedName("social"),
+        Serializer\Groups(SplGroups::DEFAULT),
         SPL\SubResource(),
         SPL\Accessor(factory: "addSocialUrls"),
     ]
@@ -42,8 +43,8 @@ trait ExtraInfosTrait
      */
     #[
         Assert\Type(LegalFrance::class),
-        JMS\SerializedName("legal_france"),
-        JMS\Type(LegalFrance::class),
+        Serializer\SerializedName("legal_france"),
+        Serializer\Groups(SplGroups::DEFAULT),
         SPL\SubResource(LegalFrance::class),
         SPL\Accessor(factory: "addLegalFrance"),
     ]
@@ -64,23 +65,4 @@ trait ExtraInfosTrait
     {
         $this->legalFrance = new LegalFrance();
     }
-
-    //    /**
-    //     * Social media information for the company.
-    //     */
-    //    #[
-    //        Assert\Type(RGPDConsent::class),
-    //        JMS\SerializedName("rgpd_consent"),
-    //        JMS\Type(RGPDConsent::class),
-    //        SPL\SubResource(RGPDConsent::class),
-    //        SPL\Accessor(factory: "addRGPDConsent"),
-    //    ]
-    //    public ?RGPDConsent $rgpdConsent = null;
-    //    /**
-    //     * Add GDPR Consents
-    //     */
-    //    public function addRGPDConsent(): void
-    //    {
-    //        $this->rgpdConsent = new RGPDConsent();
-    //    }
 }

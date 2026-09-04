@@ -16,8 +16,10 @@
 namespace Splash\Connectors\Sellsy\Models\Metadata\Company;
 
 use DateTime;
-use JMS\Serializer\Annotation as JMS;
+use Splash\Core\Dictionary\SplFields;
 use Splash\Metadata\Attributes as SPL;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -27,18 +29,17 @@ trait MetadataTrait
 {
     #[
         Assert\Type("boolean"),
-        JMS\SerializedName("is_archived"),
-        JMS\Type("boolean"),
-        SPL\Field(type: SPL_T_BOOL, desc: "Is Company Archived", group: "Meta"),
+        Serializer\SerializedName("is_archived"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::BOOL, desc: "Is Company Archived", group: "Meta"),
     ]
     public bool $isArchived;
 
     #[
         Assert\Type("datetime"),
-        JMS\SerializedName("created"),
-        JMS\Type("DateTime"),
-        JMS\Groups(array("Read")),
-        SPL\Field(type: SPL_T_DATETIME, desc: "Company creation date", group: "Meta"),
+        Serializer\SerializedName("created"),
+        Serializer\Groups(array(SplGroups::READ)),
+        SPL\Field(type: SplFields::DATETIME, desc: "Company creation date", group: "Meta"),
         SPL\IsReadOnly,
 
     ]
@@ -46,10 +47,9 @@ trait MetadataTrait
 
     #[
         Assert\Type("datetime"),
-        JMS\SerializedName("updated_at"),
-        JMS\Type("DateTime"),
-        JMS\Groups(array("Read")),
-        SPL\Field(type: SPL_T_DATETIME, desc: "Last Update Date", group: "Meta"),
+        Serializer\SerializedName("updated_at"),
+        Serializer\Groups(array(SplGroups::READ)),
+        SPL\Field(type: SplFields::DATETIME, desc: "Last Update Date", group: "Meta"),
         SPL\IsReadOnly,
     ]
     public DateTime $updatedAt;

@@ -15,8 +15,10 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Company;
 
-use JMS\Serializer\Annotation as JMS;
+use Splash\Core\Dictionary\SplFields;
 use Splash\Metadata\Attributes as SPL;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -29,54 +31,53 @@ trait MainTrait
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("reference"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Company's reference"),
+        Serializer\SerializedName("reference"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::VARCHAR, desc: "Company's reference"),
     ]
     public ?string $reference = null;
 
     #[
         Assert\Type("string"),
-        JMS\SerializedName("email"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_EMAIL, desc: "Company email"),
+        Serializer\SerializedName("email"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::EMAIL, desc: "Company email"),
         SPL\Microdata("http://schema.org/ContactPoint", "email")
     ]
     public ?string $email = null;
 
     #[
         Assert\Type("string"),
-        JMS\SerializedName("website"),
-        JMS\Type("string"),
-        JMS\Groups(array("Read", "Write")),
-        SPL\Field(type: SPL_T_URL, desc: "Company website"),
+        Serializer\SerializedName("website"),
+        Serializer\Groups(array(SplGroups::READ, SplGroups::WRITE)),
+        SPL\Field(type: SplFields::URL, desc: "Company website"),
         SPL\Microdata("http://schema.org/Organization", "url")
     ]
     public ?string $website = null;
 
     #[
         Assert\Type("string"),
-        JMS\SerializedName("phone_number"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_PHONE, desc: "Company phone number"),
+        Serializer\SerializedName("phone_number"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::PHONE, desc: "Company phone number"),
         SPL\Microdata("http://schema.org/Person", "telephone")
     ]
     public ?string $phoneNumber = null;
 
     #[
         Assert\Type("string"),
-        JMS\SerializedName("mobile_number"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_PHONE, desc: "Company mobile number"),
+        Serializer\SerializedName("mobile_number"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::PHONE, desc: "Company mobile number"),
         SPL\Microdata("http://schema.org/Person", "telephone")
     ]
     public ?string $mobileNumber = null;
 
     #[
         Assert\Type("string"),
-        JMS\SerializedName("fax_number"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_PHONE, desc: "Company fax number"),
+        Serializer\SerializedName("fax_number"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::PHONE, desc: "Company fax number"),
         SPL\Microdata("http://schema.org/faxNumber", "telephone")
     ]
     public ?string $faxNumber = null;
@@ -88,9 +89,9 @@ trait MainTrait
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("capital"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Company's capital"),
+        Serializer\SerializedName("capital"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::VARCHAR, desc: "Company's capital"),
     ]
     public ?string $capital = null;
 
@@ -101,9 +102,9 @@ trait MainTrait
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("note"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Note about the company"),
+        Serializer\SerializedName("note"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::VARCHAR, desc: "Note about the company"),
     ]
     public ?string $note = "";
 

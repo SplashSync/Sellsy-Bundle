@@ -15,8 +15,10 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Company;
 
-use JMS\Serializer\Annotation as JMS;
+use Splash\Core\Dictionary\SplFields;
 use Splash\Metadata\Attributes as SPL;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class LegalFrance
@@ -28,9 +30,9 @@ class LegalFrance
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("siret"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Company SIRET Number"),
+        Serializer\SerializedName("siret"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::VARCHAR, desc: "Company SIRET Number"),
         SPL\Microdata("http://schema.org/Organization", "taxID")
     ]
     public ?string $siret = null;
@@ -42,9 +44,9 @@ class LegalFrance
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("siren"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Company SIREN Number"),
+        Serializer\SerializedName("siren"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::VARCHAR, desc: "Company SIREN Number"),
         SPL\Microdata("http://schema.org/Organization", "duns")
     ]
     public ?string $siren = null;
@@ -56,9 +58,9 @@ class LegalFrance
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("vat"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Company VAT Code"),
+        Serializer\SerializedName("vat"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::VARCHAR, desc: "Company VAT Code"),
         SPL\Microdata("http://schema.org/Organization", "vatID")
     ]
     public ?string $vat = null;
@@ -70,9 +72,9 @@ class LegalFrance
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("ape_naf_code"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Company APE NAF Code"),
+        Serializer\SerializedName("ape_naf_code"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::VARCHAR, desc: "Company APE NAF Code"),
         SPL\Microdata("http://schema.org/Organization", "naics")
     ]
     public ?string $apeNafCode = null;
@@ -84,9 +86,9 @@ class LegalFrance
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("company_type"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Company Type"),
+        Serializer\SerializedName("company_type"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::VARCHAR, desc: "Company Type"),
     ]
     public ?string $companyType = null;
 
@@ -97,9 +99,9 @@ class LegalFrance
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("rcs_immatriculation"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Company RCS immatriculation"),
+        Serializer\SerializedName("rcs_immatriculation"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::VARCHAR, desc: "Company RCS immatriculation"),
         SPL\Microdata("http://schema.org/Organization", "isicV4")
     ]
     public ?string $rcsImmatriculation = null;

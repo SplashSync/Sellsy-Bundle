@@ -15,28 +15,33 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Company;
 
-use JMS\Serializer\Annotation as JMS;
 use Splash\Connectors\Sellsy\Models\Metadata\Address;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Symfony\Component\Serializer\Attribute as Serializer;
 
 /**
  * Virtual/Temporary Storage for Company Embedded Data
  */
 class CompanyEmbed
 {
+    /**
+     * Embedded resources asked on item reads
+     */
+    const URI_QUERY = "?embed[]=invoicing_address&embed[]=delivery_address";
     #[
-        JMS\SerializedName("invoicing_address"),
-        JMS\Type(Address::class),
+        Serializer\SerializedName("invoicing_address"),
+        Serializer\Groups(SplGroups::DEFAULT),
     ]
     public ?Address $invoicingAddress = null;
 
     #[
-        JMS\SerializedName("delivery_address"),
-        JMS\Type(Address::class),
+        Serializer\SerializedName("delivery_address"),
+        Serializer\Groups(SplGroups::DEFAULT),
     ]
     public ?Address $deliveryAddress = null;
 
     public static function getUriQuery(): string
     {
-        return "?embed[]=invoicing_address&embed[]=delivery_address";
+        return self::URI_QUERY;
     }
 }

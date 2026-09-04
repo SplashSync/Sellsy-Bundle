@@ -15,9 +15,11 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Company;
 
-use JMS\Serializer\Annotation as JMS;
+use Splash\Core\Helpers\FullNameParser;
 use Splash\Metadata\Attributes as SPL;
-use Splash\Models\Helpers\FullNameParser;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Symfony\Component\Serializer\Attribute as Serializer;
+use Symfony\Component\Serializer\Attribute\SerializedPath;
 use Symfony\Component\Validator\Constraints as Assert;
 
 trait FullNameTrait
@@ -28,10 +30,10 @@ trait FullNameTrait
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("name"),
-        JMS\Type("string"),
-        JMS\Groups(array("Read", "Write", "List", "Required")),
+        Serializer\SerializedName("name"),
+        Serializer\Groups(array(SplGroups::READ, SplGroups::WRITE, SplGroups::LIST, SplGroups::REQUIRED)),
         SPL\Field(desc: "Company name"),
+        SPL\Accessor(getter: "getCompanyName", setter: "setCompanyName"),
         SPL\Microdata("http://schema.org/Organization", "legalName"),
         SPL\Flags(listed: true),
         SPL\IsRequired,
@@ -42,7 +44,7 @@ trait FullNameTrait
      * Virtual First Name.
      */
     #[
-        JMS\Exclude(),
+        Serializer\Ignore,
         SPL\Field(desc: "First Name"),
         SPL\Microdata("http://schema.org/Person", "familyName"),
         SPL\Associations(array("firstName", "lastName"))
@@ -53,7 +55,7 @@ trait FullNameTrait
      * Virtual Last Name.
      */
     #[
-        JMS\Exclude(),
+        Serializer\Ignore,
         SPL\Field(desc: "Last Name"),
         SPL\Microdata("http://schema.org/Person", "givenName"),
         SPL\Associations(array("firstName", "lastName"))
@@ -61,32 +63,45 @@ trait FullNameTrait
     protected ?string $lastName = null;
 
     #[
-        JMS\Exclude(),
+        Serializer\Ignore,
     ]
     private FullNameParser $fullNameParser;
 
     /**
-     * @return string
-     *
-     * Get Company Name
+     * Get Name
      */
     public function getName(): string
     {
-        return (string) $this->getFullNameParser()->getCompanyName();
+        return $this->name;
     }
 
     /**
-     * @param string $name
-     *
-     * @return $this
-     *
-     * Set Company Name
+     * Set Name
      */
     public function setName(string $name): static
     {
-        $this->getFullNameParser()->setCompanyName($name);
+        $this->name = $name;
 
         return $this;
+    }
+
+    /**
+     * Set Company Name
+     */
+    public function setCompanyName(string $name): static
+    {
+        $this->getFullNameParser()->setCompanyName($name);
+        $this->refreshFullName();
+
+        return $this;
+    }
+
+    /**
+     * Get Company Name
+     */
+    public function getCompanyName(): string
+    {
+        return (string) $this->getFullNameParser()->getCompanyName();
     }
 
     /**
@@ -109,6 +124,7 @@ trait FullNameTrait
     public function setFirstName(?string $name): static
     {
         $this->getFullNameParser()->setFirstName($name);
+        $this->refreshFullName();
 
         return $this;
     }
@@ -133,28 +149,20 @@ trait FullNameTrait
     public function setLastName(?string $name): static
     {
         $this->getFullNameParser()->setLastName($name);
+        $this->refreshFullName();
 
         return $this;
     }
 
     /**
-     * Decode User Full Name
+     * Keep the serialized Name in sync with the Name Parser
+     *
+     * JMS used to rebuild it on PreSerialize: with Symfony Serializer, the
+     * property is read as is, so it is kept up to date on every change.
      */
-    #[JMS\PostDeserialize()]
-    public function decodeFullName(): void
-    {
-        $this->fullNameParser ??= new FullNameParser($this->name ?? null);
-    }
-
-    /**
-     * Encode User Full Name
-     */
-    #[JMS\PreSerialize()]
-    public function encodeFullName(): static
+    private function refreshFullName(): void
     {
         $this->name = (string) $this->getFullNameParser()->getFullName();
-
-        return $this;
     }
 
     /**
@@ -162,6 +170,6 @@ trait FullNameTrait
      */
     private function getFullNameParser(): FullNameParser
     {
-        return $this->fullNameParser ??= new FullNameParser();
+        return $this->fullNameParser ??= new FullNameParser($this->name ?? null);
     }
 }

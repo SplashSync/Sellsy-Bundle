@@ -15,8 +15,10 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Company;
 
-use JMS\Serializer\Annotation as JMS;
+use Splash\Core\Dictionary\SplFields;
 use Splash\Metadata\Attributes as SPL;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class RGPDConsent
@@ -28,9 +30,9 @@ class RGPDConsent
      */
     #[
         Assert\Type("boolean"),
-        JMS\SerializedName("email"),
-        JMS\Type("boolean"),
-        SPL\Field(type: SPL_T_BOOL, desc: "Is Email consent given"),
+        Serializer\SerializedName("email"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::BOOL, desc: "Is Email consent given"),
         SPL\PreferRead(),
     ]
     public bool $email;
@@ -42,9 +44,9 @@ class RGPDConsent
      */
     #[
         Assert\Type("boolean"),
-        JMS\SerializedName("sms"),
-        JMS\Type("boolean"),
-        SPL\Field(type: SPL_T_BOOL, desc: "Is SMS consent given"),
+        Serializer\SerializedName("sms"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::BOOL, desc: "Is SMS consent given"),
         SPL\PreferRead(),
     ]
     public bool $sms;
@@ -56,9 +58,9 @@ class RGPDConsent
      */
     #[
         Assert\Type("boolean"),
-        JMS\SerializedName("phone"),
-        JMS\Type("boolean"),
-        SPL\Field(type: SPL_T_BOOL, desc: "Is Phone consent given"),
+        Serializer\SerializedName("phone"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::BOOL, desc: "Is Phone consent given"),
         SPL\PreferRead(),
     ]
     public bool $phone;
@@ -70,9 +72,9 @@ class RGPDConsent
      */
     #[
         Assert\Type("boolean"),
-        JMS\SerializedName("postal_mail"),
-        JMS\Type("boolean"),
-        SPL\Field(type: SPL_T_BOOL, desc: "Is Postal Mail consent given"),
+        Serializer\SerializedName("postal_mail"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::BOOL, desc: "Is Postal Mail consent given"),
         SPL\PreferRead(),
     ]
     public bool $postalMail;
@@ -84,9 +86,9 @@ class RGPDConsent
      */
     #[
         Assert\Type("boolean"),
-        JMS\SerializedName("custom"),
-        JMS\Type("boolean"),
-        SPL\Field(type: SPL_T_BOOL, desc: "Is Custom consent given"),
+        Serializer\SerializedName("custom"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::BOOL, desc: "Is Custom consent given"),
         SPL\PreferRead(),
     ]
     public bool $custom;

@@ -15,7 +15,8 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Company;
 
-use JMS\Serializer\Annotation as JMS;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Symfony\Component\Serializer\Attribute as Serializer;
 
 /**
  * Companies Embedded Metadata Parsing
@@ -23,9 +24,8 @@ use JMS\Serializer\Annotation as JMS;
 trait EmbedTrait
 {
     #[
-        JMS\SerializedName("_embed"),
-        JMS\Type(CompanyEmbed::class),
-        JMS\Groups(array("Read")),
+        Serializer\SerializedName("_embed"),
+        Serializer\Groups(array(SplGroups::READ)),
     ]
     public CompanyEmbed $embed;
 }

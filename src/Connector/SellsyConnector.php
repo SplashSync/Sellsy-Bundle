@@ -18,6 +18,7 @@ namespace Splash\Connectors\Sellsy\Connector;
 use ArrayObject;
 use Exception;
 use Psr\Log\LoggerInterface;
+use Splash\Bundle\Models\AbstractConnector;
 use Splash\Bundle\Models\Connectors\GenericObjectMapperTrait;
 use Splash\Bundle\Models\Connectors\GenericWidgetMapperTrait;
 use Splash\Connectors\Sellsy\Actions\Webhooks\Receive;
@@ -28,26 +29,32 @@ use Splash\Connectors\Sellsy\Oauth2\SandboxClient;
 use Splash\Connectors\Sellsy\Objects;
 use Splash\Connectors\Sellsy\Services\SellsyLocator;
 use Splash\Connectors\Sellsy\Widgets;
-use Splash\Core\SplashCore as Splash;
+use Splash\Core\Client\Splash;
 use Splash\Metadata\Services\MetadataAdapter;
 use Splash\OpenApi\Action;
-use Splash\OpenApi\Connexion\JsonHalConnexion;
-use Splash\OpenApi\Hydrator\Hydrator;
-use Splash\OpenApi\Models\Connexion\ConnexionInterface;
-use Splash\Security\Oauth2\Model\AbstractOauth2Connector;
-use Splash\Security\Oauth2\Services\Oauth2ClientManager;
+use Splash\OpenApi\Connexion\JsonConnexion;
+use Splash\OpenApi\Hydrators\SymfonyHydrator;
+use Splash\OpenApi\Interfaces\ConnexionInterface;
+use Splash\OpenApi\Models\Connector\RestAdapterAwareTrait;
+use Splash\OpenApi\Visitor\JsonVisitor;
+use Splash\Security\Oauth2\Interfaces\Oauth2AwareInterface;
+use Splash\Security\Oauth2\Models\Oauth2ConnectorTrait;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Sellsy REST API Connector for Splash
  *
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(ExcessiveClassComplexity)
+ * @SuppressWarnings(CouplingBetweenObjects)
  */
-class SellsyConnector extends AbstractOauth2Connector
+class SellsyConnector extends AbstractConnector implements Oauth2AwareInterface
 {
     use GenericObjectMapperTrait;
     use GenericWidgetMapperTrait;
+    use RestAdapterAwareTrait;
+    use Oauth2ConnectorTrait {
+        Oauth2ConnectorTrait::getSecuredActions as oauth2SecuredActions;
+    }
 
     /**
      * Objects Type Class Map
@@ -76,34 +83,14 @@ class SellsyConnector extends AbstractOauth2Connector
      */
     private ConnexionInterface $connexion;
 
-    /**
-     * Object Hydrator
-     *
-     * @var Hydrator
-     */
-    private Hydrator $hydrator;
-
-    /**
-     * @var string
-     */
-    private string $metaDir;
-
     public function __construct(
-        protected readonly MetadataAdapter   $metadataAdapter,
-        protected readonly SellsyLocator   $locator,
-        Oauth2ClientManager $oauth2ClientManager,
+        protected readonly MetadataAdapter $metadataAdapter,
+        protected readonly SellsyLocator $locator,
+        private readonly SymfonyHydrator $hydrator,
         EventDispatcherInterface $eventDispatcher,
-        LoggerInterface          $logger
+        LoggerInterface $logger
     ) {
-        parent::__construct($oauth2ClientManager, $eventDispatcher, $logger);
-    }
-
-    /**
-     * Setup Cache Dir for Metadata
-     */
-    public function setMetaDir(string $metaDir) : void
-    {
-        $this->metaDir = $metaDir."/metadata/sellsy";
+        parent::__construct($eventDispatcher, $logger);
     }
 
     /**
@@ -304,7 +291,7 @@ class SellsyConnector extends AbstractOauth2Connector
     public function getSecuredActions() : array
     {
         return array_merge_recursive(
-            parent::getSecuredActions(),
+            $this->oauth2SecuredActions(),
             array(
                 "webhooks" => Setup::class,
             )
@@ -368,7 +355,11 @@ class SellsyConnector extends AbstractOauth2Connector
         $token = $this->getTokenOrRefresh();
         //====================================================================//
         // Setup Api Connexion
-        $this->connexion = new JsonHalConnexion(
+        //====================================================================//
+        // Sellsy Api V2 answers plain Json, wrapped in a "data" key: it is not
+        // Hal, despite what the previous JsonHalConnexion suggested. Asking for
+        // application/hal+json makes Api Platform based servers fail outright.
+        $this->connexion = new JsonConnexion(
             $this->isSandbox() ? SandboxClient::ENDPOINT : PrivateClient::ENDPOINT,
             $client->getOAuth2Provider()->getHeaders($token)
         );
@@ -377,17 +368,32 @@ class SellsyConnector extends AbstractOauth2Connector
     }
 
     /**
-     * @return Hydrator
+     * Get Object Hydrator
      */
-    public function getHydrator(): Hydrator
+    public function getHydrator(): SymfonyHydrator
     {
-        //====================================================================//
-        // Configure Object Hydrator
-        if (!isset($this->hydrator)) {
-            $this->hydrator = new Hydrator($this->metaDir);
-        }
-
         return $this->hydrator;
+    }
+
+    /**
+     * Build the Api Visitor of a Model
+     *
+     * Sellsy Api V2 answers plain Json, and updates are done with PUT.
+     *
+     * @param class-string $model
+     */
+    public function getVisitor(string $model): JsonVisitor
+    {
+        $visitor = new JsonVisitor(
+            $this->getRestAdapter(),
+            $this->getConnexion(),
+            $this->getHydrator(),
+            $model,
+        );
+        $visitor->setTimezone("UTC");
+        $visitor->setUpdateAction(Action\Json\PutAction::class);
+
+        return $visitor;
     }
 
     /**

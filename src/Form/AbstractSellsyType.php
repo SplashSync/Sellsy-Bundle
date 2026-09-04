@@ -15,8 +15,8 @@
 
 namespace Splash\Connectors\Sellsy\Form;
 
-use Burgov\Bundle\KeyValueFormBundle\Form\Type\KeyValueType;
-use Splash\Models\Objects\Invoice\PaymentMethods;
+use Splash\Bundle\Form\Type\KeyValueType;
+use Splash\Core\Dictionary\Objects\Invoice\PaymentMethods;
 use Splash\Security\Oauth2\Form\PrivateAppConfigurationForm;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -84,6 +84,9 @@ abstract class AbstractSellsyType extends PrivateAppConfigurationForm
                     'choices' => $choices,
                     "row_attr" => array("class" => "col-md-6"),
                 ),
+                //==============================================================================
+                // Splash Payment Methods are a closed dictionary: no invented keys
+                'allowed_keys' => array_keys(PaymentMethods::getChoices()),
                 'translation_domain' => "SellsyBundle",
             ))
         ;
@@ -98,7 +101,11 @@ abstract class AbstractSellsyType extends PrivateAppConfigurationForm
     {
         //==============================================================================
         // Load & Validate Account Payment Methods
-        $methods = $options['data']["PaymentMethods"] ?? array();
+        //
+        // The form is also built without data, i.e. on a new connector: the
+        // whole "data" key is missing then, not just the methods.
+        $data = is_array($options['data'] ?? null) ? $options['data'] : array();
+        $methods = $data["PaymentMethods"] ?? array();
         Assert::isArray($methods);
         Assert::allIsArray($methods);
         //==============================================================================

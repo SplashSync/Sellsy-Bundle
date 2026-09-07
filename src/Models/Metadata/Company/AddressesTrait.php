@@ -21,8 +21,11 @@ use Splash\Metadata\Attributes as SPL;
 use Symfony\Component\Serializer\Attribute as Serializer;
 
 /**
- * Manage Addresses for Companies && Contacts
- * On reading, addresses are fetched from Embed field
+ * Manage Addresses for Companies
+ *
+ * On a company, the main address is the invoicing one: it carries the generic
+ * postal address templates, whereas the delivery address is delivery scoped.
+ * On reading, addresses are fetched from Embed field.
  */
 trait AddressesTrait
 {

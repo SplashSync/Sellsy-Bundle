@@ -15,8 +15,11 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Item;
 
-use JMS\Serializer\Annotation as JMS;
+use Splash\Core\Dictionary\SplFields;
 use Splash\Metadata\Attributes as SPL;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Splash\Templates\ProductFields;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -30,25 +33,53 @@ trait MetadataTrait
     #[
         Assert\NotNull,
         Assert\Type("boolean"),
-        JMS\SerializedName("is_archived"),
-        JMS\Type("boolean"),
-        JMS\Groups(array("Read", "List")),
-        SPL\Field(type: SPL_T_BOOL, desc: "Product is archived", group: "Meta"),
-        SPL\Microdata("http://schema.org/Product", "offered"),
+        Serializer\SerializedName("is_archived"),
+        // Sellsy accepts is_archived on PUT: the normalized Active flag needs it
+        Serializer\Groups(array(SplGroups::READ, SplGroups::WRITE, SplGroups::LIST)),
+        SPL\Field(type: SplFields::BOOL, desc: "Product is archived", group: "Meta"),
+        SPL\IsReadOnly,
         SPL\IsNotTested
     ]
     public bool $isArchived = false;
+
+    /**
+     * Product Active Flag.
+     *
+     * Splash normalized flag: Sellsy only knows archived products, so the
+     * active state is the mirror of it.
+     */
+    #[
+        Serializer\Ignore,
+        SPL\Template(ProductFields::ACTIVE),
+        SPL\Accessor(getter: "isActive", setter: "setActive"),
+    ]
+    public bool $isActive = true;
 
     /**
      * Is product declined ?.
      */
     #[
         Assert\Type("boolean"),
-        JMS\SerializedName("is_declined"),
-        JMS\Type("boolean"),
-        JMS\Groups(array("Read", "List")),
-        SPL\Field(type: SPL_T_BOOL, desc: "Product is declined", group: "Meta"),
+        Serializer\SerializedName("is_declined"),
+        Serializer\Groups(array(SplGroups::READ, SplGroups::LIST)),
+        SPL\Field(type: SplFields::BOOL, desc: "Product is declined", group: "Meta"),
         SPL\IsReadOnly()
     ]
     public bool $isDeclined = false;
+
+    /**
+     * Product is Active when not Archived
+     */
+    public function isActive(): bool
+    {
+        return !$this->isArchived;
+    }
+
+    /**
+     * Update Sellsy Archived Flag from Splash Active Flag
+     */
+    public function setActive(bool $isActive): void
+    {
+        $this->isArchived = !$isActive;
+    }
 }

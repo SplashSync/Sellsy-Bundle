@@ -22,13 +22,12 @@ use Symfony\Component\Serializer\Attribute as Serializer;
 
 /**
  * Virtual/Temporary Storage for Company Embedded Data
+ *
+ * On a company, the main address is the invoicing one: it uses the generic
+ * address model, while the delivery address gets the delivery scoped one.
  */
 class CompanyEmbed
 {
-    /**
-     * Embedded resources asked on item reads
-     */
-    const URI_QUERY = "?embed[]=invoicing_address&embed[]=delivery_address";
     #[
         Serializer\SerializedName("invoicing_address"),
         Serializer\Groups(SplGroups::DEFAULT),
@@ -40,9 +39,4 @@ class CompanyEmbed
         Serializer\Groups(SplGroups::DEFAULT),
     ]
     public ?AddressDelivery $deliveryAddress = null;
-
-    public static function getUriQuery(): string
-    {
-        return self::URI_QUERY;
-    }
 }

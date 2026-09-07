@@ -15,8 +15,10 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Item;
 
-use JMS\Serializer\Annotation as JMS;
+use Splash\Core\Dictionary\SplFields;
 use Splash\Metadata\Attributes as SPL;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 trait PriceTrait
@@ -27,9 +29,8 @@ trait PriceTrait
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("reference_price"),
-        JMS\Type("string"),
-        JMS\Groups(array("Write")),
+        Serializer\SerializedName("reference_price"),
+        Serializer\Groups(array(SplGroups::WRITE)),
     ]
     public string $referencePrice = "0.0";
 
@@ -39,11 +40,10 @@ trait PriceTrait
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("reference_price_taxes_exc"),
-        JMS\Type("string"),
-        JMS\Groups(array("Read")),
+        Serializer\SerializedName("reference_price_taxes_exc"),
+        Serializer\Groups(array(SplGroups::READ)),
         SPL\Field(
-            type: SPL_T_VARCHAR,
+            type: SplFields::VARCHAR,
             desc: "Product's reference price excluding taxes",
             group: "Pricing",
         ),
@@ -57,11 +57,10 @@ trait PriceTrait
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("reference_price_taxes_inc"),
-        JMS\Type("string"),
-        JMS\Groups(array("Read")),
+        Serializer\SerializedName("reference_price_taxes_inc"),
+        Serializer\Groups(array(SplGroups::READ)),
         SPL\Field(
-            type: SPL_T_VARCHAR,
+            type: SplFields::VARCHAR,
             desc: "Product's reference price including taxes",
             group: "Pricing"
         ),
@@ -71,10 +70,10 @@ trait PriceTrait
 
     #[
         Assert\Type("boolean"),
-        JMS\SerializedName("is_reference_price_taxes_free"),
-        JMS\Type("boolean"),
+        Serializer\SerializedName("is_reference_price_taxes_free"),
+        Serializer\Groups(SplGroups::DEFAULT),
         SPL\Field(
-            type: SPL_T_BOOL,
+            type: SplFields::BOOL,
             desc: "Product is reference price has taxes free",
             group: "Pricing"
         ),
@@ -87,9 +86,9 @@ trait PriceTrait
      */
     #[
         Assert\Type("integer"),
-        JMS\SerializedName("tax_id"),
-        JMS\Type("integer"),
-        SPL\Field(type: SPL_T_INT, desc: "Tax ID", group: "Meta"),
+        Serializer\SerializedName("tax_id"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::INT, desc: "Tax ID", group: "Meta"),
         SPL\IsReadOnly,
     ]
     public int $taxId = 0;
@@ -101,11 +100,10 @@ trait PriceTrait
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("currency"),
-        JMS\Type("string"),
-        JMS\Groups(array("Read")),
+        Serializer\SerializedName("currency"),
+        Serializer\Groups(array(SplGroups::READ)),
         SPL\Field(
-            type: SPL_T_CURRENCY,
+            type: SplFields::CURRENCY,
             desc: "Currency code",
             group: "Pricing",
         ),

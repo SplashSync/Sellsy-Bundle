@@ -15,8 +15,10 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Item;
 
-use JMS\Serializer\Annotation as JMS;
+use Splash\Core\Dictionary\SplFields;
 use Splash\Metadata\Attributes as SPL;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -29,10 +31,9 @@ trait ExtraInfosTrait
      */
     #[
         Assert\Type("integer"),
-        JMS\SerializedName("unit_id"),
-        JMS\Type("integer"),
-        JMS\Groups(array("Read")),
-        SPL\Field(type: SPL_T_INT, desc: "Unit id", group: "Meta"),
+        Serializer\SerializedName("unit_id"),
+        Serializer\Groups(array(SplGroups::READ)),
+        SPL\Field(type: SplFields::INT, desc: "Unit id", group: "Meta"),
         SPL\IsReadOnly(),
     ]
     public int $unitId = 0;
@@ -42,10 +43,9 @@ trait ExtraInfosTrait
      */
     #[
         Assert\Type("integer"),
-        JMS\SerializedName("category_id"),
-        JMS\Type("integer"),
-        JMS\Groups(array("Read")),
-        SPL\Field(type: SPL_T_INT, desc: "Category id", group: "Meta"),
+        Serializer\SerializedName("category_id"),
+        Serializer\Groups(array(SplGroups::READ)),
+        SPL\Field(type: SplFields::INT, desc: "Category id", group: "Meta"),
         SPL\IsReadOnly(),
     ]
     public int $categoryId = 0;
@@ -55,9 +55,9 @@ trait ExtraInfosTrait
      */
     #[
         Assert\Type("integer"),
-        JMS\SerializedName("accounting_code_id"),
-        JMS\Type("integer"),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Product's accounting code id", group: "Meta"),
+        Serializer\SerializedName("accounting_code_id"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::VARCHAR, desc: "Product's accounting code id", group: "Meta"),
         SPL\IsReadOnly()
     ]
     public int $accountingCodeId = 0;
@@ -67,9 +67,9 @@ trait ExtraInfosTrait
      */
     #[
         Assert\Type("integer"),
-        JMS\SerializedName("accounting_purchase_code_id"),
-        JMS\Type("integer"),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Product's accounting purchase code id", group: "Meta"),
+        Serializer\SerializedName("accounting_purchase_code_id"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::VARCHAR, desc: "Product's accounting purchase code id", group: "Meta"),
         SPL\IsReadOnly()
     ]
     public int $accountingPurchaseCodeId = 0;

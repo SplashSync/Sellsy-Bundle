@@ -15,8 +15,11 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Item;
 
-use JMS\Serializer\Annotation as JMS;
+use Splash\Core\Dictionary\SplFields;
 use Splash\Metadata\Attributes as SPL;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Splash\Templates\ProductFields;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -29,12 +32,10 @@ trait MainTrait
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("name"),
-        JMS\Type("string"),
-        JMS\Groups(array("Read", "Write", "List")),
+        Serializer\SerializedName("name"),
+        Serializer\Groups(array(SplGroups::READ, SplGroups::WRITE, SplGroups::LIST)),
+        SPL\Template(ProductFields::NAME),
         SPL\Flags(listed: true),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Product's name"),
-        SPL\Microdata("http://schema.org/Product", "name")
     ]
     public ?string $name = null;
 
@@ -44,13 +45,11 @@ trait MainTrait
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("reference"),
-        JMS\Type("string"),
-        JMS\Groups(array("Read", "Write", "List", "Required")),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Product's reference"),
+        Serializer\SerializedName("reference"),
+        Serializer\Groups(array(SplGroups::READ, SplGroups::WRITE, SplGroups::LIST, SplGroups::REQUIRED)),
+        SPL\Template(ProductFields::SKU),
         SPL\IsRequired,
         SPL\Flags(listed: true),
-        SPL\Microdata("http://schema.org/Product", "model"),
     ]
     public string $reference = "";
 
@@ -60,8 +59,8 @@ trait MainTrait
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("purchase_amount"),
-        JMS\Type("string"),
+        Serializer\SerializedName("purchase_amount"),
+        Serializer\Groups(SplGroups::DEFAULT),
     ]
     public string $purchaseAmount = "0.00";
 
@@ -71,10 +70,9 @@ trait MainTrait
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("standard_quantity"),
-        JMS\Type("string"),
-        JMS\Groups(array("Write", "Read", "List")),
-        SPL\Field(type: SPL_T_DOUBLE, desc: "Product's standard quantity"),
+        Serializer\SerializedName("standard_quantity"),
+        Serializer\Groups(array(SplGroups::WRITE, SplGroups::READ, SplGroups::LIST)),
+        SPL\Field(type: SplFields::DOUBLE, desc: "Product's standard quantity"),
     ]
     public string $standardQuantity = "1.00";
 
@@ -83,11 +81,9 @@ trait MainTrait
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("description"),
-        JMS\Type("string"),
-        JMS\Groups(array("Read", "Write", "List")),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Product's description"),
-        SPL\Microdata("http://schema.org/Product", "description")
+        Serializer\SerializedName("description"),
+        Serializer\Groups(array(SplGroups::READ, SplGroups::WRITE, SplGroups::LIST)),
+        SPL\Template(ProductFields::SHORT_DESCRIPTION),
     ]
     public ?string $description = "";
 
@@ -96,10 +92,9 @@ trait MainTrait
      */
     #[
         Assert\Type("boolean"),
-        JMS\SerializedName("is_name_included_in_description"),
-        JMS\Type("boolean"),
-        JMS\Groups(array("Read", "Write", "List")),
-        SPL\Field(type: SPL_T_BOOL, desc: "To add the name of item in description"),
+        Serializer\SerializedName("is_name_included_in_description"),
+        Serializer\Groups(array(SplGroups::READ, SplGroups::WRITE, SplGroups::LIST)),
+        SPL\Field(type: SplFields::BOOL, desc: "To add the name of item in description"),
     ]
     public bool $isNameInDescription = false;
 }

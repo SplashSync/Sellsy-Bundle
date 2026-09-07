@@ -15,11 +15,11 @@
 
 namespace Splash\Connectors\Sellsy\Services;
 
-use Splash\Client\Splash;
 use Splash\Connectors\Sellsy\Models\Connector\SellsyConnectorAwareTrait;
 use Splash\Connectors\Sellsy\Models\Metadata\Address;
 use Splash\Connectors\Sellsy\Models\Metadata\Company;
 use Splash\Connectors\Sellsy\Models\Metadata\Contact;
+use Splash\Core\Client\Splash;
 
 /**
  * Manage Updates of Companies Addresses

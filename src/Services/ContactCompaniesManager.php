@@ -15,10 +15,10 @@
 
 namespace Splash\Connectors\Sellsy\Services;
 
-use Splash\Client\Splash;
 use Splash\Connectors\Sellsy\Models\Connector\SellsyConnectorAwareTrait;
 use Splash\Connectors\Sellsy\Models\Metadata\Contact;
 use Splash\Connectors\Sellsy\Models\Metadata\Contact\CompanyLink;
+use Splash\Core\Client\Splash;
 
 class ContactCompaniesManager
 {

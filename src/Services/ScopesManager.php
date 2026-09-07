@@ -16,8 +16,8 @@
 namespace Splash\Connectors\Sellsy\Services;
 
 use Exception;
-use Splash\Client\Splash;
 use Splash\Connectors\Sellsy\Models\Connector\SellsyConnectorAwareTrait;
+use Splash\Core\Client\Splash;
 
 /**
  * Manage Splash Sellsy Connector Access Scopes

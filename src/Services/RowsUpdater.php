@@ -24,8 +24,8 @@ use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\PackagingRow;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\Related;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\ShippingRow;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\SingleRow;
-use Splash\Models\Helpers\ObjectsHelper;
-use Splash\Models\Helpers\PricesHelper;
+use Splash\Core\Helpers\ObjectsHelper;
+use Splash\Core\Helpers\PricesHelper;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 

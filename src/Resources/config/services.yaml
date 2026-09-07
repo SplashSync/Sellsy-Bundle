@@ -8,8 +8,6 @@ services:
     splash.connectors.sellsy:
         class:      Splash\Connectors\Sellsy\Connector\SellsyConnector
         shared:     false
-        calls:
-          - setMetaDir: ["%kernel.cache_dir%"]
         tags:
           - { name: "splash.connector" }
 

@@ -27,7 +27,6 @@ use Splash\OpenApi\Models\Objects\AbstractRestAndMetadataObject;
 class ThirdParty extends AbstractRestAndMetadataObject
 {
     use ThirdParty\CrudTrait;
-    use ThirdParty\ConfiguratorTrait;
 
     //====================================================================//
     // General Class Variables

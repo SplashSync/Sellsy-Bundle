@@ -16,6 +16,7 @@
 namespace Splash\Connectors\Sellsy\Models\Metadata\Company;
 
 use Splash\Connectors\Sellsy\Models\Metadata\Address;
+use Splash\Connectors\Sellsy\Models\Metadata\AddressDelivery;
 use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
 use Symfony\Component\Serializer\Attribute as Serializer;
 
@@ -38,7 +39,7 @@ class CompanyEmbed
         Serializer\SerializedName("delivery_address"),
         Serializer\Groups(SplGroups::DEFAULT),
     ]
-    public ?Address $deliveryAddress = null;
+    public ?AddressDelivery $deliveryAddress = null;
 
     public static function getUriQuery(): string
     {

@@ -85,7 +85,12 @@ class LegalFrance
         Assert\Type("string"),
         Serializer\SerializedName("company_type"),
         Serializer\Groups(SplGroups::DEFAULT),
-        SPL\Field(type: SplFields::VARCHAR, desc: "Company Type"),
+        SPL\Field(
+            type: SplFields::VARCHAR,
+            name: "Company Type",
+            desc: "Company Type",
+            group: "ID",
+        ),
     ]
     public ?string $companyType = null;
 

@@ -16,6 +16,7 @@
 namespace Splash\Connectors\Sellsy\Models\Metadata\Company;
 
 use Splash\Connectors\Sellsy\Models\Metadata\Address;
+use Splash\Connectors\Sellsy\Models\Metadata\AddressDelivery;
 use Splash\Metadata\Attributes as SPL;
 use Symfony\Component\Serializer\Attribute as Serializer;
 
@@ -34,10 +35,10 @@ trait AddressesTrait
 
     #[
         Serializer\Ignore,
-        SPL\SubResource(Address::class, write: true),
+        SPL\SubResource(AddressDelivery::class, write: true),
         SPL\Accessor(factory: "addDeliveryAddress"),
     ]
-    public ?Address $deliveryAddress = null;
+    public ?AddressDelivery $deliveryAddress = null;
 
     /**
      * Fetch Addresses from Embedded data on Post Deserialize
@@ -61,8 +62,8 @@ trait AddressesTrait
     /**
      * Register a New Delivery Address
      */
-    public function addDeliveryAddress(): Address
+    public function addDeliveryAddress(): AddressDelivery
     {
-        return $this->deliveryAddress = new Address();
+        return $this->deliveryAddress = new AddressDelivery();
     }
 }

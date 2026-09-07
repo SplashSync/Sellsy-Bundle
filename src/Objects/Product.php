@@ -19,14 +19,13 @@ use Exception;
 use Splash\Connectors\Sellsy\Connector\SellsyConnector;
 use Splash\Connectors\Sellsy\Models\Actions\SellsyListAction;
 use Splash\Connectors\Sellsy\Models\Metadata as ApiModels;
-use Splash\Models\Objects\IntelParserTrait;
-use Splash\OpenApi\Action\Json;
-use Splash\OpenApi\Models\Metadata\AbstractApiMetadataObject;
+use Splash\Core\Models\Objects\IntelParserTrait;
+use Splash\OpenApi\Models\Objects\AbstractRestAndMetadataObject;
 
 /**
  * OpenApi Implementation for Sellsy Product Object
  */
-class Product extends AbstractApiMetadataObject
+class Product extends AbstractRestAndMetadataObject
 {
     use IntelParserTrait;
     use Product\PriceTrait;
@@ -51,25 +50,14 @@ class Product extends AbstractApiMetadataObject
         protected SellsyConnector $connector
     ) {
         parent::__construct(
+            $connector->getVisitor(ApiModels\Item::class),
             $connector->getMetadataAdapter(),
-            $connector->getConnexion(),
-            $connector->getHydrator(),
             ApiModels\Item::class
         );
-        $this->visitor->setTimezone("UTC");
-        //====================================================================//
-        // Prepare Api Visitor
-        $this->visitor->setModel(
-            ApiModels\Item::class,
-            "/items",
-            "/items/{id}",
-            array("id")
-        );
-        $this->visitor->setUpdateAction(Json\PutAction::class);
         $this->visitor->setListAction(
             SellsyListAction::class,
             array(
-                "filterKey" => "search[user_ref__contains][]",
+                "filterKey" => "reference",
                 "pageKey" => null,
                 "offsetKey" => "offset"
             )

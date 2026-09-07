@@ -15,6 +15,9 @@
 
 namespace Splash\Connectors\Sellsy\Objects\Address;
 
+use Splash\Core\Dictionary\SplFields;
+use Splash\Core\Helpers\ObjectsHelper;
+
 /**
  * Access to Contact Companies Links
  */
@@ -27,7 +30,7 @@ trait CompanyTrait
     {
         //====================================================================//
         // Contact First Company ID
-        $this->fieldsFactory()->create((string) self::objects()->encode("ThirdParty", SPL_T_ID))
+        $this->fieldsFactory()->create((string) ObjectsHelper::encode("ThirdParty", SplFields::ID))
             ->identifier("company")
             ->name("Company")
             ->description("First Company where Contact is Attached")
@@ -35,7 +38,7 @@ trait CompanyTrait
         ;
         //====================================================================//
         // Contact Single Company ID
-        $this->fieldsFactory()->create((string) self::objects()->encode("ThirdParty", SPL_T_ID))
+        $this->fieldsFactory()->create((string) ObjectsHelper::encode("ThirdParty", SplFields::ID))
             ->identifier("company_single")
             ->name("Single Company")
             ->description("Single Company where Contact is Attached")
@@ -84,7 +87,7 @@ trait CompanyTrait
                 //====================================================================//
                 // Verify if Contact is Already Attached
                 if (!empty($fieldData) && !$manager->hasCompany($this->object, $fieldData)) {
-                    $manager->attachToCompany($this->object, (int) self::objects()->id($fieldData));
+                    $manager->attachToCompany($this->object, (int) ObjectsHelper::id($fieldData));
                 }
 
                 // no break
@@ -102,7 +105,7 @@ trait CompanyTrait
                 //====================================================================//
                 // Detach Contact from All Companies
                 if ($manager->detachFromAll($this->object)) {
-                    $manager->attachToCompany($this->object, (int) self::objects()->id($fieldData));
+                    $manager->attachToCompany($this->object, (int) ObjectsHelper::id($fieldData));
                 }
 
                 break;

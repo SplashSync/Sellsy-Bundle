@@ -15,6 +15,10 @@
 
 namespace Splash\Connectors\Sellsy\Objects\Address;
 
+use Splash\Core\Dictionary\SplFields;
+use Splash\Core\Helpers\ListsHelper;
+use Splash\Core\Helpers\ObjectsHelper;
+
 /**
  * Access to Contact Companies Links
  */
@@ -27,7 +31,7 @@ trait CompanyLinksTrait
     {
         //====================================================================//
         // Contact Companies ID
-        $this->fieldsFactory()->create((string) self::objects()->encode("ThirdParty", SPL_T_ID))
+        $this->fieldsFactory()->create((string) ObjectsHelper::encode("ThirdParty", SplFields::ID))
             ->identifier("id")
             ->inList("compagnies")
             ->name("Company ID")
@@ -35,7 +39,7 @@ trait CompanyLinksTrait
         ;
         //====================================================================//
         // Contact Companies Main Flag
-        $this->fieldsFactory()->create(SPL_T_BOOL)
+        $this->fieldsFactory()->create(SplFields::BOOL)
             ->identifier("main")
             ->inList("compagnies")
             ->name("Is Main")
@@ -43,7 +47,7 @@ trait CompanyLinksTrait
         ;
         //====================================================================//
         // Contact Companies Invoicing Flag
-        $this->fieldsFactory()->create(SPL_T_BOOL)
+        $this->fieldsFactory()->create(SplFields::BOOL)
             ->identifier("invoicing")
             ->inList("compagnies")
             ->name("Is Invoicing")
@@ -51,7 +55,7 @@ trait CompanyLinksTrait
         ;
         //====================================================================//
         // Contact Companies Dunning Flag
-        $this->fieldsFactory()->create(SPL_T_BOOL)
+        $this->fieldsFactory()->create(SplFields::BOOL)
             ->identifier("dunning")
             ->inList("compagnies")
             ->name("Is Dunning")
@@ -66,7 +70,7 @@ trait CompanyLinksTrait
     {
         //====================================================================//
         // Check if List field & Init List Array
-        $fieldId = self::lists()->initOutput($this->out, "compagnies", $fieldName);
+        $fieldId = ListsHelper::initOutput($this->out, "compagnies", $fieldName);
         if (!$fieldId) {
             return;
         }
@@ -88,7 +92,7 @@ trait CompanyLinksTrait
             };
             //====================================================================//
             // Insert Data in List
-            self::lists()->insert($this->out, "compagnies", $fieldId, $index, $value);
+            ListsHelper::insert($this->out, "compagnies", $fieldId, $index, $value);
         }
         unset($this->in[$key]);
     }

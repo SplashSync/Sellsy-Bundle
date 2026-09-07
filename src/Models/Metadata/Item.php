@@ -15,10 +15,16 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata;
 
-use JMS\Serializer\Annotation as JMS;
 use Splash\Metadata\Attributes as SPL;
+use Splash\OpenApi\Attributes\Rest\RestResource;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
+#[RestResource(
+    collectionUri: "/items",
+    itemUri: "/items/{id}",
+)]
 #[SPL\SplashObject(
     name: "Product",
     description: "Sellsy Products Object",
@@ -32,20 +38,20 @@ class Item
     use Item\PriceTrait;
 
     #[
-        Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("id"),
-        JMS\Groups(array("Read", "List")),
-        JMS\Type("string"),
+        Serializer\SerializedName("id"),
+        Serializer\Groups(array(SplGroups::READ, SplGroups::LIST)),
     ]
-    public string $id;
+    //====================================================================//
+    // Nullable on purpose: an object being created has no id yet, and the
+    // Visitor reads this property to identify it.
+    public ?string $id = null;
 
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("type"),
-        JMS\Type("string"),
-        JMS\Groups(array("Read", "List", "Required")),
+        Serializer\SerializedName("type"),
+        Serializer\Groups(array(SplGroups::READ, SplGroups::LIST, SplGroups::REQUIRED)),
         SPL\Field(desc: "Product type"),
         SPL\Flags(listed: true),
         SPL\Choices(array(
@@ -54,8 +60,7 @@ class Item
             "shipping" => "Shipping",
             "packaging" => "Packaging"
         )),
-        SPL\IsRequired,
         SPL\IsNotTested
     ]
-    public string $type;
+    public string $type = "product";
 }

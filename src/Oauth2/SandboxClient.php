@@ -19,7 +19,7 @@ use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Token\AccessToken;
 use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
 use Psr\Http\Message\ResponseInterface;
-use Splash\Security\Oauth2\Model\ConfigurableProvider;
+use Splash\Security\Oauth2\Models\ConfigurableProvider;
 
 /**
  * Oauth2 Client For Sellsy Sandbox

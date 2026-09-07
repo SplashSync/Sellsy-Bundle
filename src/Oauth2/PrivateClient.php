@@ -18,7 +18,7 @@ namespace Splash\Connectors\Sellsy\Oauth2;
 use League\OAuth2\Client\Token\AccessToken;
 use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
 use Psr\Http\Message\ResponseInterface;
-use Splash\Security\Oauth2\Model\ConfigurableProvider;
+use Splash\Security\Oauth2\Models\ConfigurableProvider;
 
 /**
  * Oauth2 Client For Sellsy Private API
@@ -62,7 +62,7 @@ class PrivateClient extends ConfigurableProvider
     {
         return array(
             "companies.read", "companies.write",
-            "contacts.read", "contacts.write", "individuals.write",
+            "contacts.read", "contacts.write", // "individuals.write",
             "taxes.read",
             "invoices.read", "invoices.write",
             "orders.read", "orders.write",

@@ -19,14 +19,16 @@ use Exception;
 use Splash\Connectors\Sellsy\Connector\SellsyConnector;
 use Splash\Connectors\Sellsy\Models\Actions\SellsyListAction;
 use Splash\Connectors\Sellsy\Models\Metadata as ApiModels;
-use Splash\OpenApi\Action\Json;
-use Splash\OpenApi\Models\Metadata\AbstractApiMetadataObject;
+use Splash\OpenApi\Models\Objects\AbstractRestAndMetadataObject;
 
 /**
  * OpenApi Implementation for Sellsy Company Object
  */
-class ThirdParty extends AbstractApiMetadataObject
+class ThirdParty extends AbstractRestAndMetadataObject
 {
+    use ThirdParty\CrudTrait;
+    use ThirdParty\ConfiguratorTrait;
+
     //====================================================================//
     // General Class Variables
     //====================================================================//
@@ -47,25 +49,14 @@ class ThirdParty extends AbstractApiMetadataObject
         protected SellsyConnector $connector
     ) {
         parent::__construct(
+            $connector->getVisitor(ApiModels\Company::class),
             $connector->getMetadataAdapter(),
-            $connector->getConnexion(),
-            $connector->getHydrator(),
             ApiModels\Company::class
         );
-        $this->visitor->setTimezone("UTC");
-        //====================================================================//
-        // Prepare Api Visitor
-        $this->visitor->setModel(
-            ApiModels\Company::class,
-            "/companies",
-            "/companies/{id}".ApiModels\Company\CompanyEmbed::getUriQuery(),
-            array("id")
-        );
-        $this->visitor->setUpdateAction(Json\PutAction::class);
         $this->visitor->setListAction(
             SellsyListAction::class,
             array(
-                "filterKey" => "search[user_ref__contains][]",
+                "filterKey" => "email",
                 "pageKey" => null,
                 "offsetKey" => "offset"
             )
@@ -75,45 +66,4 @@ class ThirdParty extends AbstractApiMetadataObject
     //====================================================================//
     // DEBUG
     //====================================================================//
-
-    /**
-     * Update Request Object
-     *
-     * @param bool $needed Is This Update Needed
-     *
-     * @return null|string Object ID of False if Failed to Update
-     */
-    public function update(bool $needed): ?string
-    {
-        //====================================================================//
-        // Execute Generic Save
-        //        dd($this->visitor->getHydrator()->extract($this->object));
-
-        $objectId = parent::update($needed);
-        //====================================================================//
-        // Update Invoicing Address
-        if (!$objectId) {
-            return $objectId;
-        }
-        //====================================================================//
-        // Update Invoicing Address
-        if ($this->isToUpdate("InvoicingAddress")) {
-            $this->connector
-                ->getLocator()
-                ->getAddressUpdater()
-                ->createOrUpdateInvoicingAddress($this->object)
-            ;
-        }
-        //====================================================================//
-        // Update Delivery Address
-        if ($this->isToUpdate("DeliveryAddress")) {
-            $this->connector
-                ->getLocator()
-                ->getAddressUpdater()
-                ->createOrUpdateDeliveryAddress($this->object)
-            ;
-        }
-
-        return $objectId;
-    }
 }

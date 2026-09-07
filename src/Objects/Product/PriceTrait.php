@@ -15,28 +15,11 @@
 
 namespace Splash\Connectors\Sellsy\Objects\Product;
 
-use Splash\Metadata\Attributes as SPL;
-use Splash\Models\Objects\PricesTrait;
+use Splash\Core\Helpers\PricesHelper;
+use Splash\Templates\ProductFields;
 
 trait PriceTrait
 {
-    use PricesTrait;
-
-    /**
-     * Product's reference price excluding taxes.
-     */
-    #[
-        SPL\Field(type: SPL_T_PRICE, desc: "Product's Price"),
-        SPL\IsRequired,
-        SPL\Microdata("http://schema.org/Product", "price")
-    ]
-    public ?array $splPrice = null;
-
-    public function setSplPrice(array $splPrice): void
-    {
-        $this->splPrice = $splPrice;
-    }
-
     /**
      * Build Fields using FieldFactory
      */
@@ -44,21 +27,14 @@ trait PriceTrait
     {
         //====================================================================//
         // Product Price
-        self::fieldsFactory()->create(SPL_T_PRICE)
-            ->identifier("price")
-            ->name("Ref. Price")
-            ->description("Product reference price")
-            ->microData("http://schema.org/Product", "price")
+        self::fieldsFactory()
+            ->createFromTemplate("price", ProductFields::PRICE)
+            ->isListed(false)
         ;
 
         //====================================================================//
         // WholeSale Price
-        self::fieldsFactory()->create(SPL_T_PRICE)
-            ->identifier("price-wholesale")
-            ->name("Wholesale price")
-            ->description("Product wholesale price")
-            ->microData("http://schema.org/Product", "wholesalePrice")
-        ;
+        self::fieldsFactory()->createFromTemplate("price-wholesale", ProductFields::WHOLESALE_PRICE);
     }
 
     /**
@@ -100,15 +76,15 @@ trait PriceTrait
                 $current = $this->getSplashPrice();
                 $taxManager = $this->connector->getLocator()->getTaxManager();
 
-                if (!self::prices()->compare($current, $fieldData)) {
+                if (!PricesHelper::compare($current, $fieldData)) {
                     //====================================================================//
                     // Update reference price
-                    $this->object->referencePrice = (string) (self::prices()->taxExcluded($fieldData) ?? 0.0);
+                    $this->object->referencePrice = (string) (PricesHelper::taxExcluded($fieldData) ?? 0.0);
                     $this->object->isReferencePriceTaxesFree = true;
 
                     //====================================================================//
                     // Update Tax Class
-                    $taxPercent = self::prices()->taxPercent($fieldData);
+                    $taxPercent = PricesHelper::taxPercent($fieldData);
                     if (null === $taxPercent) {
                         $this->object->taxId = 0;
                     } else {
@@ -124,7 +100,7 @@ trait PriceTrait
 
                 break;
             case "price-wholesale":
-                $purchaseAmount = self::prices()->taxExcluded($fieldData) ?? 0.0;
+                $purchaseAmount = PricesHelper::taxExcluded($fieldData) ?? 0.0;
                 if (abs($purchaseAmount - (float) $this->object->purchaseAmount) > 0.001) {
                     $this->object->purchaseAmount = (string) $purchaseAmount;
                     $this->needUpdate();
@@ -142,7 +118,7 @@ trait PriceTrait
      */
     private function getSplashPrice(): ?array
     {
-        return self::prices()->encode(
+        return PricesHelper::encode(
             (float) $this->object->referencePriceTaxesExc,
             $this->connector->getLocator()->getTaxManager()->getRate($this->object->taxId),
             null,
@@ -155,7 +131,7 @@ trait PriceTrait
      */
     private function getWholesalePrice(): ?array
     {
-        return self::prices()->encode(
+        return PricesHelper::encode(
             (float) $this->object->purchaseAmount,
             $this->connector->getLocator()->getTaxManager()->getRate($this->object->taxId),
             null,

@@ -16,9 +16,9 @@
 namespace Splash\Connectors\Sellsy\Services;
 
 use Exception;
-use Splash\Client\Splash;
 use Splash\Connectors\Sellsy\Connector\SellsyConnector;
 use Splash\Connectors\Sellsy\Models\Connector\SellsyConnectorAwareTrait;
+use Splash\Core\Client\Splash;
 
 /**
  * Manage Sellsy Account Taxes
@@ -56,7 +56,10 @@ class TaxManager
         } catch (Exception $e) {
             return Splash::log()->report($e);
         }
-        if (!is_array($response) || !is_array($response['data'])) {
+        //====================================================================//
+        // Safety Check - Sellsy wraps its collections in a "data" key
+        $rawTaxes = is_array($response) ? ($response['data'] ?? null) : null;
+        if (!is_array($rawTaxes)) {
             return false;
         }
         //====================================================================//
@@ -64,8 +67,8 @@ class TaxManager
         $taxes = array_combine(
             array_map(static function (array $taxItem) {
                 return $taxItem["id"];
-            }, $response['data']),
-            $response['data']
+            }, $rawTaxes),
+            $rawTaxes
         );
         //====================================================================//
         // Store in Connector Settings

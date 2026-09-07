@@ -122,8 +122,8 @@ class AddressUpdater
      */
     private function isBothInvoicingAndDelivery(Company|Contact $parent): bool
     {
-        $invoicingId = $parent->invoicingAddress?->id ?? null;
-        $deliveryId = $parent->deliveryAddress?->id ?? null;
+        $invoicingId = $parent->invoicingAddress?->id;
+        $deliveryId = $parent->deliveryAddress?->id;
 
         return $invoicingId && $deliveryId && ($invoicingId === $deliveryId);
     }

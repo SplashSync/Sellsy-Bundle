@@ -18,6 +18,7 @@ namespace Splash\Connectors\Sellsy\Models\Metadata\Company;
 use Splash\Core\Dictionary\SplFields;
 use Splash\Metadata\Attributes as SPL;
 use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Splash\Templates\ThirdPartyFields;
 use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -33,16 +34,15 @@ trait MainTrait
         Assert\Type("string"),
         Serializer\SerializedName("reference"),
         Serializer\Groups(SplGroups::DEFAULT),
-        SPL\Field(type: SplFields::VARCHAR, desc: "Company's reference"),
+        SPL\Template(ThirdPartyFields::IDENTIFIER),
     ]
     public ?string $reference = null;
 
     #[
         Assert\Type("string"),
         Serializer\SerializedName("email"),
-        Serializer\Groups(SplGroups::DEFAULT),
-        SPL\Field(type: SplFields::EMAIL, desc: "Company email"),
-        SPL\Microdata("http://schema.org/ContactPoint", "email")
+        Serializer\Groups(SplGroups::DEFAULT_LISTED),
+        SPL\Template(ThirdPartyFields::EMAIL),
     ]
     public ?string $email = null;
 
@@ -50,8 +50,7 @@ trait MainTrait
         Assert\Type("string"),
         Serializer\SerializedName("website"),
         Serializer\Groups(array(SplGroups::READ, SplGroups::WRITE)),
-        SPL\Field(type: SplFields::URL, desc: "Company website"),
-        SPL\Microdata("http://schema.org/Organization", "url")
+        SPL\Template(ThirdPartyFields::URL),
     ]
     public ?string $website = null;
 
@@ -59,8 +58,7 @@ trait MainTrait
         Assert\Type("string"),
         Serializer\SerializedName("phone_number"),
         Serializer\Groups(SplGroups::DEFAULT),
-        SPL\Field(type: SplFields::PHONE, desc: "Company phone number"),
-        SPL\Microdata("http://schema.org/Person", "telephone")
+        SPL\Template(ThirdPartyFields::PHONE),
     ]
     public ?string $phoneNumber = null;
 
@@ -68,8 +66,7 @@ trait MainTrait
         Assert\Type("string"),
         Serializer\SerializedName("mobile_number"),
         Serializer\Groups(SplGroups::DEFAULT),
-        SPL\Field(type: SplFields::PHONE, desc: "Company mobile number"),
-        SPL\Microdata("http://schema.org/Person", "telephone")
+        SPL\Template(ThirdPartyFields::MOBILE),
     ]
     public ?string $mobileNumber = null;
 
@@ -77,8 +74,7 @@ trait MainTrait
         Assert\Type("string"),
         Serializer\SerializedName("fax_number"),
         Serializer\Groups(SplGroups::DEFAULT),
-        SPL\Field(type: SplFields::PHONE, desc: "Company fax number"),
-        SPL\Microdata("http://schema.org/faxNumber", "telephone")
+        SPL\Template(ThirdPartyFields::FAX),
     ]
     public ?string $faxNumber = null;
 

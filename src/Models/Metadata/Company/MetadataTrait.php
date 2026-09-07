@@ -19,6 +19,7 @@ use DateTime;
 use Splash\Core\Dictionary\SplFields;
 use Splash\Metadata\Attributes as SPL;
 use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Splash\Templates\Common\CommonFields;
 use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -39,7 +40,7 @@ trait MetadataTrait
         Assert\Type("datetime"),
         Serializer\SerializedName("created"),
         Serializer\Groups(array(SplGroups::READ)),
-        SPL\Field(type: SplFields::DATETIME, desc: "Company creation date", group: "Meta"),
+        SPL\Template(CommonFields::DATE_CREATED),
         SPL\IsReadOnly,
 
     ]
@@ -49,7 +50,7 @@ trait MetadataTrait
         Assert\Type("datetime"),
         Serializer\SerializedName("updated_at"),
         Serializer\Groups(array(SplGroups::READ)),
-        SPL\Field(type: SplFields::DATETIME, desc: "Last Update Date", group: "Meta"),
+        SPL\Template(CommonFields::DATE_MODIFIED),
         SPL\IsReadOnly,
     ]
     public DateTime $updatedAt;

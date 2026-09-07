@@ -18,6 +18,7 @@ namespace Splash\Connectors\Sellsy\Models\Metadata\Company;
 use Splash\Core\Dictionary\SplFields;
 use Splash\Metadata\Attributes as SPL;
 use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Splash\Templates\ThirdPartyFields;
 use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -32,8 +33,7 @@ class LegalFrance
         Assert\Type("string"),
         Serializer\SerializedName("siret"),
         Serializer\Groups(SplGroups::DEFAULT),
-        SPL\Field(type: SplFields::VARCHAR, desc: "Company SIRET Number"),
-        SPL\Microdata("http://schema.org/Organization", "taxID")
+        SPL\Template(ThirdPartyFields::TAX_ID)
     ]
     public ?string $siret = null;
 
@@ -46,8 +46,7 @@ class LegalFrance
         Assert\Type("string"),
         Serializer\SerializedName("siren"),
         Serializer\Groups(SplGroups::DEFAULT),
-        SPL\Field(type: SplFields::VARCHAR, desc: "Company SIREN Number"),
-        SPL\Microdata("http://schema.org/Organization", "duns")
+        SPL\Template(ThirdPartyFields::DUNS)
     ]
     public ?string $siren = null;
 
@@ -60,8 +59,7 @@ class LegalFrance
         Assert\Type("string"),
         Serializer\SerializedName("vat"),
         Serializer\Groups(SplGroups::DEFAULT),
-        SPL\Field(type: SplFields::VARCHAR, desc: "Company VAT Code"),
-        SPL\Microdata("http://schema.org/Organization", "vatID")
+        SPL\Template(ThirdPartyFields::VAT_ID)
     ]
     public ?string $vat = null;
 
@@ -74,8 +72,7 @@ class LegalFrance
         Assert\Type("string"),
         Serializer\SerializedName("ape_naf_code"),
         Serializer\Groups(SplGroups::DEFAULT),
-        SPL\Field(type: SplFields::VARCHAR, desc: "Company APE NAF Code"),
-        SPL\Microdata("http://schema.org/Organization", "naics")
+        SPL\Template(ThirdPartyFields::NAICS)
     ]
     public ?string $apeNafCode = null;
 
@@ -101,8 +98,7 @@ class LegalFrance
         Assert\Type("string"),
         Serializer\SerializedName("rcs_immatriculation"),
         Serializer\Groups(SplGroups::DEFAULT),
-        SPL\Field(type: SplFields::VARCHAR, desc: "Company RCS immatriculation"),
-        SPL\Microdata("http://schema.org/Organization", "isicV4")
+        SPL\Template(ThirdPartyFields::ISIC_V4)
     ]
     public ?string $rcsImmatriculation = null;
 }

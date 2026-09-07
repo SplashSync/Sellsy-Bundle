@@ -18,8 +18,8 @@ namespace Splash\Connectors\Sellsy\Models\Metadata\Company;
 use Splash\Core\Helpers\FullNameParser;
 use Splash\Metadata\Attributes as SPL;
 use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Splash\Templates\ThirdPartyFields;
 use Symfony\Component\Serializer\Attribute as Serializer;
-use Symfony\Component\Serializer\Attribute\SerializedPath;
 use Symfony\Component\Validator\Constraints as Assert;
 
 trait FullNameTrait
@@ -32,9 +32,8 @@ trait FullNameTrait
         Assert\Type("string"),
         Serializer\SerializedName("name"),
         Serializer\Groups(array(SplGroups::READ, SplGroups::WRITE, SplGroups::LIST, SplGroups::REQUIRED)),
-        SPL\Field(desc: "Company name"),
+        SPL\Template(ThirdPartyFields::NAME),
         SPL\Accessor(getter: "getCompanyName", setter: "setCompanyName"),
-        SPL\Microdata("http://schema.org/Organization", "legalName"),
         SPL\Flags(listed: true),
         SPL\IsRequired,
     ]
@@ -45,8 +44,7 @@ trait FullNameTrait
      */
     #[
         Serializer\Ignore,
-        SPL\Field(desc: "First Name"),
-        SPL\Microdata("http://schema.org/Person", "familyName"),
+        SPL\Template(ThirdPartyFields::FIRSTNAME),
         SPL\Associations(array("firstName", "lastName"))
     ]
     protected ?string $firstName = null;
@@ -56,8 +54,7 @@ trait FullNameTrait
      */
     #[
         Serializer\Ignore,
-        SPL\Field(desc: "Last Name"),
-        SPL\Microdata("http://schema.org/Person", "givenName"),
+        SPL\Template(ThirdPartyFields::LASTNAME),
         SPL\Associations(array("firstName", "lastName"))
     ]
     protected ?string $lastName = null;

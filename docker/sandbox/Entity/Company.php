@@ -15,6 +15,7 @@
 
 namespace App\Entity;
 
+use App\ApiPlatform\SearchCollection;
 use ApiPlatform\Metadata as API;
 use App\Controller\AddCompanyAddress;
 use App\Controller\AddCompanyContact;
@@ -35,6 +36,10 @@ use Symfony\Component\Validator\Constraints as Assert;
     API\ApiResource(
         operations: array(
             new API\GetCollection(),
+            //====================================================================//
+            // Sellsy searches its collections with a POST on /search.
+            // Declared before Get() so that "search" is never read as an {id}.
+            new SearchCollection('/companies/search'),
             new API\Post(),
             new API\Get(),
             new API\Put(),

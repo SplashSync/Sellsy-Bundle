@@ -45,18 +45,26 @@ trait GeocodeAwareTrait
      */
     #[
         Serializer\Ignore,
-        SPL\Field(type: SplFields::DOUBLE, desc: "[Geocode] Address Latitude"),
+        SPL\Field(
+            type: SplFields::DOUBLE,
+            desc: "[Geocode] Address Latitude",
+            group: "Address"
+        ),
     ]
-    private ?float $latitude = null;
+    protected ?float $latitude = null;
 
     /**
      * Address Longitude
      */
     #[
         Serializer\Ignore,
-        SPL\Field(type: SplFields::DOUBLE, desc: "[Geocode] Address Longitude"),
+        SPL\Field(
+            type: SplFields::DOUBLE,
+            desc: "[Geocode] Address Longitude",
+            group: "Address"
+        ),
     ]
-    private ?float $longitude = null;
+    protected ?float $longitude = null;
 
     /**
      * @return null|float

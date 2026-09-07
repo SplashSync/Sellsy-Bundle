@@ -16,15 +16,13 @@
 namespace Splash\Connectors\Sellsy\Models\Metadata\Contact;
 
 use Splash\Connectors\Sellsy\Models\Metadata\Contact;
-use Splash\Models\Objects\ObjectsTrait;
+use Splash\Core\Helpers\ObjectsHelper;
 
 /**
  * Temporary Storage for Links between Contact & Companies
  */
 class CompanyLink
 {
-    use ObjectsTrait;
-
     /**
      * Parent Contact ID
      */
@@ -50,7 +48,7 @@ class CompanyLink
      */
     public function getObjectId(): ?string
     {
-        return self::objects()->encode("ThirdParty", (string) $this->getCompanyId());
+        return ObjectsHelper::encode("ThirdParty", (string) $this->getCompanyId());
     }
 
     /**

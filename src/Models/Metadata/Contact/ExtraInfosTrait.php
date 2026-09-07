@@ -15,9 +15,10 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Contact;
 
-use JMS\Serializer\Annotation as JMS;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\SocialUrls;
 use Splash\Metadata\Attributes as SPL;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -30,8 +31,8 @@ trait ExtraInfosTrait
      */
     #[
         Assert\Type(SocialUrls::class),
-        JMS\SerializedName("social"),
-        JMS\Type(SocialUrls::class),
+        Serializer\SerializedName("social"),
+        Serializer\Groups(SplGroups::DEFAULT),
         SPL\SubResource(),
         SPL\Accessor(factory: "addSocialUrls"),
     ]
@@ -42,8 +43,8 @@ trait ExtraInfosTrait
      */
     #[
         Assert\Type(ContactSync::class),
-        JMS\SerializedName("sync"),
-        JMS\Type(ContactSync::class),
+        Serializer\SerializedName("sync"),
+        Serializer\Groups(SplGroups::DEFAULT),
         SPL\SubResource(targetClass: ContactSync::class),
         SPL\Accessor(factory: "addContactSync"),
     ]

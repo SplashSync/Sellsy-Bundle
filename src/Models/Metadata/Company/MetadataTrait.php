@@ -42,7 +42,6 @@ trait MetadataTrait
         Serializer\Groups(array(SplGroups::READ)),
         SPL\Template(CommonFields::DATE_CREATED),
         SPL\IsReadOnly,
-
     ]
     public DateTime $created;
 

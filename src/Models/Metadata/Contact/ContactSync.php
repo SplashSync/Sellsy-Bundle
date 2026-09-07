@@ -15,33 +15,35 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Contact;
 
-use JMS\Serializer\Annotation as JMS;
+use Splash\Core\Dictionary\SplFields;
 use Splash\Metadata\Attributes as SPL;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class ContactSync
 {
     #[
         Assert\Type("boolean"),
-        JMS\SerializedName("mailchimp"),
-        JMS\Type("boolean"),
-        SPL\Field(type: SPL_T_BOOL, desc: "[Sync] Activate the mailchimp synchronization"),
+        Serializer\SerializedName("mailchimp"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::BOOL, desc: "[Sync] Activate the mailchimp synchronization"),
     ]
     public ?bool $mailchimp = false;
 
     #[
         Assert\Type("boolean"),
-        JMS\SerializedName("mailjet"),
-        JMS\Type("boolean"),
-        SPL\Field(type: SPL_T_BOOL, desc: "[Sync] Activate the mailjet synchronization"),
+        Serializer\SerializedName("mailjet"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::BOOL, desc: "[Sync] Activate the mailjet synchronization"),
     ]
     public ?bool $mailjet = false;
 
     #[
         Assert\Type("boolean"),
-        JMS\SerializedName("simplemail"),
-        JMS\Type("boolean"),
-        SPL\Field(type: SPL_T_BOOL, desc: "[Sync] Activate the Simple Mail synchronization"),
+        Serializer\SerializedName("simplemail"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::BOOL, desc: "[Sync] Activate the Simple Mail synchronization"),
     ]
     public ?bool $simplemail = false;
 }

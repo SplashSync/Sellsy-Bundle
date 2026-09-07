@@ -15,9 +15,13 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Contact;
 
-use JMS\Serializer\Annotation as JMS;
 use Splash\Connectors\Sellsy\Dictionary\Civility;
+use Splash\Core\Dictionary\SplFields;
 use Splash\Metadata\Attributes as SPL;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Splash\Templates\AddressFields;
+use Splash\Templates\ThirdPartyFields;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -30,11 +34,10 @@ trait MainTrait
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("civility"),
-        JMS\Type("string"),
-        JMS\Groups(array("Read", "Write")),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Contact's Civility"),
-        SPL\Choices(Civility::ALL),
+        Serializer\SerializedName("civility"),
+        Serializer\Groups(array(SplGroups::READ, SplGroups::WRITE)),
+        SPL\Template(ThirdPartyFields::CIVILITY),
+        SPL\Accessor(getter: "getCivilityFormated", setter: "setCivilityFormated"),
         SPL\IsNotTested(),
     ]
     public ?string $civility = null;
@@ -45,10 +48,9 @@ trait MainTrait
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("first_name"),
-        JMS\Type("string"),
-        JMS\Groups(array("Read", "Write", "List")),
-        SPL\Field(desc: "Contact's Firstname"),
+        Serializer\SerializedName("first_name"),
+        Serializer\Groups(array(SplGroups::READ, SplGroups::WRITE, SplGroups::LIST)),
+        SPL\Template(AddressFields::FIRSTNAME),
         SPL\Flags(listed: true),
     ]
     public ?string $first_name = null;
@@ -59,10 +61,9 @@ trait MainTrait
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("last_name"),
-        JMS\Type("string"),
-        JMS\Groups(array("Read", "Write", "List", "Required")),
-        SPL\Field(desc: "Contact's Lastname"),
+        Serializer\SerializedName("last_name"),
+        Serializer\Groups(array(SplGroups::READ, SplGroups::WRITE, SplGroups::LIST, SplGroups::REQUIRED)),
+        SPL\Template(AddressFields::LASTNAME),
         SPL\Flags(listed: true),
         SPL\IsRequired,
     ]
@@ -73,55 +74,50 @@ trait MainTrait
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("position"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Contact job"),
+        Serializer\SerializedName("position"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::VARCHAR, desc: "Contact job"),
     ]
     public ?string $position = null;
 
     #[
         Assert\Type("string"),
-        JMS\SerializedName("email"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_EMAIL, desc: "Contact email"),
-        SPL\Microdata("http://schema.org/ContactPoint", "email")
+        Serializer\SerializedName("email"),
+        Serializer\Groups(SplGroups::DEFAULT_LISTED),
+        SPL\Template(AddressFields::EMAIL),
+        SPL\Flags(listed: true),
     ]
     public ?string $email = null;
 
     #[
         Assert\Type("string"),
-        JMS\SerializedName("website"),
-        JMS\Type("string"),
-        JMS\Groups(array("Read", "Write")),
-        SPL\Field(type: SPL_T_URL, desc: "Contact website"),
-        SPL\Microdata("http://schema.org/Organization", "url")
+        Serializer\SerializedName("website"),
+        Serializer\Groups(array(SplGroups::READ, SplGroups::WRITE)),
+        SPL\Template(ThirdPartyFields::URL),
     ]
     public ?string $website = null;
 
     #[
         Assert\Type("string"),
-        JMS\SerializedName("phone_number"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_PHONE, desc: "Contact phone number"),
-        SPL\Microdata("http://schema.org/Person", "telephone")
+        Serializer\SerializedName("phone_number"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Template(AddressFields::PHONE),
     ]
     public ?string $phoneNumber = null;
 
     #[
         Assert\Type("string"),
-        JMS\SerializedName("mobile_number"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_PHONE, desc: "Contact mobile number"),
-        SPL\Microdata("http://schema.org/Person", "telephone")
+        Serializer\SerializedName("mobile_number"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Template(ThirdPartyFields::MOBILE),
     ]
     public ?string $mobileNumber = null;
 
     #[
         Assert\Type("string"),
-        JMS\SerializedName("fax_number"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_PHONE, desc: "Contact fax number"),
-        SPL\Microdata("http://schema.org/faxNumber", "telephone")
+        Serializer\SerializedName("fax_number"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Template(AddressFields::FAX),
     ]
     public ?string $faxNumber = null;
 
@@ -132,18 +128,18 @@ trait MainTrait
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("note"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Note about the contact"),
+        Serializer\SerializedName("note"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Template(AddressFields::DESCRIPTION),
     ]
     public ?string $note = null;
 
-    public function getCivility(): ?string
+    public function getCivilityFormated(): ?string
     {
         return (string) Civility::toSplash($this->civility);
     }
 
-    public function setCivility(?string $civility): self
+    public function setCivilityFormated(?string $civility): self
     {
         //====================================================================//
         // Detect Changes

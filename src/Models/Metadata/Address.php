@@ -15,9 +15,12 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata;
 
-use JMS\Serializer\Annotation as JMS;
 use Splash\Connectors\Sellsy\Models\Metadata\Address\GeocodeAwareTrait;
+use Splash\Core\Dictionary\SplFields;
 use Splash\Metadata\Attributes as SPL;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Splash\Templates\Address\PostalAddressFields;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -36,13 +39,14 @@ class Address
      * ID of the Address.
      */
     #[
-        Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("id"),
-        JMS\Groups(array("Read", "List")),
-        JMS\Type("string"),
+        Serializer\SerializedName("id"),
+        Serializer\Groups(array(SplGroups::READ, SplGroups::LIST)),
     ]
-    public string $id;
+    //====================================================================//
+    // Nullable on purpose: an object being created has no id yet, and the
+    // Visitor reads this property to identify it.
+    public ?string $id = null;
 
     /**
      * Name of the Address.
@@ -52,10 +56,10 @@ class Address
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("name"),
-        JMS\Type("string"),
-        JMS\Groups(array("Read", "Write")),
-        SPL\Field(desc: "Address name"),
+        Serializer\SerializedName("name"),
+        Serializer\Groups(array(SplGroups::READ, SplGroups::WRITE)),
+        SPL\Template(PostalAddressFields::COMPANY),
+        SPL\Field(group: "Address"),
     ]
     public string $name;
 
@@ -66,9 +70,9 @@ class Address
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("address_line_1"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_TEXT, desc: "First line of the address"),
+        Serializer\SerializedName("address_line_1"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Template(PostalAddressFields::STREET),
     ]
     public ?string $addressFirstLine = null;
 
@@ -79,9 +83,9 @@ class Address
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("address_line_2"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_TEXT, desc: "Second line of the address"),
+        Serializer\SerializedName("address_line_2"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Template(PostalAddressFields::POST_OFFICE_BOX_NUMBER),
     ]
     public ?string $addressSecondLine = null;
 
@@ -92,9 +96,9 @@ class Address
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("address_line_3"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_TEXT, desc: "Third line of the address"),
+        Serializer\SerializedName("address_line_3"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Template(PostalAddressFields::EXTENDED),
     ]
     public ?string $addressThirdLine = null;
 
@@ -105,9 +109,14 @@ class Address
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("address_line_4"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_TEXT, desc: "Fourth line of the address"),
+        Serializer\SerializedName("address_line_4"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(
+            type: SplFields::VARCHAR,
+            name: "[ADD4] Address extension",
+            desc: "Fourth line of the address",
+            group: "Address"
+        ),
     ]
     public ?string $addressFourthLine = null;
 
@@ -118,10 +127,9 @@ class Address
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("postal_code"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Address's postal code"),
-        SPL\Microdata("http://schema.org/PostalAddress", "postalCode")
+        Serializer\SerializedName("postal_code"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Template(PostalAddressFields::POSTAL_CODE),
     ]
     public ?string $postalCode = null;
 
@@ -132,10 +140,9 @@ class Address
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("city"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Address's city"),
-        SPL\Microdata("http://schema.org/PostalAddress", "addressLocality")
+        Serializer\SerializedName("city"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Template(PostalAddressFields::CITY),
     ]
     public ?string $city = null;
 
@@ -146,9 +153,9 @@ class Address
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("country"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Address's country"),
+        Serializer\SerializedName("country"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Template(PostalAddressFields::COUNTRY_NAME),
     ]
     public ?string $country = null;
 
@@ -159,10 +166,9 @@ class Address
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("country_code"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_COUNTRY, desc: "Address's country ISO code"),
-        SPL\Microdata("http://schema.org/PostalAddress", "addressCountry")
+        Serializer\SerializedName("country_code"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Template(PostalAddressFields::COUNTRY),
     ]
     public ?string $countryCode = null;
 
@@ -173,9 +179,14 @@ class Address
      */
     #[
         Assert\Type("bool"),
-        JMS\SerializedName("is_invoicing_address"),
-        JMS\Type("boolean"),
-        SPL\Field(type: SPL_T_BOOL, name: "Is Invoicing", desc: "Is address invoicing address ?"),
+        Serializer\SerializedName("is_invoicing_address"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(
+            type: SplFields::BOOL,
+            name: "Is Invoicing",
+            desc: "Is address invoicing address ?",
+            group: "Address"
+        ),
         SPL\IsNotTested(),
     ]
     public bool $isInvoicingAddress = false;
@@ -187,9 +198,14 @@ class Address
      */
     #[
         Assert\Type("bool"),
-        JMS\SerializedName("is_delivery_address"),
-        JMS\Type("boolean"),
-        SPL\Field(type: SPL_T_BOOL, name: "Is Delivery", desc: "Is address delivery address ?"),
+        Serializer\SerializedName("is_delivery_address"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(
+            type: SplFields::BOOL,
+            name: "Is Delivery",
+            desc: "Is address delivery address ?",
+            group: "Address"
+        ),
         SPL\IsNotTested(),
     ]
     public bool $isDeliveryAddress = false;

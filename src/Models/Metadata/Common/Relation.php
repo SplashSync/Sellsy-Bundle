@@ -15,7 +15,8 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Common;
 
-use JMS\Serializer\Annotation as JMS;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -26,18 +27,16 @@ class Relation
     #[
         Assert\NotNull,
         Assert\Type("int"),
-        JMS\SerializedName("id"),
-        JMS\Groups(array("Read", "Write", "Required")),
-        JMS\Type("int"),
+        Serializer\SerializedName("id"),
+        Serializer\Groups(array(SplGroups::READ, SplGroups::WRITE, SplGroups::REQUIRED)),
     ]
     public int $id;
 
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("type"),
-        JMS\Groups(array("Read", "Write", "Required")),
-        JMS\Type("string"),
+        Serializer\SerializedName("type"),
+        Serializer\Groups(array(SplGroups::READ, SplGroups::WRITE, SplGroups::REQUIRED)),
     ]
     public string $type;
 }

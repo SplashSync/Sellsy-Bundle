@@ -15,17 +15,19 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Common;
 
-use JMS\Serializer\Annotation as JMS;
+use Splash\Core\Dictionary\SplFields;
 use Splash\Metadata\Attributes as SPL;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class SocialUrls
 {
     #[
         Assert\Type("string"),
-        JMS\SerializedName("twitter"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_URL, desc: "[Social] Company Twitter Page"),
+        Serializer\SerializedName("twitter"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::URL, desc: "[Social] Company Twitter Page"),
         SPL\Microdata("http://schema.org/URL", "twitter")
     ]
     public ?string $twitter = null;
@@ -35,27 +37,27 @@ class SocialUrls
 
     #[
         Assert\Type("string"),
-        JMS\SerializedName("facebook"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_URL, desc: "[Social] Company Facebook Page"),
+        Serializer\SerializedName("facebook"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::URL, desc: "[Social] Company Facebook Page"),
         SPL\Microdata("http://schema.org/URL", "facebook")
     ]
     public ?string $facebook = null;
 
     #[
         Assert\Type("string"),
-        JMS\SerializedName("linkedin"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_URL, desc: "[Social] Company LinkedIn Page"),
+        Serializer\SerializedName("linkedin"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::URL, desc: "[Social] Company LinkedIn Page"),
         SPL\Microdata("http://schema.org/URL", "linkedin")
     ]
     public ?string $linkedin = null;
 
     #[
         Assert\Type("string"),
-        JMS\SerializedName("viadeo"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_URL, desc: "[Social] Company Viadeo Page"),
+        Serializer\SerializedName("viadeo"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::URL, desc: "[Social] Company Viadeo Page"),
         SPL\Microdata("http://schema.org/URL", "viadeo")
     ]
     public ?string $viadeo = null;

@@ -15,10 +15,17 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata;
 
-use JMS\Serializer\Annotation as JMS;
+use Splash\Connectors\Sellsy\Dictionary\EmbedQueries;
 use Splash\Metadata\Attributes as SPL;
+use Splash\OpenApi\Attributes\Rest\RestResource;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
+#[RestResource(
+    collectionUri: "/contacts",
+    itemUri: "/contacts/{id}".EmbedQueries::ADDRESSES,
+)]
 #[SPL\SplashObject(
     name: "Contact",
     description: "Sellsy Contacts Object",
@@ -28,17 +35,18 @@ class Contact
 {
     use Contact\MainTrait;
     use Contact\ExtraInfosTrait;
-    use Company\EmbedTrait;
-    use Company\AddressesTrait;
+    use Contact\EmbedTrait;
+    use Contact\AddressesTrait;
     use Contact\MetadataTrait;
     use Contact\CompaniesLinkTrait;
 
     #[
-        Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("id"),
-        JMS\Groups(array("Read", "List")),
-        JMS\Type("string"),
+        Serializer\SerializedName("id"),
+        Serializer\Groups(array(SplGroups::READ, SplGroups::LIST)),
     ]
-    public string $id;
+    //====================================================================//
+    // Nullable on purpose: an object being created has no id yet, and the
+    // Visitor reads this property to identify it.
+    public ?string $id = null;
 }

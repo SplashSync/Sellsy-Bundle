@@ -17,19 +17,19 @@ namespace Splash\Connectors\Sellsy\Models\Metadata;
 
 use Splash\Core\Dictionary\SplFields;
 use Splash\Metadata\Attributes as SPL;
-use Splash\Templates\Accounting\AccountingDeliveryFields;
+use Splash\Templates\Accounting\AccountingBillingFields;
 
 /**
- * Api Metadata Model for Delivery Addresses.
+ * Api Metadata Model for Invoicing Addresses.
  *
- * Same Sellsy address, seen as a delivery address: only the field templates
- * change, so that Splash reads them as schema.org/deliveryAddress instead of
+ * Same Sellsy address, seen as an invoicing address: only the field templates
+ * change, so that Splash reads them as schema.org/billingAddress instead of
  * plain postal address fields.
  *
  * Properties are redeclared for their templates only: serialization, validation
  * and accessors are inherited from the parent, PHP attributes are not.
  */
-class AddressDelivery extends Address
+class AddressInvoicing extends Address
 {
     /**
      * Name of the Address.
@@ -37,7 +37,7 @@ class AddressDelivery extends Address
      * @var string
      */
     #[
-        SPL\Template(AccountingDeliveryFields::DELIVERY_COMPANY),
+        SPL\Template(AccountingBillingFields::BILLING_COMPANY),
     ]
     public string $name;
 
@@ -47,7 +47,7 @@ class AddressDelivery extends Address
      * @var null|string
      */
     #[
-        SPL\Template(AccountingDeliveryFields::DELIVERY_STREET),
+        SPL\Template(AccountingBillingFields::BILLING_STREET),
     ]
     public ?string $addressFirstLine = null;
 
@@ -57,7 +57,7 @@ class AddressDelivery extends Address
      * @var null|string
      */
     #[
-        SPL\Template(AccountingDeliveryFields::DELIVERY_POST_OFFICE_BOX),
+        SPL\Template(AccountingBillingFields::BILLING_POST_OFFICE_BOX),
     ]
     public ?string $addressSecondLine = null;
 
@@ -67,7 +67,7 @@ class AddressDelivery extends Address
      * @var null|string
      */
     #[
-        SPL\Template(AccountingDeliveryFields::DELIVERY_STREET_EXT),
+        SPL\Template(AccountingBillingFields::BILLING_STREET_EXT),
     ]
     public ?string $addressThirdLine = null;
 
@@ -77,7 +77,7 @@ class AddressDelivery extends Address
      * @var null|string
      */
     #[
-        SPL\Template(AccountingDeliveryFields::DELIVERY_POSTAL_CODE),
+        SPL\Template(AccountingBillingFields::BILLING_POSTAL_CODE),
     ]
     public ?string $postalCode = null;
 
@@ -87,7 +87,7 @@ class AddressDelivery extends Address
      * @var null|string
      */
     #[
-        SPL\Template(AccountingDeliveryFields::DELIVERY_CITY),
+        SPL\Template(AccountingBillingFields::BILLING_CITY),
     ]
     public ?string $city = null;
 
@@ -97,7 +97,7 @@ class AddressDelivery extends Address
      * @var null|string
      */
     #[
-        SPL\Template(AccountingDeliveryFields::DELIVERY_COUNTRY_NAME),
+        SPL\Template(AccountingBillingFields::BILLING_COUNTRY_NAME),
     ]
     public ?string $country = null;
 
@@ -107,7 +107,7 @@ class AddressDelivery extends Address
      * @var null|string
      */
     #[
-        SPL\Template(AccountingDeliveryFields::DELIVERY_COUNTRY),
+        SPL\Template(AccountingBillingFields::BILLING_COUNTRY),
     ]
     public ?string $countryCode = null;
 
@@ -121,7 +121,7 @@ class AddressDelivery extends Address
             type: SplFields::VARCHAR,
             name: "[ADD4] Address extension",
             desc: "Fourth line of the address",
-            group: "Delivery"
+            group: "Billing"
         ),
     ]
     public ?string $addressFourthLine = null;
@@ -136,7 +136,7 @@ class AddressDelivery extends Address
             type: SplFields::BOOL,
             name: "Is Invoicing",
             desc: "Is address invoicing address ?",
-            group: "Delivery"
+            group: "Billing"
         ),
     ]
     public bool $isInvoicingAddress = false;
@@ -151,19 +151,19 @@ class AddressDelivery extends Address
             type: SplFields::BOOL,
             name: "Is Delivery",
             desc: "Is address delivery address ?",
-            group: "Delivery"
+            group: "Billing"
         ),
     ]
     public bool $isDeliveryAddress = false;
 
     /**
-     * Address Longitude
+     * Address Latitude
      */
     #[
         SPL\Field(
             type: SplFields::DOUBLE,
             desc: "[Geocode] Address Latitude",
-            group: "Delivery"
+            group: "Billing"
         ),
     ]
     protected ?float $latitude = null;
@@ -175,7 +175,7 @@ class AddressDelivery extends Address
         SPL\Field(
             type: SplFields::DOUBLE,
             desc: "[Geocode] Address Longitude",
-            group: "Delivery"
+            group: "Billing"
         ),
     ]
     protected ?float $longitude = null;

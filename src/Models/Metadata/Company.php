@@ -15,15 +15,21 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata;
 
-use JMS\Serializer\Annotation as JMS;
 use Splash\Metadata\Attributes as SPL;
+use Splash\OpenApi\Attributes\Rest\RestResource;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Api Metadata Model for Simple Object: Basic Fields.
  *
- * @SuppressWarnings(PHPMD.TooManyFields)
+ * @SuppressWarnings(TooManyFields)
  */
+#[RestResource(
+    collectionUri: "/companies",
+    itemUri: "/companies/{id}".Company\CompanyEmbed::URI_QUERY,
+)]
 #[SPL\SplashObject(
     name: "Company",
     description: "Sellsy Company API Object",
@@ -39,20 +45,21 @@ class Company
     use Company\MetadataTrait;
 
     #[
-        Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("id"),
-        JMS\Groups(array("Read", "List")),
-        JMS\Type("string"),
+        Serializer\SerializedName("id"),
+        Serializer\Groups(array(SplGroups::READ, SplGroups::LIST)),
     ]
-    public string $id;
+    //====================================================================//
+    // Nullable on purpose: an object being created has no id yet, and the
+    // Visitor reads this property to identify it.
+    public ?string $id = null;
 
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("type"),
-        JMS\Type("string"),
-        JMS\Groups(array("Read", "List", "Required")),
+        Serializer\SerializedName("type"),
+        // Type is writable: Splash declares it so, and Sellsy PUT needs it back
+        Serializer\Groups(array(SplGroups::READ, SplGroups::WRITE, SplGroups::LIST, SplGroups::REQUIRED)),
         SPL\Field(desc: "Company type"),
         SPL\Flags(listed: true),
         SPL\Choices(array(
@@ -60,8 +67,7 @@ class Company
             "client" => "Client",
             "supplier" => "Supplier",
         )),
-        SPL\IsRequired,
         SPL\IsNotTested,
     ]
-    public ?string $type;
+    public ?string $type = "client";
 }

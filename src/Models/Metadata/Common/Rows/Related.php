@@ -15,8 +15,9 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Common\Rows;
 
-use JMS\Serializer\Annotation as JMS;
-use Splash\Models\Helpers\ObjectsHelper;
+use Splash\Core\Helpers\ObjectsHelper;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -29,8 +30,8 @@ class Related
      */
     #[
         Assert\Type("integer"),
-        JMS\SerializedName("id"),
-        JMS\Type("integer"),
+        Serializer\SerializedName("id"),
+        Serializer\Groups(SplGroups::DEFAULT),
     ]
     public int $id;
 
@@ -39,9 +40,8 @@ class Related
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("type"),
-        JMS\Type("string"),
-        JMS\Groups(array("Read", "Write")),
+        Serializer\SerializedName("type"),
+        Serializer\Groups(array(SplGroups::READ, SplGroups::WRITE)),
     ]
     public string $type;
 
@@ -50,8 +50,8 @@ class Related
      */
     #[
         Assert\Type("integer"),
-        JMS\SerializedName("declination_id"),
-        JMS\Type("integer"),
+        Serializer\SerializedName("declination_id"),
+        Serializer\Groups(SplGroups::DEFAULT),
     ]
     public ?int $declinationId = null;
 

@@ -15,9 +15,11 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Common;
 
-use JMS\Serializer\Annotation as JMS;
+use Splash\Core\Dictionary\SplFields;
+use Splash\Core\Helpers\PricesHelper;
 use Splash\Metadata\Attributes as SPL;
-use Splash\Models\Helpers\PricesHelper;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Discount
@@ -30,9 +32,9 @@ class Discount
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("value"),
-        JMS\Groups(array("Read", "Write", "Required")),
-        SPL\Field(type: SPL_T_DOUBLE, desc: "Discount Percentage"),
+        Serializer\SerializedName("value"),
+        Serializer\Groups(array(SplGroups::READ, SplGroups::WRITE, SplGroups::REQUIRED)),
+        SPL\Field(type: SplFields::DOUBLE, desc: "Discount Percentage"),
     ]
     public string $value = "0.00";
 
@@ -44,9 +46,8 @@ class Discount
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("type"),
-        JMS\Type("string"),
-        JMS\Groups(array("Read", "Write", "Required")),
+        Serializer\SerializedName("type"),
+        Serializer\Groups(array(SplGroups::READ, SplGroups::WRITE, SplGroups::REQUIRED)),
         SPL\Field(desc: "Discount Type"),
         SPL\Choices(array(
             "percent" => "Percent",

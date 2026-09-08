@@ -15,7 +15,7 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\Models;
 
-use JMS\Serializer\Annotation as JMS;
+use Splash\Connectors\Sellsy\Dictionary\RowTypes;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\BreakLineRow;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\BreakPageRow;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\CatalogRow;
@@ -25,12 +25,16 @@ use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\ShippingRow;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\SingleRow;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\SubTotalRow;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\TitleRow;
+use Splash\Core\Dictionary\SplFields;
 use Splash\Metadata\Attributes as SPL;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Splash\Templates\Accounting\AccountingItemsFields;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[JMS\Discriminator(
-    field: "type",
-    map: array(
+#[Serializer\DiscriminatorMap(
+    typeProperty: "type",
+    mapping: array(
         // Mapped by Splash
         SingleRow::DATATYPE => SingleRow::class,
         CatalogRow::DATATYPE => CatalogRow::class,
@@ -49,9 +53,9 @@ abstract class AbstractRow implements RowInterface
     #[
         Assert\NotNull,
         Assert\Type("integer"),
-        JMS\SerializedName("id"),
-        JMS\Type("integer"),
-        SPL\Field(type: SPL_T_INT, desc: "Item ID"),
+        Serializer\SerializedName("id"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::INT, desc: "Item ID"),
         SPL\IsReadOnly(),
     ]
     public int $id;
@@ -59,11 +63,10 @@ abstract class AbstractRow implements RowInterface
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("type"),
-        JMS\Groups(array("Read")),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Item Type"),
-        SPL\IsReadOnly(),
+        Serializer\SerializedName("type"),
+        Serializer\Groups(array(SplGroups::READ)),
+        SPL\Template(AccountingItemsFields::ITEM_TYPE),
+        SPL\IsNotTested(),
     ]
     public string $rowType;
 
@@ -81,5 +84,23 @@ abstract class AbstractRow implements RowInterface
     public function getType(): ?string
     {
         return $this->rowType ?? static::DATATYPE;
+    }
+
+    /**
+     * Compute Row Checksum to Detect Changes
+     */
+    public function getChecksum(): string
+    {
+        return md5(serialize($this));
+    }
+
+    /**
+     * Get Row Type as a Splash Normalized Line Type
+     *
+     * Null for the Sellsy layout rows, which Splash does not qualify.
+     */
+    public function getSplashType(): ?string
+    {
+        return RowTypes::toSplash($this->getType());
     }
 }

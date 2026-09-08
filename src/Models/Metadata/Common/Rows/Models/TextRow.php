@@ -15,7 +15,8 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\Models;
 
-use JMS\Serializer\Annotation as JMS;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -25,9 +26,8 @@ abstract class TextRow extends AbstractRow
 {
     #[
         Assert\Type("string"),
-        JMS\SerializedName("text"),
-        JMS\Type("string"),
-        JMS\Groups(array("Read")),
+        Serializer\SerializedName("text"),
+        Serializer\Groups(SplGroups::DEFAULT),
     ]
     public ?string $text = null;
 }

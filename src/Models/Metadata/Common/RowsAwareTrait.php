@@ -15,11 +15,13 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Common;
 
-use JMS\Serializer\Annotation as JMS;
+use Splash\Connectors\Sellsy\Dictionary\RowTypes;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\CatalogRow;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\Models\AbstractRow;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\Models\ProductRow;
 use Splash\Metadata\Attributes as SPL;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 trait RowsAwareTrait
@@ -29,12 +31,44 @@ trait RowsAwareTrait
      */
     #[
         Assert\Type("array"),
-        JMS\SerializedName("rows"),
-        JMS\Type("array<".AbstractRow::class.">"),
+        Serializer\SerializedName("rows"),
+        Serializer\Groups(SplGroups::DEFAULT),
         SPL\ListResource(targetClass: CatalogRow::class),
         SPL\Manual,
     ]
     public array $rows = array();
+
+    /**
+     * Check if Document carries Rows that Splash cannot represent
+     *
+     * Titles, sub-totals and page breaks are laid out by hand in Sellsy:
+     * such a document belongs to its user, Splash must not rewrite it.
+     */
+    public function hasLayoutRows(): bool
+    {
+        foreach ($this->rows as $row) {
+            if (!RowTypes::isSyncable($row->getType())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Get Rows that Splash is able to represent
+     *
+     * Sold items & charges, plus the Sellsy comments, which Splash exposes
+     * as comment lines. Original keys are kept: the writer walks them.
+     *
+     * @return AbstractRow[]
+     */
+    public function getSyncableRows(): array
+    {
+        return array_filter($this->rows, static function (AbstractRow $row) {
+            return RowTypes::isSyncable($row->getType());
+        });
+    }
 
     /**
      * @return ProductRow[]

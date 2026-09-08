@@ -15,10 +15,12 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\Models;
 
-use JMS\Serializer\Annotation as JMS;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Discount;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\Related;
 use Splash\Metadata\Attributes as SPL;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Splash\Templates\Accounting\AccountingItemsFields;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 abstract class ProductRow extends AbstractRow
@@ -28,10 +30,9 @@ abstract class ProductRow extends AbstractRow
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("reference"),
-        JMS\Type("string"),
-        SPL\Field(desc: "Row reference"),
-        SPL\Microdata("http://schema.org/Product", "sku"),
+        Serializer\SerializedName("reference"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Template(AccountingItemsFields::ITEM_PRODUCT_SKU),
         SPL\Associations(array("quantity@rows")),
     ]
     public ?string $reference = null;
@@ -41,10 +42,9 @@ abstract class ProductRow extends AbstractRow
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("description"),
-        JMS\Type("string"),
-        SPL\Field(desc: "Row description"),
-        SPL\Microdata("http://schema.org/partOfInvoice", "description"),
+        Serializer\SerializedName("description"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Template(AccountingItemsFields::ITEM_DESCRIPTION),
         SPL\Associations(array("quantity@rows")),
     ]
     public ?string $description = null;
@@ -54,10 +54,9 @@ abstract class ProductRow extends AbstractRow
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("unit_amount"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_PRICE, desc: "Unit amount without tax"),
-        SPL\Microdata("http://schema.org/PriceSpecification", "price"),
+        Serializer\SerializedName("unit_amount"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Template(AccountingItemsFields::ITEM_UNIT_PRICE),
         SPL\Associations(array("quantity@rows")),
     ]
     public ?string $unitAmount = null;
@@ -65,10 +64,9 @@ abstract class ProductRow extends AbstractRow
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("quantity"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_INT, name: "Quantity", desc: "Item Quantity"),
-        SPL\Microdata("http://schema.org/QuantitativeValue", "value"),
+        Serializer\SerializedName("quantity"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Template(AccountingItemsFields::ITEM_QUANTITY),
     ]
     public string $quantity;
 
@@ -77,11 +75,9 @@ abstract class ProductRow extends AbstractRow
      */
     #[
         Assert\Type(Discount::class),
-        JMS\SerializedName("discount"),
-        JMS\Type(Discount::class),
-        JMS\Groups(array("Read", "Write")),
-        SPL\Field(type: SPL_T_DOUBLE, desc: "Discount %"),
-        SPL\Microdata("http://schema.org/Order", "discount"),
+        Serializer\SerializedName("discount"),
+        Serializer\Groups(array(SplGroups::READ, SplGroups::WRITE)),
+        SPL\Template(AccountingItemsFields::ITEM_DISCOUNT),
         SPL\Accessor(
             getter: "getDiscount",
             setter: "setDiscount"
@@ -95,24 +91,27 @@ abstract class ProductRow extends AbstractRow
      */
     #[
         Assert\Type("integer"),
-        JMS\SerializedName("tax_id"),
-        JMS\Type("integer"),
-        SPL\Field(type: SPL_T_VARCHAR, desc: "Tax Name"),
-        SPL\Microdata("http://schema.org/PriceSpecification", "valueAddedTaxName"),
+        Serializer\SerializedName("tax_id"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Template(AccountingItemsFields::ITEM_VAT_CODE),
         SPL\IsNotTested,
     ]
     public int $taxId = 0;
 
-    #[JMS\Exclude()]
-    public ?Related $related = null;
-
     /**
-     * Compute Product Row Checksum to Detect Changes
+     * Row Related Catalog Item.
+     *
+     * Only carried by catalog, shipping & packaging rows: on a free row it
+     * stays null, and null values are never sent to Sellsy.
      */
-    public function getChecksum(): string
-    {
-        return md5(serialize($this));
-    }
+    #[
+        Assert\Type(Related::class),
+        Serializer\SerializedName("related"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Template(AccountingItemsFields::ITEM_PRODUCT_ID),
+        SPL\Associations(array("quantity@rows")),
+    ]
+    public ?Related $related = null;
 
     /**
      * Set Discount Data through an SPL Accessor

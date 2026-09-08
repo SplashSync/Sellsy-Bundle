@@ -30,7 +30,7 @@ trait ExtraInfosTrait
         ORM\Column(type: Types::INTEGER),
         Serializer\Groups("read")
     ]
-    public ?int $fiscal_year_id = 0;
+    public ?int $fiscalYearId = 0;
 
     /**
      * Invoice's Assigned Staff ID.
@@ -40,7 +40,7 @@ trait ExtraInfosTrait
         ORM\Column(type: Types::INTEGER),
         Serializer\Groups("read")
     ]
-    public int $assigned_staff_id = 0;
+    public int $assignedStaffId = 0;
 
     /**
      * Invoice's Contact ID.
@@ -50,7 +50,7 @@ trait ExtraInfosTrait
         ORM\Column(type: Types::INTEGER),
         Serializer\Groups("read")
     ]
-    public ?int $contact_id = 0;
+    public ?int $contactId = 0;
 
     /**
      * Invoice's Contact Invoicing ID.
@@ -60,7 +60,7 @@ trait ExtraInfosTrait
         ORM\Column(type: Types::INTEGER),
         Serializer\Groups("read")
     ]
-    public int $invoicing_address_id = 0;
+    public int $invoicingAddressId = 0;
 
     /**
      * Invoice's Delivery Address ID.
@@ -70,7 +70,7 @@ trait ExtraInfosTrait
         ORM\Column(type: Types::INTEGER),
         Serializer\Groups("read")
     ]
-    public int $delivery_address_id = 0;
+    public int $deliveryAddressId = 0;
 
     /**
      * Invoice's Rate Category ID.
@@ -80,7 +80,7 @@ trait ExtraInfosTrait
         ORM\Column(type: Types::INTEGER),
         Serializer\Groups("read")
     ]
-    public int $rate_category_id = 0;
+    public int $rateCategoryId = 0;
 
     /**
      * Invoice's Subscription ID.
@@ -90,5 +90,5 @@ trait ExtraInfosTrait
         ORM\Column(type: Types::INTEGER),
         Serializer\Groups("read")
     ]
-    public int $subscription_id = 0;
+    public int $subscriptionId = 0;
 }

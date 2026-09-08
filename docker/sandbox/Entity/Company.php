@@ -135,16 +135,16 @@ class Company extends AbstractSellsyObject
     #[ORM\PrePersist()]
     public function onPrePersist(): void
     {
-        $this->created = $this->updated_at = new DateTime();
+        $this->created = $this->updatedAt = new DateTime();
     }
 
     #[ORM\PreUpdate()]
     public function onPreUpdate(): void
     {
-        $this->updated_at = new DateTime();
+        $this->updatedAt = new DateTime();
         //====================================================================//
         // A PUT rebuilds the entity from the payload, where creation date is
         // never sent: keep the column filled whatever happens.
-        $this->created ??= $this->updated_at;
+        $this->created ??= $this->updatedAt;
     }
 }

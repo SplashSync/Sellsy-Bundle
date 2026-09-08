@@ -33,7 +33,7 @@ trait ExtrasInfosTrait
         ORM\Column(type: Types::INTEGER, nullable: false),
         Serializer\Groups("read")
     ]
-    public int $unit_id = 0;
+    public int $unitId = 0;
 
     /**
      * Product's category ID.
@@ -43,7 +43,7 @@ trait ExtrasInfosTrait
         ORM\Column(type: Types::INTEGER),
         Serializer\Groups("read")
     ]
-    public int $category_id = 0;
+    public int $categoryId = 0;
 
     /**
      * Product's accounting code ID.
@@ -53,7 +53,7 @@ trait ExtrasInfosTrait
         ORM\Column(type: Types::INTEGER, nullable: false),
         Serializer\Groups("read")
     ]
-    public int $accounting_code_id = 0;
+    public int $accountingCodeId = 0;
 
     /**
      * Product's accounting purchase code ID.
@@ -63,5 +63,5 @@ trait ExtrasInfosTrait
         ORM\Column(type: Types::INTEGER, nullable: false),
         Serializer\Groups("read")
     ]
-    public int $accounting_purchase_code_id = 0;
+    public int $accountingPurchaseCodeId = 0;
 }

@@ -61,7 +61,7 @@ class SellsyRow extends AbstractRow
         ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2),
         Serializer\Groups("read")
     ]
-    public float $unit_amount = 0.0;
+    public float $unitAmount = 0.0;
 
     /**
      * Row's text
@@ -92,6 +92,6 @@ class SellsyRow extends AbstractRow
      */
     public function setUnitAmount(?string $value): void
     {
-        $this->unit_amount = (float) $value;
+        $this->unitAmount = (float) $value;
     }
 }

@@ -31,7 +31,7 @@ trait MainTrait
         ORM\Column(type: Types::STRING, nullable: true),
         Serializer\Groups("read")
     ]
-    public ?string $shipping_date = null;
+    public ?string $shippingDate = null;
 
     /**
      * Invoice's Subject
@@ -121,7 +121,7 @@ trait MainTrait
         ORM\Column(type: Types::STRING, nullable: true),
         Serializer\Groups("read")
     ]
-    public ?string $pdf_link = null;
+    public ?string $pdfLink = null;
 
     /**
      * Invoice's Note

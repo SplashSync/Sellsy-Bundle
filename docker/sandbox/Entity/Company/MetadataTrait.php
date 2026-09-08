@@ -43,7 +43,7 @@ trait MetadataTrait
         ORM\Column(nullable: false),
         Serializer\Groups("read"),
     ]
-    public ?DateTime $updated_at = null;
+    public ?DateTime $updatedAt = null;
 
     /**
      * Is Company Archived

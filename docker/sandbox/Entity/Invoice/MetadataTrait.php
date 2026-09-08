@@ -44,7 +44,7 @@ trait MetadataTrait
         ORM\Column(type: Types::DATE_MUTABLE, nullable: true),
         Serializer\Groups("read")
     ]
-    public ?DateTime $due_date = null;
+    public ?DateTime $dueDate = null;
 
     /**
      * Invoice's Created Date

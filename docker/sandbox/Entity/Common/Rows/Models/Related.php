@@ -45,5 +45,5 @@ class Related
         Assert\Type("integer"),
         Serializer\Groups("read")
     ]
-    public ?int $declination_id = null;
+    public ?int $declinationId = null;
 }

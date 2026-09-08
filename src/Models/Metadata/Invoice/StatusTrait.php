@@ -124,11 +124,35 @@ trait StatusTrait
     //====================================================================//
 
     /**
+     * Check if Document must be Validated on Sellsy
+     *
+     * Sellsy only leaves the draft status through its validation endpoint,
+     * never through a document update.
+     */
+    public function isToValidate(): bool
+    {
+        return InvoiceStatus::isEditable($this->originalStatus ?? "")
+            && InvoiceStatus::isValidated($this->status)
+        ;
+    }
+
+    /**
      * Check if Document is Editable
      */
     public function allowDocumentUpdate(): bool
     {
         if ($this->isSentToAccounting) {
+            return false;
+        }
+        //====================================================================//
+        // Document was laid out by hand in Sellsy: leave it to its owner
+        if ($this->hasLayoutRows()) {
+            Splash::log()->war(
+                "This Invoice was built in Sellsy: it carries layout rows (title, sub-total, "
+                ."page break) that Splash cannot reproduce, so it belongs to its author. "
+                ."Update skipped on purpose, this is not an error."
+            );
+
             return false;
         }
 

@@ -15,7 +15,7 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Invoice;
 
-use Splash\Core\Dictionary\SplFields;
+use DateTime;
 use Splash\Metadata\Attributes as SPL;
 use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
 use Splash\Templates\InvoiceFields;
@@ -37,19 +37,20 @@ trait DatesTrait
         SPL\Template(InvoiceFields::DATE),
         SPL\IsRequired,
     ]
-    public \DateTime $date;
+    public DateTime $date;
 
     /**
      * Invoice's due date.
+     *
+     * Nullable: Sellsy computes it from the payment terms, and leaves it
+     * empty as long as none is set on the document.
      */
     #[
-        Assert\NotNull,
         Assert\Type("date"),
         Serializer\SerializedName("due_date"),
         Serializer\Context(array(DateTimeNormalizer::FORMAT_KEY => "Y-m-d")),
-        SPL\Field(type: SplFields::DATE, desc: "Due Date of the invoice"),
-        SPL\Microdata("http://schema.org/Invoice", "paymentDueDate"),
+        Serializer\Groups(array(SplGroups::READ, SplGroups::WRITE)),
         SPL\Template(InvoiceFields::DATE_DUE),
     ]
-    public string $dueDate = "";
+    public ?DateTime $dueDate = null;
 }

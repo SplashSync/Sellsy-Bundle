@@ -46,10 +46,10 @@ trait MainTrait
     #[
         Assert\Type("string"),
         Serializer\SerializedName("company_reference"),
-        Serializer\Groups(SplGroups::DEFAULT),
+        Serializer\Groups(SplGroups::DEFAULT_LISTED),
         SPL\Template(InvoiceFields::REF_CUSTOMER),
     ]
-    public ?string $companyReference = null;
+    public ?string $company_reference = null;
 
     /**
      * Invoice's subject.
@@ -73,6 +73,10 @@ trait MainTrait
         Serializer\SerializedName("order_reference"),
         Serializer\Groups(SplGroups::DEFAULT),
         SPL\Template(OrderFields::REF_CUSTOMER),
+        SPL\Flags(
+            required: false,
+            listed: false
+        ),
     ]
     protected ?string $orderReference = null;
 

@@ -15,8 +15,10 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Invoice;
 
-use JMS\Serializer\Annotation as JMS;
+use Splash\Core\Dictionary\SplFields;
 use Splash\Metadata\Attributes as SPL;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -29,9 +31,9 @@ trait ExtraInfosTrait
      */
     #[
         Assert\Type("integer"),
-        JMS\SerializedName("fiscalYearId"),
-        JMS\Type("integer"),
-        SPL\Field(type: SPL_T_INT, desc: "Fiscal Year ID"),
+        Serializer\SerializedName("fiscalYearId"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::INT, desc: "Fiscal Year ID"),
     ]
     public ?int $fiscalYearId = null;
 
@@ -41,9 +43,9 @@ trait ExtraInfosTrait
     #[
         Assert\NotNull,
         Assert\Type("integer"),
-        JMS\SerializedName("assigned_staff_id"),
-        JMS\Type("integer"),
-        SPL\Field(type: SPL_T_INT, desc: "Fiscal Year"),
+        Serializer\SerializedName("assigned_staff_id"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::INT, desc: "Fiscal Year"),
     ]
     public int $assignedStaffId = 0;
 
@@ -52,9 +54,9 @@ trait ExtraInfosTrait
      */
     #[
         Assert\Type("integer"),
-        JMS\SerializedName("contact_id"),
-        JMS\Type("integer"),
-        SPL\Field(type: SPL_T_INT, desc: "Fiscal Year ID"),
+        Serializer\SerializedName("contact_id"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::INT, desc: "Fiscal Year ID"),
     ]
     public ?int $contactId = null;
 
@@ -63,9 +65,9 @@ trait ExtraInfosTrait
      */
     #[
         Assert\Type("integer"),
-        JMS\SerializedName("invoicing_address_id"),
-        JMS\Type("integer"),
-        SPL\Field(type: SPL_T_INT, desc: "Invoicing Address ID"),
+        Serializer\SerializedName("invoicing_address_id"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::INT, desc: "Invoicing Address ID"),
     ]
     public int $invoicingAddressId = 0;
 
@@ -74,9 +76,9 @@ trait ExtraInfosTrait
      */
     #[
         Assert\Type("integer"),
-        JMS\SerializedName("delivery_address_id"),
-        JMS\Type("integer"),
-        SPL\Field(type: SPL_T_INT, desc: "Delivery Address ID"),
+        Serializer\SerializedName("delivery_address_id"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::INT, desc: "Delivery Address ID"),
     ]
     public int $deliveryAddressId = 0;
 
@@ -87,9 +89,9 @@ trait ExtraInfosTrait
      */
     #[
         Assert\Type("integer"),
-        JMS\SerializedName("rate_category_id"),
-        JMS\Type("integer"),
-        SPL\Field(type: SPL_T_INT, desc: "Rate Category ID"),
+        Serializer\SerializedName("rate_category_id"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::INT, desc: "Rate Category ID"),
     ]
     public int $rateCategoryId = 0;
 
@@ -98,9 +100,9 @@ trait ExtraInfosTrait
      */
     #[
         Assert\Type("integer"),
-        JMS\SerializedName("subscription_id"),
-        JMS\Type("integer"),
-        SPL\Field(type: SPL_T_INT, desc: "Subscription ID"),
+        Serializer\SerializedName("subscription_id"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::INT, desc: "Subscription ID"),
     ]
     public ?int $subscriptionId = null;
 }

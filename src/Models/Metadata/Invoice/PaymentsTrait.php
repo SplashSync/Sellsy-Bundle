@@ -15,9 +15,10 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Invoice;
 
-use JMS\Serializer\Annotation as JMS;
 use Splash\Connectors\Sellsy\Models\Metadata\Payment;
+use Splash\Core\Dictionary\SplOperations;
 use Splash\Metadata\Attributes as SPL;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Webmozart\Assert\Assert;
 
 /**
@@ -29,7 +30,7 @@ trait PaymentsTrait
      * @var Payment[]
      */
     #[
-        JMS\Groups(array("None")),
+        Serializer\Groups(array("None")),
         SPL\ListResource(targetClass: Payment::class),
         SPL\Accessor(
             factory: "createPayment",
@@ -72,6 +73,6 @@ trait PaymentsTrait
      */
     public function removePayment(Payment $payment): void
     {
-        $payment->status = SPL_A_DELETE;
+        $payment->status = SplOperations::DELETE;
     }
 }

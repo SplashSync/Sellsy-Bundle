@@ -16,27 +16,17 @@
 namespace Splash\Connectors\Sellsy\Dictionary;
 
 /**
- * Sales Documents Rows Api Keys Dictionary
+ * Payments Types Dictionary
  */
-class RowsKeys
+class PaymentTypes
 {
     /**
-     * Rows collection of a sales document
+     * Money received from a customer
      */
-    const ROWS = "rows";
+    const CREDIT = "credit";
 
     /**
-     * Row unique identifier, only known for already stored rows
+     * Money paid to a supplier
      */
-    const ID = "id";
-
-    /**
-     * Row type discriminator, only expected on row creation
-     */
-    const TYPE = "type";
-
-    /**
-     * Row related catalog item, only expected on row creation
-     */
-    const RELATED = "related";
+    const DEBIT = "debit";
 }

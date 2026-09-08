@@ -16,6 +16,7 @@
 namespace Splash\Connectors\Sellsy\Oauth2;
 
 use League\OAuth2\Client\Token\AccessToken;
+use Splash\Connectors\Sellsy\Dictionary\ApiScopes;
 use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
 use Psr\Http\Message\ResponseInterface;
 use Splash\Security\Oauth2\Models\ConfigurableProvider;
@@ -60,18 +61,7 @@ class PrivateClient extends ConfigurableProvider
      */
     protected function getDefaultScopes(): array
     {
-        return array(
-            "companies.read", "companies.write",
-            "contacts.read", "contacts.write", // "individuals.write",
-            "taxes.read",
-            "invoices.read", "invoices.write",
-            "orders.read", "orders.write",
-            "webhooks.read", "webhooks.write",
-            "payments.read", "payments.write",
-            "scopes.read",
-            "api-v1",
-            "catalog", "items.read", "items.write",
-        );
+        return ApiScopes::REQUIRED;
     }
 
     protected function getScopeSeparator()

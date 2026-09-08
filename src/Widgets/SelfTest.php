@@ -17,7 +17,7 @@ namespace Splash\Connectors\Sellsy\Widgets;
 
 use Splash\Bundle\Models\AbstractStandaloneWidget;
 use Splash\Connectors\Sellsy\Connector\SellsyConnector;
-use Splash\Core\SplashCore as Splash;
+use Splash\Core\Client\Splash;
 
 /**
  * Sellsy Config SelfTest
@@ -60,11 +60,7 @@ class SelfTest extends AbstractStandaloneWidget
     /**
      * Return requested Customer Data
      *
-     * @param array $parameters Widget Inputs Parameters
-     *
-     * @return array
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings(UnusedFormalParameter)
      */
     public function get(array $parameters = null): ?array
     {

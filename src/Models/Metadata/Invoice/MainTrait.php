@@ -15,8 +15,12 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Invoice;
 
-use JMS\Serializer\Annotation as JMS;
+use Splash\Core\Dictionary\SplFields;
 use Splash\Metadata\Attributes as SPL;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Splash\Templates\InvoiceFields;
+use Splash\Templates\OrderFields;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -30,46 +34,45 @@ trait MainTrait
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("currency"),
-        JMS\Type("string"),
-        SPL\Field(desc: "Invoice Currency Code"),
+        Serializer\SerializedName("currency"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Template(InvoiceFields::CURRENCY),
     ]
     public string $currency = "EUR";
 
     /**
-     * Invoice's subject.
+     * Invoice's client reference.
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("subject"),
-        JMS\Type("string"),
-        SPL\Field(desc: "Invoice Subject"),
-        SPL\Microdata("http://schema.org/Invoice", "confirmationNumber"),
-        SPL\IsRequired,
+        Serializer\SerializedName("company_reference"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Template(InvoiceFields::REF_CUSTOMER),
     ]
-    protected ?string $subject = null;
+    public ?string $companyReference = null;
 
-    //    /**
-    //     * Invoice's order reference.
-    //     */
-    //    #[
-    //        Assert\Type("string"),
-    //        JMS\SerializedName("third_reference"),
-    //        JMS\Type("string"),
-    //        JMS\Groups(array("Write")),
-    //        SPL\Field(desc: "Invoice client Reference"),
-    //    ]
-    //    public ?string $clientReference = "CUSTO-REf";
+    /**
+     * Invoice's subject.
+     *
+     * Sellsy refuses a document without subject, Splash does not ask for one:
+     * the default value keeps creations working when none is written.
+     */
+    #[
+        Assert\Type("string"),
+        Serializer\SerializedName("subject"),
+        Serializer\Groups(array(SplGroups::READ, SplGroups::WRITE, SplGroups::REQUIRED)),
+        SPL\Field(desc: "Invoice Subject"),
+    ]
+    protected ?string $subject = "Your Invoice";
 
     /**
      * Invoice's order reference.
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("order_reference"),
-        JMS\Type("string"),
-        SPL\Field(desc: "Invoice Order Reference"),
-        SPL\Microdata("http://schema.org/Order", "orderNumber"),
+        Serializer\SerializedName("order_reference"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Template(OrderFields::REF_CUSTOMER),
     ]
     protected ?string $orderReference = null;
 
@@ -78,9 +81,9 @@ trait MainTrait
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("note"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_TEXT, desc: "Invoice Note"),
+        Serializer\SerializedName("note"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::TEXT, desc: "Invoice Note"),
     ]
     protected ?string $note = null;
 

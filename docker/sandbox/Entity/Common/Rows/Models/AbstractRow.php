@@ -51,6 +51,8 @@ abstract class AbstractRow
      */
     public function getId(): ?int
     {
-        return $this->id;
+        //====================================================================//
+        // A row received on a create request has no id yet
+        return $this->id ?? null;
     }
 }

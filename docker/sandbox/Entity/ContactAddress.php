@@ -67,7 +67,7 @@ class ContactAddress extends AbstractSellsyObject
      * Link to Parent Contact
      */
     #[ORM\ManyToOne(targetEntity: Contact::class, inversedBy: 'addresses')]
-    protected ?Contact $contact;
+    protected ?Contact $contact = null;
 
     //====================================================================//
     // Getters & Setters

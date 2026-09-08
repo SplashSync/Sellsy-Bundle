@@ -64,15 +64,28 @@ class SellsyRow extends AbstractRow
     public float $unit_amount = 0.0;
 
     /**
-     * Row's quantity
+     * Row's text
+     *
+     * Only carried by comment & title rows, in place of the description.
      */
     #[
-        Assert\NotNull,
         Assert\Type("string"),
-        ORM\Column(type: Types::STRING),
+        ORM\Column(type: Types::STRING, nullable: true),
         Serializer\Groups("read")
     ]
-    public string $quantity;
+    public ?string $text = null;
+
+    /**
+     * Row's quantity
+     *
+     * Comment & layout rows carry no quantity at all.
+     */
+    #[
+        Assert\Type("string"),
+        ORM\Column(type: Types::STRING, nullable: true),
+        Serializer\Groups("read")
+    ]
+    public ?string $quantity = null;
 
     /**
      * Set Unit Amount as Float

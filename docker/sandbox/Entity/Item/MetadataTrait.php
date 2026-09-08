@@ -30,9 +30,10 @@ trait MetadataTrait
     #[
         Assert\Type("boolean"),
         ORM\Column(nullable: false),
-        Serializer\Groups("read"),
+        // Sellsy accepts is_archived on item updates
+        Serializer\Groups(array("read", "write")),
     ]
-    public bool $is_archived = false;
+    public bool $isArchived = false;
 
     /**
      * Is Product declined
@@ -42,5 +43,5 @@ trait MetadataTrait
         ORM\Column(nullable: false),
         Serializer\Groups("read"),
     ]
-    public bool $is_declined = false;
+    public bool $isDeclined = false;
 }

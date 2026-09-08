@@ -59,46 +59,6 @@ class WebhooksManager implements SellsyConnectorAwareInterface
     }
 
     /**
-     * Check & Update Api WebHooks Configuration.
-     */
-    private function updateWebHookConfig(
-        array $webHooks,
-        AbstractWebhookConfig $webhookConfig
-    ) : bool {
-        //====================================================================//
-        // Generate Final Webhooks Url
-        if (!$webhookUrl = $this->getWebHooksUrl($webhookConfig)) {
-            return false;
-        }
-        //====================================================================//
-        // Get Default Channel
-        $channel = $webhookConfig->getChanel($this->connector);
-        //====================================================================//
-        // Filter & Clean List Of WebHooks
-        foreach ($webHooks as $webHook) {
-            //====================================================================//
-            // This is Pointed WebHook is Valid
-            if ($channel == $webHook["default_channel"]) {
-                //====================================================================//
-                // Update WebHook
-                return (false !== $this->connector->setObject(
-                    "Webhook",
-                    $webHook["id"],
-                    $webhookConfig->getConfiguration($this->connector, $webhookUrl)
-                ));
-            }
-        }
-
-        //====================================================================//
-        // Add Splash WebHooks
-        return (false !== $this->connector->setObject(
-            "Webhook",
-            null,
-            $webhookConfig->getConfiguration($this->connector, $webhookUrl)
-        ));
-    }
-
-    /**
      * Check if every required WebHook is installed on the Account
      */
     public function verifyWebHooks(): bool
@@ -139,6 +99,46 @@ class WebhooksManager implements SellsyConnectorAwareInterface
         }
 
         return $webHooks;
+    }
+
+    /**
+     * Check & Update Api WebHooks Configuration.
+     */
+    private function updateWebHookConfig(
+        array $webHooks,
+        AbstractWebhookConfig $webhookConfig
+    ) : bool {
+        //====================================================================//
+        // Generate Final Webhooks Url
+        if (!$webhookUrl = $this->getWebHooksUrl($webhookConfig)) {
+            return false;
+        }
+        //====================================================================//
+        // Get Default Channel
+        $channel = $webhookConfig->getChanel($this->connector);
+        //====================================================================//
+        // Filter & Clean List Of WebHooks
+        foreach ($webHooks as $webHook) {
+            //====================================================================//
+            // This is Pointed WebHook is Valid
+            if ($channel == $webHook["default_channel"]) {
+                //====================================================================//
+                // Update WebHook
+                return (false !== $this->connector->setObject(
+                    "Webhook",
+                    $webHook["id"],
+                    $webhookConfig->getConfiguration($this->connector, $webhookUrl)
+                ));
+            }
+        }
+
+        //====================================================================//
+        // Add Splash WebHooks
+        return (false !== $this->connector->setObject(
+            "Webhook",
+            null,
+            $webhookConfig->getConfiguration($this->connector, $webhookUrl)
+        ));
     }
 
     /**

@@ -15,8 +15,8 @@
 
 namespace App\Entity;
 
-use App\ApiPlatform\SearchCollection;
 use ApiPlatform\Metadata as API;
+use App\ApiPlatform\SearchCollection;
 use App\Controller\AddCompanyAddress;
 use App\Controller\AddCompanyContact;
 use App\Controller\RemoveCompanyContact;

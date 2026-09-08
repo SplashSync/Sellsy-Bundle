@@ -67,7 +67,7 @@ class CompanyAddress extends AbstractSellsyObject
      * Link to Parent Company
      */
     #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'addresses')]
-    protected ?Company $company;
+    protected ?Company $company = null;
 
     //====================================================================//
     // Getters & Setters

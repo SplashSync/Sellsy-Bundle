@@ -15,8 +15,8 @@
 
 namespace App\Entity;
 
-use App\ApiPlatform\SearchCollection;
 use ApiPlatform\Metadata as API;
+use App\ApiPlatform\SearchCollection;
 use App\Entity\Common\Rows\RowsAwareTrait;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;

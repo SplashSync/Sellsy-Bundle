@@ -15,8 +15,8 @@
 
 namespace App\Entity;
 
-use App\ApiPlatform\SearchCollection;
 use ApiPlatform\Metadata as API;
+use App\ApiPlatform\SearchCollection;
 use App\Controller\AddContactAddress;
 use App\Controller\CompanyContacts;
 use DateTime;
@@ -87,6 +87,7 @@ class Contact extends AbstractSellsyObject
     public function __construct()
     {
         $this->addresses = new ArrayCollection();
+        $this->companies = new ArrayCollection();
     }
 
     /**
@@ -121,5 +122,9 @@ class Contact extends AbstractSellsyObject
     public function onPreUpdate(): void
     {
         $this->updated = new DateTime();
+        //====================================================================//
+        // A PUT rebuilds the entity from the payload, where creation date is
+        // never sent: keep the column filled whatever happens.
+        $this->created ??= $this->updated;
     }
 }

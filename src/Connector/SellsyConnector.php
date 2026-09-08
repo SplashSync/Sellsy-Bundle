@@ -24,6 +24,7 @@ use Splash\Bundle\Models\Connectors\GenericWidgetMapperTrait;
 use Splash\Connectors\Sellsy\Actions\Webhooks\Receive;
 use Splash\Connectors\Sellsy\Actions\Webhooks\Setup;
 use Splash\Connectors\Sellsy\Form\SellsyEditForm;
+use Splash\Connectors\Sellsy\Models\Actions\SellsyPutAction;
 use Splash\Connectors\Sellsy\Oauth2\PrivateClient;
 use Splash\Connectors\Sellsy\Oauth2\SandboxClient;
 use Splash\Connectors\Sellsy\Objects;
@@ -391,7 +392,7 @@ class SellsyConnector extends AbstractConnector implements Oauth2AwareInterface
             $model,
         );
         $visitor->setTimezone("UTC");
-        $visitor->setUpdateAction(Action\Json\PutAction::class);
+        $visitor->setUpdateAction(SellsyPutAction::class);
 
         return $visitor;
     }

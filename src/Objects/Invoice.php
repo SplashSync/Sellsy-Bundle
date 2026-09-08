@@ -20,18 +20,18 @@ use Splash\Connectors\Sellsy\Connector\SellsyConnector;
 use Splash\Connectors\Sellsy\Models\Actions\SellsyListAction;
 use Splash\Connectors\Sellsy\Models\Metadata as ApiModels;
 use Splash\Connectors\Sellsy\Objects\Common\RowsParserTrait;
-use Splash\Models\Objects\IntelParserTrait;
-use Splash\OpenApi\Action\Json;
-use Splash\OpenApi\Models\Metadata\AbstractApiMetadataObject;
+use Splash\Core\Models\Objects\IntelParserTrait;
+use Splash\OpenApi\Models\Objects\AbstractRestAndMetadataObject;
 
 /**
  * OpenApi Implementation for Sellsy Invoice Object
  */
-class Invoice extends AbstractApiMetadataObject
+class Invoice extends AbstractRestAndMetadataObject
 {
     use IntelParserTrait;
     use RowsParserTrait;
     use Invoice\CrudTrait;
+    use Invoice\PaymentMethodsTrait;
 
     //====================================================================//
     // General Class Variables
@@ -53,25 +53,14 @@ class Invoice extends AbstractApiMetadataObject
         protected SellsyConnector $connector
     ) {
         parent::__construct(
+            $connector->getVisitor(ApiModels\Invoice::class),
             $connector->getMetadataAdapter(),
-            $connector->getConnexion(),
-            $connector->getHydrator(),
             ApiModels\Invoice::class
         );
-        $this->visitor->setTimezone("UTC");
-        //====================================================================//
-        // Prepare Api Visitor
-        $this->visitor->setModel(
-            ApiModels\Invoice::class,
-            "/invoices",
-            "/invoices/{id}", //.ApiModels\Invoice\InvoiceEmbed::getUriQuery(),
-            array("id")
-        );
-        $this->visitor->setUpdateAction(Json\PutAction::class);
         $this->visitor->setListAction(
             SellsyListAction::class,
             array(
-                "filterKey" => "search[user_ref__contains][]",
+                "filterKey" => "number",
                 "pageKey" => null,
                 "offsetKey" => "offset"
             )

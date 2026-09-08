@@ -86,7 +86,7 @@ trait PriceTrait
                     // Update Tax Class
                     $taxPercent = PricesHelper::taxPercent($fieldData);
                     if (null === $taxPercent) {
-                        $this->object->taxId = 0;
+                        $this->object->taxId = null;
                     } else {
                         $currentRate = $taxManager->getRate($this->object->taxId);
                         if (abs($taxPercent - $currentRate) > 0.01) {

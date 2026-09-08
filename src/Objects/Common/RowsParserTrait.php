@@ -15,7 +15,11 @@
 
 namespace Splash\Connectors\Sellsy\Objects\Common;
 
+use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\Models\AbstractRow;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\Models\ProductRow;
+use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\Models\TextRow;
+use Splash\Core\Helpers\ListsHelper;
+use Splash\Core\Helpers\PricesHelper;
 
 trait RowsParserTrait
 {
@@ -26,37 +30,58 @@ trait RowsParserTrait
     {
         //====================================================================//
         // Check if List field & Init List Array
-        $fieldId = self::lists()->initOutput($this->out, "rows", $fieldName);
+        $fieldId = ListsHelper::initOutput($this->out, "rows", $fieldName);
         if (!$fieldId) {
             return;
         }
         unset($this->in[$key]);
         //====================================================================//
         // Verify List is Not Empty
-        if (empty($rows = $this->object->getProductRows())) {
+        if (empty($rows = $this->object->getSyncableRows())) {
             return;
         }
         //====================================================================//
         // Fill List with Data
         foreach ($rows as $index => $row) {
             //====================================================================//
-            // Read Data from Line Item
-            $value = match ($fieldId) {
+            // Insert Data in List
+            ListsHelper::insert($this->out, "rows", $fieldName, $index, $this->getRowValue($row, $fieldId));
+        }
+    }
+
+    /**
+     * Read a Single Row Field Value
+     */
+    protected function getRowValue(AbstractRow $row, string $fieldId): null|array|float|int|string
+    {
+        //====================================================================//
+        // Comment Rows only carry their text
+        if ($row instanceof TextRow) {
+            return match ($fieldId) {
                 "id" => $row->getId(),
-                "rowType" => $row->getType(),
-                "related" => $row->related?->toSplash(),
-                "reference" => $row->reference,
-                "description" => $row->description,
-                "quantity" => (int) $row->quantity,
-                "unitAmount" => $this->getSplashPrice($row),
-                "taxId" => $this->connector->getLocator()->getTaxManager()->getLabel($row->taxId),
-                "discount" => $row->getDiscount($this->getSplashPrice($row)),
+                "rowType" => $row->getSplashType(),
+                "description" => $row->text,
                 default => null,
             };
-            //====================================================================//
-            // Insert Data in List
-            self::lists()->insert($this->out, "rows", $fieldName, $index, $value);
         }
+        //====================================================================//
+        // Safety Check - Other Rows are Product Rows
+        if (!$row instanceof ProductRow) {
+            return null;
+        }
+
+        return match ($fieldId) {
+            "id" => $row->getId(),
+            "rowType" => $row->getSplashType(),
+            "related" => $row->related?->toSplash(),
+            "reference" => $row->reference,
+            "description" => $row->description,
+            "quantity" => (int) $row->quantity,
+            "unitAmount" => $this->getSplashPrice($row),
+            "taxId" => $this->connector->getLocator()->getTaxManager()->getLabel($row->taxId),
+            "discount" => $row->getDiscount($this->getSplashPrice($row)),
+            default => null,
+        };
     }
 
     /**
@@ -93,7 +118,7 @@ trait RowsParserTrait
      */
     private function getSplashPrice(ProductRow $row): ?array
     {
-        return self::prices()->encode(
+        return PricesHelper::encode(
             (float) $row->unitAmount,
             $this->connector->getLocator()->getTaxManager()->getRate($row->taxId),
             null,

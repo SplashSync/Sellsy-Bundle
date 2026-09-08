@@ -27,9 +27,13 @@ trait CrudTrait
         //====================================================================//
         // Load Remote Object
         $invoice = parent::load($objectId);
+
         //====================================================================//
         // Invoice Found
         if ($invoice instanceof ApiModels\Invoice) {
+            //====================================================================//
+            // Normalize Relations, previously done on JMS PostDeserialize
+            $invoice->setPostDeserialize();
             //====================================================================//
             // Load Invoice Linked Payments
             $paymentsManager = $this->connector->getLocator()->getPaymentsManager();
@@ -53,6 +57,11 @@ trait CrudTrait
         // Execute Generic Update
         if ($this->object->allowDocumentUpdate()) {
             $objectId = parent::update($needed);
+        }
+        //====================================================================//
+        // Apply Invoice Validation
+        if (!$this->connector->getLocator()->getInvoiceStatusManager()->validate($this->object)) {
+            return null;
         }
         //====================================================================//
         // Update Invoice Payments

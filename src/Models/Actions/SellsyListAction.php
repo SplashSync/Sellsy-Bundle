@@ -66,12 +66,20 @@ class SellsyListAction extends AbstractListAction
 
     /**
      * Execute Collection Request
+     *
+     * Sellsy searches are POST requests on a dedicated endpoint: a collection
+     * without search endpoint is read the plain way, with a GET.
      */
     protected function executeRequest(
         VisitorInterface $visitor,
         ?string $filter = null,
         array $params = array()
     ): ?array {
+        //====================================================================//
+        // Collection has no Search Endpoint
+        if (!$this->getOption(self::SEARCH, true)) {
+            return parent::executeRequest($visitor, $filter, $params);
+        }
         //====================================================================//
         // Resolve Collection Uri
         $collectionUri = $this->getUri($visitor, $filter, $params);

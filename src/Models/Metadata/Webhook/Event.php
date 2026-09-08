@@ -15,8 +15,9 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Webhook;
 
-use JMS\Serializer\Annotation as JMS;
 use Splash\Metadata\Attributes as SPL;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -27,26 +28,24 @@ class Event
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("id"),
-        JMS\Type("string"),
-        JMS\Groups(array("Required", "Read", "Write")),
+        Serializer\SerializedName("id"),
+        Serializer\Groups(array(SplGroups::REQUIRED, SplGroups::READ, SplGroups::WRITE)),
         SPL\Field(desc: "Event ID"),
     ]
     public string $id;
 
     #[
         Assert\Type("boolean"),
-        JMS\SerializedName("is_enabled"),
-        JMS\Type("boolean"),
+        Serializer\SerializedName("is_enabled"),
+        Serializer\Groups(SplGroups::DEFAULT),
         SPL\Field(),
     ]
     public bool $isEnabled = true;
 
     #[
         Assert\Type("string"),
-        JMS\SerializedName("channel"),
-        JMS\Type("string"),
-        JMS\Groups(array("Read")),
+        Serializer\SerializedName("channel"),
+        Serializer\Groups(array(SplGroups::READ)),
         SPL\Field(),
         SPL\IsReadOnly(),
     ]

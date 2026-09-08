@@ -67,6 +67,13 @@ class Webhook extends AbstractSellsyObject
     public string $type = "http";
 
     #[
+        Assert\Type("string"),
+        ORM\Column(type: Types::STRING, nullable: true),
+        Serializer\Groups("read"),
+    ]
+    public ?string $name = null;
+
+    #[
         Assert\NotNull,
         Assert\Type("string"),
         ORM\Column(type: Types::STRING),

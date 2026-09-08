@@ -19,11 +19,10 @@ use Exception;
 use Splash\Connectors\Sellsy\Connector\SellsyConnector;
 use Splash\Connectors\Sellsy\Models\Actions\SellsyListAction;
 use Splash\Connectors\Sellsy\Models\Metadata as ApiModels;
-use Splash\Models\Objects\IntelParserTrait;
-use Splash\OpenApi\Action\Json;
-use Splash\OpenApi\Models\Metadata\AbstractApiMetadataObject;
+use Splash\Core\Models\Objects\IntelParserTrait;
+use Splash\OpenApi\Models\Objects\AbstractRestAndMetadataObject;
 
-class Webhook extends AbstractApiMetadataObject
+class Webhook extends AbstractRestAndMetadataObject
 {
     use IntelParserTrait;
 
@@ -47,25 +46,16 @@ class Webhook extends AbstractApiMetadataObject
         protected SellsyConnector $connector
     ) {
         parent::__construct(
+            $connector->getVisitor(ApiModels\Webhook::class),
             $connector->getMetadataAdapter(),
-            $connector->getConnexion(),
-            $connector->getHydrator(),
             ApiModels\Webhook::class
         );
-        $this->visitor->setTimezone("UTC");
-        //====================================================================//
-        // Prepare Api Visitor
-        $this->visitor->setModel(
-            ApiModels\Webhook::class,
-            "/webhooks",
-            "/webhooks/{id}",
-            array("id")
-        );
-        $this->visitor->setUpdateAction(Json\PutAction::class);
         $this->visitor->setListAction(
             SellsyListAction::class,
             array(
-                "filterKey" => "search[user_ref__contains][]",
+                // Webhooks have no /search endpoint on Sellsy Api
+                SellsyListAction::SEARCH => false,
+                "filterKey" => "endpoint",
                 "pageKey" => null,
                 "offsetKey" => "offset"
             )

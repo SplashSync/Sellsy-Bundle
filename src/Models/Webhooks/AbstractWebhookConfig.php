@@ -45,6 +45,17 @@ abstract class AbstractWebhookConfig
     }
 
     /**
+     * Get Webhook default Name
+     *
+     * Shown as is in the Sellsy account: it says who owns the webhook, and
+     * which kind of data it watches.
+     */
+    public function getName(): string
+    {
+        return sprintf("[Splash] %s", $this->getObjectType());
+    }
+
+    /**
      * Get Webhook Event default Channel
      */
     public function getChanel(AbstractConnector $abstractConnector): string
@@ -58,6 +69,7 @@ abstract class AbstractWebhookConfig
     public function getConfiguration(AbstractConnector $abstractConnector, string $url): array
     {
         $whConfig = array(
+            "name" => $this->getName(),
             "endpoint" => $url,
             "default_channel" => $this->getChanel($abstractConnector),
             "configuration" => array()

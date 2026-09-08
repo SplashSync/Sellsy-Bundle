@@ -15,16 +15,24 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata;
 
-use JMS\Serializer\Annotation as JMS;
 use Splash\Connectors\Sellsy\Models\Metadata\Webhook\Event;
 use Splash\Metadata\Attributes as SPL;
+use Splash\OpenApi\Attributes\Rest\RestResource;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Api Metadata Model for Sellsy Webhook.
  *
- * @SuppressWarnings(PHPMD.CamelCasePropertyName)
+ * @SuppressWarnings(CamelCasePropertyName)
  */
+#[RestResource(
+    // Webhooks are created & listed on the plain collection: Sellsy has no
+    // search endpoint for them, the List Action asks for none.
+    collectionUri: "/webhooks",
+    itemUri: "/webhooks/{id}",
+)]
 #[SPL\SplashObject(
     name: "Webhook",
     description: "Sellsy Webhook API Object",
@@ -35,19 +43,19 @@ class Webhook
     use Webhook\DatesTrait;
 
     #[
-        Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("id"),
-        JMS\Groups(array("Read", "List")),
-        JMS\Type("string"),
+        Serializer\SerializedName("id"),
+        Serializer\Groups(array(SplGroups::READ, SplGroups::LIST)),
     ]
-    public string $id;
+    //====================================================================//
+    // Nullable on purpose: an object being created has no id yet, and the
+    // Visitor reads this property to identify it.
+    public ?string $id = null;
 
     #[
         Assert\Type("boolean"),
-        JMS\SerializedName("is_enabled"),
-        JMS\Type("boolean"),
-        JMS\Groups(array("Required", "Read", "Write", "List")),
+        Serializer\SerializedName("is_enabled"),
+        Serializer\Groups(array(SplGroups::REQUIRED, SplGroups::READ, SplGroups::WRITE, SplGroups::LIST)),
         SPL\Field(desc: "Enabled"),
         SPL\Flags(listed: true),
     ]
@@ -56,9 +64,8 @@ class Webhook
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("type"),
-        JMS\Type("string"),
-        JMS\Groups(array("Required", "Read", "List")),
+        Serializer\SerializedName("type"),
+        Serializer\Groups(array(SplGroups::REQUIRED, SplGroups::READ, SplGroups::LIST)),
         SPL\Field(desc: "Webhook Type"),
         SPL\Flags(listed: true),
         SPL\IsReadOnly(),
@@ -66,11 +73,19 @@ class Webhook
     public string $type = "http";
 
     #[
+        Assert\Type("string"),
+        Serializer\SerializedName("name"),
+        Serializer\Groups(array(SplGroups::REQUIRED, SplGroups::READ, SplGroups::WRITE, SplGroups::LIST)),
+        SPL\Field(desc: "Webhook Name"),
+        SPL\Flags(listed: true),
+    ]
+    public ?string $name = null;
+
+    #[
         Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("endpoint"),
-        JMS\Type("string"),
-        JMS\Groups(array("Required", "Read", "Write", "List")),
+        Serializer\SerializedName("endpoint"),
+        Serializer\Groups(array(SplGroups::REQUIRED, SplGroups::READ, SplGroups::WRITE, SplGroups::LIST)),
         SPL\Field(desc: "Endpoint"),
         SPL\Flags(listed: true, required: true),
     ]
@@ -78,19 +93,20 @@ class Webhook
 
     #[
         Assert\Type("string"),
-        JMS\SerializedName("default_channel"),
-        JMS\Type("string"),
-        JMS\Groups(array("Required", "Read", "Write", "List")),
+        Serializer\SerializedName("default_channel"),
+        Serializer\Groups(array(SplGroups::REQUIRED, SplGroups::READ, SplGroups::WRITE, SplGroups::LIST)),
         SPL\Field(name: "Channel", desc: "Channel"),
         SPL\Flags(listed: true, required: true),
     ]
     public ?string $default_channel = null;
 
+    /**
+     * @var Event[]
+     */
     #[
         Assert\Type("array"),
-        JMS\SerializedName("configuration"),
-        JMS\Groups(array("Required", "Read", "Write")),
-        JMS\Type("array<".Event::class.">"),
+        Serializer\SerializedName("configuration"),
+        Serializer\Groups(array(SplGroups::REQUIRED, SplGroups::READ, SplGroups::WRITE)),
         SPL\ListResource(targetClass: Event::class),
         SPL\IsRequired,
     ]

@@ -13,16 +13,17 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Connectors\Sellsy\Services;
+namespace Splash\Connectors\Sellsy\Services\Api;
 
 use Splash\Connectors\Sellsy\Dictionary\WebhookConfig;
+use Splash\Connectors\Sellsy\Interfaces\SellsyConnectorAwareInterface;
 use Splash\Connectors\Sellsy\Models\Connector\SellsyConnectorAwareTrait;
 use Splash\Connectors\Sellsy\Models\Webhooks\AbstractWebhookConfig;
 use Splash\Connectors\Sellsy\Objects\Webhook;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
-class WebhooksManager
+class WebhooksManager implements SellsyConnectorAwareInterface
 {
     use SellsyConnectorAwareTrait;
 
@@ -98,11 +99,33 @@ class WebhooksManager
     }
 
     /**
+     * Check if every required WebHook is installed on the Account
+     */
+    public function verifyWebHooks(): bool
+    {
+        //====================================================================//
+        // Collect Channels of Installed Webhooks
+        $channels = array();
+        foreach ($this->getInstalledWebhooks() as $webHook) {
+            $channels[] = $webHook["default_channel"] ?? null;
+        }
+        //====================================================================//
+        // Walk on Required WebHooks
+        foreach (WebhookConfig::all() as $webhookConfig) {
+            if (!in_array($webhookConfig->getChanel($this->connector), $channels, true)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Get List of Installed Webhooks
      *
      * @return array<string, string[]>
      */
-    private function getInstalledWebhooks(): array
+    public function getInstalledWebhooks(): array
     {
         //====================================================================//
         // Create Object Class

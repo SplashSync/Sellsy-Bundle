@@ -13,16 +13,17 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Connectors\Sellsy\Services;
+namespace Splash\Connectors\Sellsy\Services\Accounting;
 
 use Psr\Cache\InvalidArgumentException;
+use Splash\Connectors\Sellsy\Dictionary\RowTypes;
+use Splash\Connectors\Sellsy\Interfaces\SellsyConnectorAwareInterface;
 use Splash\Connectors\Sellsy\Models\Connector\SellsyConnectorAwareTrait;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\CatalogRow;
+use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\CommentRow;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\Models\AbstractRow;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\Models\ProductRow;
-use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\PackagingRow;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\Related;
-use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\ShippingRow;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Rows\SingleRow;
 use Splash\Core\Helpers\ObjectsHelper;
 use Splash\Core\Helpers\PricesHelper;
@@ -32,7 +33,7 @@ use Symfony\Contracts\Cache\ItemInterface;
 /**
  * Manage CRUD for Sellsy Orders/Invoices/More... Products Rows
  */
-class RowsUpdater
+class RowsUpdater implements SellsyConnectorAwareInterface
 {
     use SellsyConnectorAwareTrait;
 
@@ -68,20 +69,22 @@ class RowsUpdater
         // Verify Lines List & Update if Needed
         foreach ($rowsData as $rowData) {
             //====================================================================//
-            // Fetch Next Product Row
-            $row = $this->getNextProductRow($rows);
+            // Fetch Next Syncable Row
+            $row = $this->getNextSyncableRow($rows);
             //====================================================================//
             // Ensure Row is from Correct Type, or Create a new one
             $row = $this->updateRowClass($row, $rowData);
             $checksum = $row->getChecksum();
             //====================================================================//
             // Update Row Contents
-            $this
-                ->updateScalarValues($row, $rowData)
-                ->updatePrice($row, $rowData)
-                ->updateRelated($row, $rowData)
-                ->updateDiscount($row, $rowData)
-            ;
+            $this->updateScalarValues($row, $rowData);
+            if ($row instanceof ProductRow) {
+                $this
+                    ->updatePrice($row, $rowData)
+                    ->updateRelated($row, $rowData)
+                    ->updateDiscount($row, $rowData)
+                ;
+            }
             //====================================================================//
             // Push updated Row to Rows
             $rows[$this->rowsCursor] = $row;
@@ -91,7 +94,7 @@ class RowsUpdater
         }
         //====================================================================//
         // Delete Remaining Lines
-        while ($this->getNextProductRow($rows)) {
+        while ($this->getNextSyncableRow($rows)) {
             unset($rows[$this->rowsCursor]);
             $this->updated = true;
         }
@@ -100,11 +103,13 @@ class RowsUpdater
     }
 
     /**
-     * Get Next Valid Product Row
+     * Get Next Row that Splash is able to write
+     *
+     * Layout rows are walked over: they keep their place in the document.
      *
      * @param AbstractRow[] $rows
      */
-    public function getNextProductRow(array $rows): ?ProductRow
+    public function getNextSyncableRow(array $rows): ?AbstractRow
     {
         foreach ($rows as $index => $row) {
             //====================================================================//
@@ -113,8 +118,8 @@ class RowsUpdater
                 continue;
             }
             //====================================================================//
-            // This is a Product Row
-            if ($row instanceof ProductRow) {
+            // This is a Row Splash may write
+            if (($row instanceof ProductRow) || ($row instanceof CommentRow)) {
                 $this->rowsCursor = $index;
 
                 return $row;
@@ -128,22 +133,50 @@ class RowsUpdater
     /**
      * Check current Row if Suitable for Received Data
      */
-    public function updateRowClass(?ProductRow $row, array $rowData): ProductRow
+    public function updateRowClass(?AbstractRow $row, array $rowData): AbstractRow
     {
         //====================================================================//
-        // Detect if Simple or Catalog Row
-        $isSimple = empty($rowData["related"]);
+        // Comment Row: carries a text, and nothing else
+        if (RowTypes::isComment($rowData["rowType"] ?? null)) {
+            return ($row instanceof CommentRow) ? $row : new CommentRow();
+        }
+        //====================================================================//
+        // Stored row was a comment, received data is not: start over
+        $row = ($row instanceof ProductRow) ? $row : null;
+        //====================================================================//
+        // Related was not written: keep the stored row, so that its remote
+        // id survives a partial write of the document rows.
+        if ($row && !array_key_exists("related", $rowData)) {
+            return $row;
+        }
+
+        return $this->updateProductRowClass($row, $rowData);
+    }
+
+    /**
+     * Check current Product Row if Suitable for Received Data
+     */
+    public function updateProductRowClass(?ProductRow $row, array $rowData): ProductRow
+    {
         //====================================================================//
         // Should be a Single Row
-        if ($isSimple) {
+        if (empty($objectId = $rowData["related"] ?? null)) {
             return ($row instanceof SingleRow) ? $row : new SingleRow();
         }
         //====================================================================//
         // Should be a Catalog Row => Related Changed ?
-        $objectId = $rowData["related"] ?? null;
         if (($row instanceof CatalogRow) && ($objectId == $row->related?->toSplash())) {
             return $row;
         }
+
+        return $this->newProductRow((string) $objectId);
+    }
+
+    /**
+     * Build the Row Class matching a Catalog Product
+     */
+    public function newProductRow(string $objectId): ProductRow
+    {
         //====================================================================//
         // New product Not Found
         if (!$productData = $this->getProductInfos((string) ObjectsHelper::id($objectId))) {
@@ -152,18 +185,28 @@ class RowsUpdater
 
         //====================================================================//
         // New product Found
-        return match ($productData["type"]) {
-            "shipping" => new ShippingRow(),
-            "packaging" => new PackagingRow(),
-            default => new CatalogRow(),
-        };
+        return RowTypes::fromItemType($productData["type"] ?? null);
     }
 
     /**
      * Update Row Contents from received Splash Data
      */
-    public function updateScalarValues(ProductRow &$row, array $rowData): static
+    public function updateScalarValues(AbstractRow &$row, array $rowData): static
     {
+        //====================================================================//
+        // Comment Rows only store the received description
+        if ($row instanceof CommentRow) {
+            if (array_key_exists("description", $rowData)) {
+                $row->text = (string) $rowData["description"];
+            }
+
+            return $this;
+        }
+        //====================================================================//
+        // Safety Check - Other Rows are Product Rows
+        if (!$row instanceof ProductRow) {
+            return $this;
+        }
         //====================================================================//
         // Update of Simple Contents
         if (array_key_exists("reference", $rowData)) {

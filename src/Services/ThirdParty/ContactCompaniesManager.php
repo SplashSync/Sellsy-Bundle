@@ -13,14 +13,15 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Connectors\Sellsy\Services;
+namespace Splash\Connectors\Sellsy\Services\ThirdParty;
 
+use Splash\Connectors\Sellsy\Interfaces\SellsyConnectorAwareInterface;
 use Splash\Connectors\Sellsy\Models\Connector\SellsyConnectorAwareTrait;
 use Splash\Connectors\Sellsy\Models\Metadata\Contact;
 use Splash\Connectors\Sellsy\Models\Metadata\Contact\CompanyLink;
 use Splash\Core\Client\Splash;
 
-class ContactCompaniesManager
+class ContactCompaniesManager implements SellsyConnectorAwareInterface
 {
     use SellsyConnectorAwareTrait;
 

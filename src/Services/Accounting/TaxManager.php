@@ -13,17 +13,18 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Connectors\Sellsy\Services;
+namespace Splash\Connectors\Sellsy\Services\Accounting;
 
 use Exception;
 use Splash\Connectors\Sellsy\Connector\SellsyConnector;
+use Splash\Connectors\Sellsy\Interfaces\SellsyConnectorAwareInterface;
 use Splash\Connectors\Sellsy\Models\Connector\SellsyConnectorAwareTrait;
 use Splash\Core\Client\Splash;
 
 /**
  * Manage Sellsy Account Taxes
  */
-class TaxManager
+class TaxManager implements SellsyConnectorAwareInterface
 {
     use SellsyConnectorAwareTrait;
 

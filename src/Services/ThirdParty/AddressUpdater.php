@@ -13,8 +13,9 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Connectors\Sellsy\Services;
+namespace Splash\Connectors\Sellsy\Services\ThirdParty;
 
+use Splash\Connectors\Sellsy\Interfaces\SellsyConnectorAwareInterface;
 use Splash\Connectors\Sellsy\Models\Connector\SellsyConnectorAwareTrait;
 use Splash\Connectors\Sellsy\Models\Metadata\Address;
 use Splash\Connectors\Sellsy\Models\Metadata\Company;
@@ -24,7 +25,7 @@ use Splash\Core\Client\Splash;
 /**
  * Manage Updates of Companies Addresses
  */
-class AddressUpdater
+class AddressUpdater implements SellsyConnectorAwareInterface
 {
     use SellsyConnectorAwareTrait;
 

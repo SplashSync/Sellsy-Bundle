@@ -13,17 +13,18 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Connectors\Sellsy\Services\Invoice;
+namespace Splash\Connectors\Sellsy\Services\Accounting;
 
 use Exception;
-use Splash\Client\Splash;
 use Splash\Connectors\Sellsy\Connector\SellsyConnector;
+use Splash\Connectors\Sellsy\Interfaces\SellsyConnectorAwareInterface;
 use Splash\Connectors\Sellsy\Models\Connector\SellsyConnectorAwareTrait;
+use Splash\Core\Client\Splash;
 
 /**
  * Manage Sellsy Payment Methods
  */
-class PaymentMethodsManager
+class PaymentMethodsManager implements SellsyConnectorAwareInterface
 {
     use SellsyConnectorAwareTrait;
 
@@ -127,6 +128,45 @@ class PaymentMethodsManager
             ?? $this->findMethodByName($methodName)
             ?? $this->getDefaultMethodId()
         ;
+    }
+
+    /**
+     * Get All Payment Methods as Splash Field Choices
+     *
+     * Keyed by the label Splash exchanges, i.e. the association when one is
+     * configured, the Sellsy label otherwise.
+     *
+     * @return array<string, string>
+     */
+    public function getChoices(): array
+    {
+        $choices = array();
+        foreach (array_keys($this->methods) as $methodId) {
+            if (!$label = $this->getTranslatedLabel((int) $methodId)) {
+                continue;
+            }
+            $choices[$label] = $label;
+        }
+
+        return $choices;
+    }
+
+    /**
+     * Get All Sellsy Payment Methods, as stored on the Account
+     *
+     * @return array<string, array>
+     */
+    public function getMethods(): array
+    {
+        return $this->methods;
+    }
+
+    /**
+     * Get the Method used when Splash did not identify the received one
+     */
+    public function getDefaultMethodLabel(): ?string
+    {
+        return $this->getTranslatedLabel($this->default);
     }
 
     /**

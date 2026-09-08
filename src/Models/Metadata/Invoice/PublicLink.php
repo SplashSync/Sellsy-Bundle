@@ -15,8 +15,10 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Invoice;
 
-use JMS\Serializer\Annotation as JMS;
+use Splash\Core\Dictionary\SplFields;
 use Splash\Metadata\Attributes as SPL;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class PublicLink
@@ -29,9 +31,9 @@ class PublicLink
     #[
         Assert\NotNull,
         Assert\Type("bool"),
-        JMS\SerializedName("enabled"),
-        JMS\Type("bool"),
-        SPL\Field(type: SPL_T_BOOL, desc: "Is Public Link Enabled ?"),
+        Serializer\SerializedName("enabled"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::BOOL, desc: "Is Public Link Enabled ?"),
     ]
     public bool $enabled = false;
 
@@ -43,9 +45,9 @@ class PublicLink
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("url"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_URL, desc: "Public Link URL"),
+        Serializer\SerializedName("url"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::URL, desc: "Public Link URL"),
     ]
     public string $url = "";
 }

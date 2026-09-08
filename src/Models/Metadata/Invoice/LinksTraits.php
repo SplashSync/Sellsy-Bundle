@@ -15,8 +15,10 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Invoice;
 
-use JMS\Serializer\Annotation as JMS;
+use Splash\Core\Dictionary\SplFields;
 use Splash\Metadata\Attributes as SPL;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -26,11 +28,17 @@ trait LinksTraits
 {
     /**
      * Invoice's Public Link.
+     *
+     * @var null|PublicLink
      */
     #[
-        JMS\SerializedName("public_link"),
-        JMS\Groups(array("Read")),
-        SPL\Field(type: SPL_T_URL, desc: "Invoice Public Link", group: "Links"),
+        Serializer\SerializedName("public_link"),
+        Serializer\Groups(array(SplGroups::READ)),
+        SPL\Field(
+            type: SplFields::URL,
+            desc: "Invoice Public Link",
+            group: "Links"
+        ),
         SPL\IsReadOnly(),
     ]
     public ?PublicLink $publicLink = null;
@@ -40,10 +48,13 @@ trait LinksTraits
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("pdf_link"),
-        JMS\Type("string"),
-        JMS\Groups(array("Read")),
-        SPL\Field(type: SPL_T_URL, desc: "Invoice PDF Link", group: "Links"),
+        Serializer\SerializedName("pdf_link"),
+        Serializer\Groups(array(SplGroups::READ)),
+        SPL\Field(
+            type: SplFields::URL,
+            desc: "Invoice PDF Link",
+            group: "Links"
+        ),
         SPL\IsReadOnly(),
     ]
     public ?string $pdfLink = null;

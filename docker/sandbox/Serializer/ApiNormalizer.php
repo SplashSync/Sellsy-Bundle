@@ -51,14 +51,15 @@ final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface,
      */
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = array()): bool
     {
-        if ($this->decorated->supportsNormalization($data, $format, $context)) {
-            return true;
-        }
-        if ((self::FORMAT === $format) && ($data instanceof Paginator)) {
-            return true;
+        //====================================================================//
+        // A Paginator is a collection: only Sellsy ones are ours to reshape.
+        // Claiming the others would hand them to the item normalizer, which
+        // would then look for an "id" on the Paginator itself.
+        if ($data instanceof Paginator) {
+            return (self::FORMAT === $format) && self::isManagedObject($context["resource_class"] ?? "");
         }
 
-        return false;
+        return $this->decorated->supportsNormalization($data, $format, $context);
     }
 
     /**
@@ -78,10 +79,16 @@ final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface,
         //  Collection Normalizer
         if ($object instanceof Paginator) {
             $data = array();
-            $parent = $context["resource_class"];
-            /** @var SellsyObjectInterface $obj */
+            //====================================================================//
+            // The collection key comes from the resource class, not from its
+            // items: an empty collection has none, and used to be answered
+            // under its own class name.
+            $resourceClass = $context["resource_class"];
+            $parent = is_a($resourceClass, SellsyObjectInterface::class, true)
+                ? $resourceClass::getCollectionIndex()
+                : null
+            ;
             foreach ($object as $index => $obj) {
-                $parent = $obj::getCollectionIndex();
                 $data[$index] = $this->decorated->normalize($obj, $format, $context);
             }
 

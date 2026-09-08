@@ -15,8 +15,12 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Invoice;
 
-use JMS\Serializer\Annotation as JMS;
+use Splash\Core\Dictionary\SplFields;
 use Splash\Metadata\Attributes as SPL;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Splash\Templates\InvoiceFields;
+use Symfony\Component\Serializer\Attribute as Serializer;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 trait DatesTrait
@@ -27,34 +31,25 @@ trait DatesTrait
     #[
         Assert\NotNull,
         Assert\Type("date"),
-        JMS\SerializedName("date"),
-        JMS\Type("DateTime<'Y-m-d'>"),
-        JMS\Groups(array("Read", "Write", "Required")),
-        SPL\Field(type: SPL_T_DATE, desc: "Date of the invoice"),
+        Serializer\SerializedName("date"),
+        Serializer\Context(array(DateTimeNormalizer::FORMAT_KEY => "Y-m-d")),
+        Serializer\Groups(array(SplGroups::READ, SplGroups::WRITE, SplGroups::LIST, SplGroups::REQUIRED)),
+        SPL\Template(InvoiceFields::DATE),
         SPL\IsRequired,
     ]
     public \DateTime $date;
 
-    //    /**
-    //     * Invoice's shipping date.
-    //     */
-    //    #[
-    //        Assert\Type("string<string>"),
-    //        JMS\SerializedName("shipping_date"),
-    //        JMS\Type("string<date>"),
-    //        SPL\Field(type: SPL_T_DATE, desc: "Shipping Date of the invoice"),
-    //    ]
-    //    public ?string $shippingDate = null;
-    //
-    //    /**
-    //     * Invoice's due date.
-    //     */
-    //    #[
-    //        Assert\NotNull,
-    //        Assert\Type("date"),
-    //        JMS\SerializedName("due_date"),
-    //        JMS\Type("string<date>"),
-    //        SPL\Field(type: SPL_T_DATE, desc: "Due Date of the invoice"),
-    //    ]
-    //    public string $dueDate = "";
+    /**
+     * Invoice's due date.
+     */
+    #[
+        Assert\NotNull,
+        Assert\Type("date"),
+        Serializer\SerializedName("due_date"),
+        Serializer\Context(array(DateTimeNormalizer::FORMAT_KEY => "Y-m-d")),
+        SPL\Field(type: SplFields::DATE, desc: "Due Date of the invoice"),
+        SPL\Microdata("http://schema.org/Invoice", "paymentDueDate"),
+        SPL\Template(InvoiceFields::DATE_DUE),
+    ]
+    public string $dueDate = "";
 }

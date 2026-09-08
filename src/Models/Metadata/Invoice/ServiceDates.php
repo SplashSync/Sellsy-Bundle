@@ -15,8 +15,11 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Invoice;
 
-use JMS\Serializer\Annotation as JMS;
+use Splash\Core\Dictionary\SplFields;
 use Splash\Metadata\Attributes as SPL;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Symfony\Component\Serializer\Attribute as Serializer;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class ServiceDates
@@ -29,9 +32,10 @@ class ServiceDates
     #[
         Assert\NotNull,
         Assert\Type("date"),
-        JMS\SerializedName("start"),
-        JMS\Type("date"),
-        SPL\Field(type: SPL_T_DATE, desc: "Service Start Date"),
+        Serializer\SerializedName("start"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        Serializer\Context(array(DateTimeNormalizer::FORMAT_KEY => "Y-m-d")),
+        SPL\Field(type: SplFields::DATE, desc: "Service Start Date"),
     ]
     public string $start = "";
 
@@ -43,9 +47,10 @@ class ServiceDates
     #[
         Assert\NotNull,
         Assert\Type("date"),
-        JMS\SerializedName("end"),
-        JMS\Type("date"),
-        SPL\Field(type: SPL_T_DATE, desc: "Service End Date"),
+        Serializer\SerializedName("end"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        Serializer\Context(array(DateTimeNormalizer::FORMAT_KEY => "Y-m-d")),
+        SPL\Field(type: SplFields::DATE, desc: "Service End Date"),
     ]
     public string $end = "";
 }

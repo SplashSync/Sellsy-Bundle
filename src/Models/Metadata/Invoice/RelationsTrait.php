@@ -15,11 +15,13 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Invoice;
 
-use JMS\Serializer\Annotation as JMS;
-use Splash\Client\Splash;
 use Splash\Connectors\Sellsy\Models\Metadata\Common\Relation;
+use Splash\Core\Client\Splash;
+use Splash\Core\Helpers\ObjectsHelper;
 use Splash\Metadata\Attributes as SPL;
-use Splash\Models\Helpers\ObjectsHelper;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Splash\Templates\InvoiceFields;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 trait RelationsTrait
@@ -29,9 +31,8 @@ trait RelationsTrait
      */
     #[
         Assert\Type("array"),
-        JMS\SerializedName("related"),
-        JMS\Groups(array("Read", "Write", "Required")),
-        JMS\Type("array<".Relation::class.">"),
+        Serializer\SerializedName("related"),
+        Serializer\Groups(array(SplGroups::READ, SplGroups::WRITE, SplGroups::REQUIRED)),
     ]
     public array $related = array();
 
@@ -40,19 +41,16 @@ trait RelationsTrait
      */
     #[
         Assert\Type("array"),
-        JMS\SerializedName("amounts"),
-        JMS\Groups(array("Read")),
-        JMS\Type(Amounts::class),
+        Serializer\SerializedName("amounts"),
+        Serializer\Groups(array(SplGroups::READ)),
         SPL\SubResource(Amounts::class, write: false)
     ]
     public Amounts $amounts;
 
     #[
-        SPL\Field(
-            type: SPL_T_ID.IDSPLIT."ThirdParty",
-            desc: "Invoice Customer Company"
-        ),
-        SPL\IsRequired
+        Serializer\Ignore,
+        SPL\Template(InvoiceFields::THIRD_PARTY),
+        SPL\IsRequired,
     ]
     public ?string $customer = null;
 
@@ -65,7 +63,7 @@ trait RelationsTrait
 
         //====================================================================//
         // Identify First Company
-        foreach ($this->related ?? array() as $related) {
+        foreach ($this->related as $related) {
             if ("company" === $related->type) {
                 $relation = $related;
 
@@ -110,7 +108,6 @@ trait RelationsTrait
         return $this;
     }
 
-    #[JMS\PostDeserialize()]
     public function setPostDeserialize(): void
     {
         if (!empty($this->customer)) {

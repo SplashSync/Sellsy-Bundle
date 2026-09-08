@@ -15,39 +15,67 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Invoice;
 
-use JMS\Serializer\Annotation as JMS;
-use Splash\Client\Splash;
 use Splash\Connectors\Sellsy\Dictionary\InvoiceStatus;
+use Splash\Core\Client\Splash;
+use Splash\Core\Dictionary\Objects\Invoice\Status as SplashStatus;
 use Splash\Metadata\Attributes as SPL;
-use Splash\Models\Objects\Invoice\Status as SplashStatus;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Splash\Templates\Invoice\InvoiceStatusFields;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 trait StatusTrait
 {
+    /**
+     * Sellsy Invoice Status
+     *
+     * Read only on the Api side: Sellsy owns this value, and status changes
+     * go through its own transition endpoints, never through the invoice PUT.
+     *
+     * Splash sees it through the standard Status field template, converted
+     * by the accessors below, and restricted to the statuses Sellsy supports.
+     *
+     * @var string
+     */
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("status"),
-        JMS\Type("string"),
-        JMS\Groups(array("Read", "List", "Write")),
-        SPL\Field(desc: "Third Party Id"),
-        SPL\Flags(listed: true),
+        Serializer\SerializedName("status"),
+        Serializer\Groups(array(SplGroups::READ, SplGroups::LIST)),
+        SPL\Template(InvoiceStatusFields::STATUS),
         SPL\Choices(InvoiceStatus::CHOICES),
+        SPL\Accessor(getter: "getSplashStatus", setter: "setSplashStatus"),
+        SPL\Flags(listed: true),
         SPL\IsNotTested,
     ]
     public string $status;
 
     /**
-     * Original Invoice Status
+     * Invoice Status, as read from Sellsy, before any local transition
      */
     private ?string $originalStatus = null;
 
+    //====================================================================//
+    // SPLASH STATUS ACCESSORS
+    //====================================================================//
+
     /**
-     * Get Invoice Splash Status
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * Get Invoice Status, as a Splash Status
      */
-    public function setStatus(?string $status): bool
+    public function getSplashStatus(): string
+    {
+        return InvoiceStatus::toSplash($this->status);
+    }
+
+    /**
+     * Set Invoice Status from a Splash Status
+     *
+     * Only transitions Sellsy accepts are applied: a validated invoice that
+     * already carries payments never goes back to draft or cancelled.
+     *
+     * @SuppressWarnings(CyclomaticComplexity)
+     */
+    public function setSplashStatus(?string $status): bool
     {
         //====================================================================//
         // Empty Status => Do Nothing
@@ -56,29 +84,25 @@ trait StatusTrait
         }
         //====================================================================//
         // Invoice is Cancelled
-        if (SplashStatus::isCanceled($status)) {
-            if (InvoiceStatus::CANCELLED != $this->status) {
-                if ($this->isValidatedWithPayments()) {
-                    return false;
-                }
-                $this->originalStatus = null;
-                $this->status = InvoiceStatus::CANCELLED;
-
-                return true;
+        if (SplashStatus::isCanceled($status) && (InvoiceStatus::CANCELLED != $this->status)) {
+            if ($this->isValidatedWithPayments()) {
+                return false;
             }
+            $this->originalStatus = null;
+            $this->status = InvoiceStatus::CANCELLED;
+
+            return true;
         }
         //====================================================================//
         // Invoice is Draft
-        if (SplashStatus::isDraft($status)) {
-            if (InvoiceStatus::DRAFT != $this->status) {
-                if ($this->isValidatedWithPayments()) {
-                    return false;
-                }
-                $this->originalStatus = null;
-                $this->status = InvoiceStatus::DRAFT;
-
-                return true;
+        if (SplashStatus::isDraft($status) && (InvoiceStatus::DRAFT != $this->status)) {
+            if ($this->isValidatedWithPayments()) {
+                return false;
             }
+            $this->originalStatus = null;
+            $this->status = InvoiceStatus::DRAFT;
+
+            return true;
         }
         //====================================================================//
         // Invoice is Validated
@@ -95,13 +119,9 @@ trait StatusTrait
         return false;
     }
 
-    /**
-     * Get Invoice Splash Status
-     */
-    public function getStatus(): string
-    {
-        return InvoiceStatus::toSplash($this->status);
-    }
+    //====================================================================//
+    // STATUS BASED RULES
+    //====================================================================//
 
     /**
      * Check if Document is Editable
@@ -125,8 +145,12 @@ trait StatusTrait
         ;
     }
 
+    //====================================================================//
+    // PRIVATE METHODS
+    //====================================================================//
+
     /**
-     * Check if Payments are Editable
+     * Check if Invoice is Validated and already carries Payments
      */
     private function isValidatedWithPayments(): bool
     {

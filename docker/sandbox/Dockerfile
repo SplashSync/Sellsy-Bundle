@@ -39,6 +39,7 @@ ENV OAUTH2_CLIENT_REDIRECT_URI=http://toolkit.sellsy.local/ws/sellsy
 
 ################################################################################
 # Copy Sellsy Api Definitions
+COPY ApiPlatform/ /app/src/ApiPlatform/
 COPY Entity/ /app/src/Entity/
 COPY Controller/ /app/src/Controller/
 COPY Serializer/ /app/src/Serializer/

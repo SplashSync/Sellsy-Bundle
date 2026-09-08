@@ -35,6 +35,7 @@ services:
         hostname:           sandbox.sellsy.local
         tty:                true
         volumes:
+            - '${PWD}/docker/sandbox/ApiPlatform/:/app/src/ApiPlatform/:ro'
             - '${PWD}/docker/sandbox/Entity/:/app/src/Entity/:ro'
             - '${PWD}/docker/sandbox/Controller/:/app/src/Controller/:ro'
             - '${PWD}/docker/sandbox/Serializer/:/app/src/Serializer/:ro'

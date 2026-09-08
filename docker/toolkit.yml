@@ -36,8 +36,13 @@ services:
             - '${PWD}/src/:/app/connectors/Sellsy/:ro'
             # Push Bridge Connector
             - '${PWD}/dist/:/app/bridges/:ro'
+            # Keep Connectors Settings & Oauth2 Tokens across image updates
+            - 'toolkit-var:/app/var'
         env_file:           ${PWD}/.env
         tty:                true
         networks:
             sellsy:         { ipv4_address: 172.118.0.100, aliases: [ toolkit.sellsy.local ] }
             splashsync:     { aliases: [ toolkit.sellsy.local ] }
+
+volumes:
+    toolkit-var:

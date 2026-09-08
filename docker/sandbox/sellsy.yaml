@@ -12,6 +12,12 @@ api_platform:
     defaults:
         pagination_client_items_per_page:           true
         pagination_items_per_page_parameter_name:   limit
+        ################################################################
+        # Sellsy PUT keeps the values that are not sent: deserialize on
+        # top of the stored item instead of replacing it, as Api Platform
+        # standard PUT would do.
+        extra_properties:
+            standard_put:                           false
 
     ########################################################################
     # Api Platform 4 syntax: api_keys is a map, each entry needs its own key
@@ -36,3 +42,10 @@ services:
         decorates: 'api_platform.serializer.normalizer.item'
         arguments:
             $decorated: '@App\Serializer\ApiNormalizer.inner'
+
+    ########################################################################
+    # Merge Sales Documents Rows on Write
+    App\Serializer\RowDenormalizer:
+        autowire:   true
+        tags:
+            - { name: 'serializer.normalizer', priority: 100 }

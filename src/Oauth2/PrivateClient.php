@@ -16,9 +16,9 @@
 namespace Splash\Connectors\Sellsy\Oauth2;
 
 use League\OAuth2\Client\Token\AccessToken;
-use Splash\Connectors\Sellsy\Dictionary\ApiScopes;
 use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
 use Psr\Http\Message\ResponseInterface;
+use Splash\Connectors\Sellsy\Dictionary\ApiScopes;
 use Splash\Security\Oauth2\Models\ConfigurableProvider;
 
 /**

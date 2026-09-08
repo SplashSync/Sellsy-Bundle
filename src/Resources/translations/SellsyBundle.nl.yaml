@@ -1,0 +1,48 @@
+profile:
+    connection:
+        title:              "API-verbinding"
+    card:
+        title:              "Sellsy API V2"
+        label:              "Verbind uw Sellsy-account om uw gegevens met Splash te synchroniseren"
+
+admin:
+    payments:
+        methods:
+            default:
+                title:      "Standaard betaalmethode"
+                help:       "Deze methode wordt gebruikt als Splash de ontvangen methode niet kon herkennen"
+            associations:
+                title:      "Koppelingen van betaalmethoden"
+                help:       "Koppel de betaalmethoden om ontvangen facturen te verwerken"
+
+    scopes:
+        title:              "API-rechten"
+        valid:              "Alle door Splash vereiste rechten zijn beschikbaar op uw Sellsy-account"
+        invalid:            "Sommige door Splash vereiste rechten ontbreken, de synchronisatie blijft onvolledig"
+        required:           "Vereist door Splash"
+        missing:            "Ontbreken op uw account"
+        none:               "Geen ontbrekende rechten"
+
+    accounting:
+        title:              "Boekhoudinstellingen"
+        id:                 "Id"
+        code:               "Code"
+        name:               "Naam"
+        rate:               "Tarief"
+        empty:              "Hier is nog niets, verbind uw account opnieuw"
+        methods:
+            title:          "Betaalmethoden"
+        taxes:
+            title:          "Btw-tarieven"
+
+    webhooks:
+        title:              "Webhooks"
+        valid:              "Alle door Splash vereiste webhooks zijn geïnstalleerd op uw Sellsy-account"
+        invalid:            "Sommige webhooks ontbreken, wijzigingen in Sellsy bereiken Splash mogelijk niet"
+        name:               "Naam"
+        endpoint:           "Adres"
+        empty:              "Nog geen webhook geïnstalleerd"
+        setup:
+            title:          "Webhook-configuratie"
+            ok:             "Webhooks ingesteld"
+            fail:           "Webhook-configuratie mislukt, probeer opnieuw of neem contact op met uw beheerder"

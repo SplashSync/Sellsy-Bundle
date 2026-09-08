@@ -1,0 +1,48 @@
+profile:
+    connection:
+        title:              "Conexión a la API"
+    card:
+        title:              "API Sellsy V2"
+        label:              "Conecte su cuenta Sellsy para sincronizar sus datos con Splash"
+
+admin:
+    payments:
+        methods:
+            default:
+                title:      "Método de pago por defecto"
+                help:       "Este método se usará si Splash no ha podido identificar el recibido"
+            associations:
+                title:      "Asociaciones de métodos de pago"
+                help:       "Asocie los métodos de pago para interpretar las facturas recibidas"
+
+    scopes:
+        title:              "Permisos de la API"
+        valid:              "Todos los permisos requeridos por Splash están disponibles en su cuenta Sellsy"
+        invalid:            "Faltan algunos permisos requeridos por Splash, la sincronización será parcial"
+        required:           "Requeridos por Splash"
+        missing:            "Faltan en su cuenta"
+        none:               "Ningún permiso falta"
+
+    accounting:
+        title:              "Ajustes contables"
+        id:                 "Id"
+        code:               "Código"
+        name:               "Nombre"
+        rate:               "Tasa"
+        empty:              "Aún no hay nada aquí, vuelva a conectar su cuenta"
+        methods:
+            title:          "Métodos de pago"
+        taxes:
+            title:          "Tipos de IVA"
+
+    webhooks:
+        title:              "Webhooks"
+        valid:              "Todos los webhooks requeridos por Splash están instalados en su cuenta Sellsy"
+        invalid:            "Faltan algunos webhooks, los cambios hechos en Sellsy pueden no llegar a Splash"
+        name:               "Nombre"
+        endpoint:           "Dirección"
+        empty:              "Ningún webhook instalado"
+        setup:
+            title:          "Configuración de webhooks"
+            ok:             "Webhooks configurados"
+            fail:           "Error en la configuración de webhooks, inténtelo de nuevo o contacte con su administrador"

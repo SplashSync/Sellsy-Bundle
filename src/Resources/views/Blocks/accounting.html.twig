@@ -1,0 +1,56 @@
+{% trans_default_domain "SellsyBundle" %}
+
+<div class="row">
+    {# Account Payment Methods #}
+    <div class="col-md-6">
+        <h5>{{ 'admin.accounting.methods.title'|trans }}</h5>
+        <table class="table table-sm table-condensed table-striped">
+            <thead>
+                <tr>
+                    <th>{{ 'admin.accounting.id'|trans }}</th>
+                    <th>{{ 'admin.accounting.name'|trans }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for method in connector.locator.paymentMethodsManager.methods %}
+                    <tr>
+                        <td><code>{{ method.id }}</code></td>
+                        <td>{{ method.label ?? '-' }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="2" class="text-muted">{{ 'admin.accounting.empty'|trans }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {# Account Vat Rates #}
+    <div class="col-md-6">
+        <h5>{{ 'admin.accounting.taxes.title'|trans }}</h5>
+        <table class="table table-sm table-condensed table-striped">
+            <thead>
+                <tr>
+                    <th>{{ 'admin.accounting.id'|trans }}</th>
+                    <th>{{ 'admin.accounting.code'|trans }}</th>
+                    <th>{{ 'admin.accounting.name'|trans }}</th>
+                    <th class="text-right text-end">{{ 'admin.accounting.rate'|trans }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tax in connector.locator.taxManager.taxes %}
+                    <tr class="{{ tax.is_active ?? true ? '' : 'text-muted' }}">
+                        <td><code>{{ tax.id }}</code></td>
+                        <td>{{ tax.label ?? '-' }}</td>
+                        <td>{{ tax.system_label ?? tax.category ?? '-' }}</td>
+                        <td class="text-right text-end">{{ tax.rate }} %</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4" class="text-muted">{{ 'admin.accounting.empty'|trans }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

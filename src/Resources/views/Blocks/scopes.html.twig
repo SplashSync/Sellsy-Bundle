@@ -1,0 +1,47 @@
+{% trans_default_domain "SellsyBundle" %}
+
+{% set scopesManager = connector.locator.scopesManager %}
+{% set missing = scopesManager.missingScopes %}
+
+{# Connector Requirements #}
+{% if valid|default(missing is empty) %}
+    <h4 class="font-md">
+        <i class="fa fa-check text-success"></i>&nbsp;{{ 'admin.scopes.valid'|trans }}
+    </h4>
+{% else %}
+    <h4 class="font-md">
+        <i class="fa fa-times text-danger"></i>&nbsp;{{ 'admin.scopes.invalid'|trans }}
+    </h4>
+{% endif %}
+
+<div class="row">
+    {# Scopes Required by the Connector #}
+    <div class="col-md-6">
+        <h5>{{ 'admin.scopes.required'|trans }}</h5>
+        <ul class="list-unstyled">
+            {% for scope in scopesManager.requiredScopes %}
+                <li class="{{ scope in missing ? 'text-danger' : 'text-success' }}">
+                    <i class="fa fa-fw {{ scope in missing ? 'fa-times' : 'fa-check' }}"></i>
+                    <code>{{ scope }}</code>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {# Scopes the Account does NOT grant #}
+    <div class="col-md-6">
+        <h5>{{ 'admin.scopes.missing'|trans }}</h5>
+        <ul class="list-unstyled">
+            {% for scope in missing %}
+                <li class="text-danger">
+                    <i class="fa fa-fw fa-times"></i>
+                    <code>{{ scope }}</code>
+                </li>
+            {% else %}
+                <li class="text-muted">
+                    <i class="fa fa-fw fa-check"></i>
+                    {{ 'admin.scopes.none'|trans }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>

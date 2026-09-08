@@ -1,0 +1,48 @@
+profile:
+    connection:
+        title:              "Connessione all'API"
+    card:
+        title:              "API Sellsy V2"
+        label:              "Collega il tuo account Sellsy per sincronizzare i tuoi dati con Splash"
+
+admin:
+    payments:
+        methods:
+            default:
+                title:      "Metodo di pagamento predefinito"
+                help:       "Questo metodo sarà usato se Splash non ha riconosciuto quello ricevuto"
+            associations:
+                title:      "Associazioni dei metodi di pagamento"
+                help:       "Associa i metodi di pagamento per interpretare le fatture ricevute"
+
+    scopes:
+        title:              "Autorizzazioni API"
+        valid:              "Tutte le autorizzazioni richieste da Splash sono disponibili sul tuo account Sellsy"
+        invalid:            "Mancano alcune autorizzazioni richieste da Splash, la sincronizzazione sarà parziale"
+        required:           "Richieste da Splash"
+        missing:            "Mancanti sul tuo account"
+        none:               "Nessuna autorizzazione mancante"
+
+    accounting:
+        title:              "Impostazioni contabili"
+        id:                 "Id"
+        code:               "Codice"
+        name:               "Nome"
+        rate:               "Aliquota"
+        empty:              "Ancora niente qui, ricollega il tuo account"
+        methods:
+            title:          "Metodi di pagamento"
+        taxes:
+            title:          "Aliquote IVA"
+
+    webhooks:
+        title:              "Webhooks"
+        valid:              "Tutti i webhook richiesti da Splash sono installati sul tuo account Sellsy"
+        invalid:            "Mancano alcuni webhook, le modifiche fatte su Sellsy potrebbero non raggiungere Splash"
+        name:               "Nome"
+        endpoint:           "Indirizzo"
+        empty:              "Nessun webhook installato"
+        setup:
+            title:          "Configurazione dei webhook"
+            ok:             "Webhook configurati"
+            fail:           "Configurazione dei webhook non riuscita, riprova o contatta il tuo amministratore"

@@ -1,0 +1,46 @@
+{% trans_default_domain "SellsyBundle" %}
+
+{# Webhooks Requirements #}
+{% if valid|default(false) %}
+    <h4 class="font-md">
+        <i class="fa fa-check text-success"></i>&nbsp;{{ 'admin.webhooks.valid'|trans }}
+    </h4>
+{% else %}
+    <h4 class="font-md">
+        <i class="fa fa-times text-danger"></i>&nbsp;{{ 'admin.webhooks.invalid'|trans }}
+    </h4>
+{% endif %}
+
+{# Installed Webhooks #}
+<table class="table table-sm table-condensed table-striped">
+    <thead>
+        <tr>
+            <th>{{ 'admin.webhooks.name'|trans }}</th>
+            <th>{{ 'admin.webhooks.endpoint'|trans }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for webhook in connector.locator.webhooksManager.installedWebhooks %}
+            <tr>
+                <td>{{ webhook.name ?? '-' }}</td>
+                <td class="text-break"><small>{{ webhook.endpoint ?? webhook.url ?? '-' }}</small></td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="2" class="text-muted">{{ 'admin.webhooks.empty'|trans }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a
+    id="node-webhooks-btn" class="btn btn-lg btn-block btn-primary text-center d-block w-100"
+    href="{{ path('splash_connector_secured_action', {
+        "connectorName" :   connector.profile.name,
+        "webserviceId" :    connector.WebserviceId,
+        "action" :          "webhooks"
+    }) }}"
+>
+    <i class="fa fa-refresh"></i>
+    {{ 'admin.webhooks.setup.title' | trans }}
+</a>

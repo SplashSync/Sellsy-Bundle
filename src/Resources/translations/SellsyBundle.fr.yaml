@@ -1,0 +1,48 @@
+profile:
+    connection:
+        title:              "Connexion à l'API"
+    card:
+        title:              "API Sellsy V2"
+        label:              "Connectez votre compte Sellsy pour synchroniser vos données avec Splash"
+
+admin:
+    payments:
+        methods:
+            default:
+                title:      "Moyen de paiement par défaut"
+                help:       "Ce moyen sera utilisé si Splash n'a pas su identifier celui reçu"
+            associations:
+                title:      "Associations des moyens de paiement"
+                help:       "Associez les moyens de paiement pour interpréter les factures reçues"
+
+    scopes:
+        title:              "Autorisations de l'API"
+        valid:              "Toutes les autorisations requises par Splash sont disponibles sur votre compte Sellsy"
+        invalid:            "Certaines autorisations requises par Splash manquent, la synchronisation sera partielle"
+        required:           "Requises par Splash"
+        missing:            "Manquantes sur votre compte"
+        none:               "Aucune autorisation manquante"
+
+    accounting:
+        title:              "Paramètres comptables"
+        id:                 "Id"
+        code:               "Code"
+        name:               "Nom"
+        rate:               "Taux"
+        empty:              "Rien ici pour le moment, veuillez reconnecter votre compte"
+        methods:
+            title:          "Moyens de paiement"
+        taxes:
+            title:          "Taux de TVA"
+
+    webhooks:
+        title:              "Webhooks"
+        valid:              "Tous les webhooks requis par Splash sont installés sur votre compte Sellsy"
+        invalid:            "Certains webhooks manquent, les modifications faites dans Sellsy peuvent ne pas parvenir à Splash"
+        name:               "Nom"
+        endpoint:           "Adresse"
+        empty:              "Aucun webhook installé"
+        setup:
+            title:          "Configuration des webhooks"
+            ok:             "Webhooks configurés"
+            fail:           "Échec de la configuration des webhooks, réessayez ou contactez votre administrateur"

@@ -1,47 +1,84 @@
-{% trans_default_domain "ShopifyBundle" %}
+{% trans_default_domain "SellsyBundle" %}
 
 {% set selfTest = connector.selfTest %}
 {% set connect = connector.connect %}
 
-
+{# Blocks States, resolved once: each one hits the Api #}
+{% set scopesValid = connector.locator.scopesManager.hasRequiredScopes %}
+{% set accountingValid = connector.locator.taxManager.taxes is not empty %}
+{% set webhooksValid = connector.locator.webhooksManager.verifyWebHooks %}
 
 {% include "@SplashOauth2/Profile/connected.html.twig"  %}
 
 <div class="panel-group" id="accordion">
 
-{#    <!-- Available OAuth2 Scopes Block -->#}
-{#    <div class="panel panel-default card">#}
-{#        <div class="panel-heading card-header collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false">#}
-{#            <h3 class="panel-title card-title text-primary">#}
-{#                <i class="fa fa-fw fa-key"></i>#}
-{#                {{ 'admin.scopes.title'|trans }}#}
-{#            </h3>#}
-{#        </div>#}
-{#        <div id="collapseOne" class="panel-collapse collapse" aria-expanded="false">#}
-{#            <div class="panel-body card-body">#}
-{#                {% include '@Shopify/Blocks/scopes.html.twig'  %}#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
-{#    <!-- End Available OAuth2 Scopes Block -->#}
+    <!-- Api Scopes Block -->
+    <div class="panel card {{ scopesValid ? 'panel-default' : 'panel-danger border-danger' }}">
+        <div
+                class="panel-heading card-header collapsed"
+                data-toggle="collapse"  data-bs-toggle="collapse"
+                data-parent="#accordion" data-bs-parent="#accordion"
+                href="#collapseScopes"
+                data-target="#collapseScopes" data-bs-target="#collapseScopes"
+                aria-expanded="false"
+        >
+            <h3 class="panel-title card-title {{ scopesValid ? 'text-primary' : 'text-danger' }}">
+                <i class="fa fa-fw fa-key"></i>
+                {{ 'admin.scopes.title'|trans }}
+            </h3>
+        </div>
+        <div id="collapseScopes" class="panel-collapse collapse" aria-expanded="false">
+            <div class="panel-body card-body">
+                {% include '@Sellsy/Blocks/scopes.html.twig' with { 'valid': scopesValid } %}
+            </div>
+        </div>
+    </div>
+    <!-- End Api Scopes Block -->
 
-{#    <!-- Server Description Block -->#}
-{#    <div class="panel panel-default card">#}
-{#        <div class="panel-heading card-header" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true">#}
-{#            <h3 class="panel-title card-title text-primary">#}
-{#                <i class="fa fa-fw fa-info-circle"></i>#}
-{#                {{ 'admin.description.title'|trans }}#}
-{#            </h3>#}
-{#        </div>#}
-{#        <div id="collapseTwo" class="panel-collapse collapse show" aria-expanded="true">#}
-{#            <div class="panel-body card-body">#}
-{#                {% include '@Shopify/Blocks/features.html.twig'  %}#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
-{#    <!-- End Server Description Block -->#}
+    <!-- Accounting Settings Block -->
+    <div class="panel card {{ accountingValid ? 'panel-default' : 'panel-danger border-danger' }}">
+        <div
+                class="panel-heading card-header collapsed"
+                data-toggle="collapse"  data-bs-toggle="collapse"
+                data-parent="#accordion" data-bs-parent="#accordion"
+                href="#collapseAccounting"
+                data-target="#collapseAccounting" data-bs-target="#collapseAccounting"
+                aria-expanded="false"
+        >
+            <h3 class="panel-title card-title {{ accountingValid ? 'text-primary' : 'text-danger' }}">
+                <i class="fa fa-fw fa-calculator"></i>
+                {{ 'admin.accounting.title'|trans }}
+            </h3>
+        </div>
+        <div id="collapseAccounting" class="panel-collapse collapse" aria-expanded="false">
+            <div class="panel-body card-body">
+                {% include '@Sellsy/Blocks/accounting.html.twig'  %}
+            </div>
+        </div>
+    </div>
+    <!-- End Accounting Settings Block -->
 
+    <!-- Webhooks Configuration Block -->
+    <div class="panel card {{ webhooksValid ? 'panel-default' : 'panel-danger border-danger' }}">
+        <div
+                class="panel-heading card-header collapsed"
+                data-toggle="collapse"  data-bs-toggle="collapse"
+                data-parent="#accordion" data-bs-parent="#accordion"
+                href="#collapseWebhooks"
+                data-target="#collapseWebhooks" data-bs-target="#collapseWebhooks"
+                aria-expanded="false"
+        >
+            <h3 class="panel-title card-title {{ webhooksValid ? 'text-primary' : 'text-danger' }}">
+                <i class="fa fa-fw fa-rss"></i>
+                {{ 'admin.webhooks.title'|trans }}
+            </h3>
+        </div>
+        <div id="collapseWebhooks" class="panel-collapse collapse" aria-expanded="false">
+            <div class="panel-body card-body">
+                {% include '@Sellsy/Blocks/webhooks.html.twig' with { 'valid': webhooksValid } %}
+            </div>
+        </div>
+    </div>
+    <!-- End Webhooks Configuration Block -->
 
 </div>
-
-{% include '@Sellsy/Blocks/actions.html.twig'  %}

@@ -1,0 +1,48 @@
+profile:
+    connection:
+        title:              "API-Verbindung"
+    card:
+        title:              "Sellsy API V2"
+        label:              "Verbinden Sie Ihr Sellsy-Konto, um Ihre Daten mit Splash zu synchronisieren"
+
+admin:
+    payments:
+        methods:
+            default:
+                title:      "Standard-Zahlungsart"
+                help:       "Diese Zahlungsart wird verwendet, wenn Splash die empfangene nicht erkennen konnte"
+            associations:
+                title:      "Zuordnung der Zahlungsarten"
+                help:       "Ordnen Sie die Zahlungsarten zu, um empfangene Rechnungen auszuwerten"
+
+    scopes:
+        title:              "API-Berechtigungen"
+        valid:              "Alle von Splash benötigten Berechtigungen sind in Ihrem Sellsy-Konto verfügbar"
+        invalid:            "Einige von Splash benötigte Berechtigungen fehlen, die Synchronisierung bleibt unvollständig"
+        required:           "Von Splash benötigt"
+        missing:            "In Ihrem Konto fehlend"
+        none:               "Keine fehlende Berechtigung"
+
+    accounting:
+        title:              "Buchhaltungseinstellungen"
+        id:                 "Id"
+        code:               "Code"
+        name:               "Name"
+        rate:               "Satz"
+        empty:              "Hier ist noch nichts, bitte verbinden Sie Ihr Konto erneut"
+        methods:
+            title:          "Zahlungsarten"
+        taxes:
+            title:          "Mehrwertsteuersätze"
+
+    webhooks:
+        title:              "Webhooks"
+        valid:              "Alle von Splash benötigten Webhooks sind in Ihrem Sellsy-Konto installiert"
+        invalid:            "Einige Webhooks fehlen, Änderungen in Sellsy erreichen Splash möglicherweise nicht"
+        name:               "Name"
+        endpoint:           "Adresse"
+        empty:              "Noch kein Webhook installiert"
+        setup:
+            title:          "Webhook-Konfiguration"
+            ok:             "Webhooks eingerichtet"
+            fail:           "Webhook-Einrichtung fehlgeschlagen, bitte erneut versuchen oder Ihren Administrator kontaktieren"

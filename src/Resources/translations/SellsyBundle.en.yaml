@@ -1,3 +1,9 @@
+profile:
+    connection:
+        title:              "Api Connection"
+    card:
+        title:              "Sellsy API V2"
+        label:              "Connect your Sellsy account to sync all your business data with Splash"
 
 admin:
     payments:
@@ -9,8 +15,34 @@ admin:
                 title:      "Payment Method Associations"
                 help:       "Associate payment method in order to parse received invoices"
 
+    scopes:
+        title:              "Api Access Scopes"
+        valid:              "All the scopes required by Splash are available on your Sellsy account"
+        invalid:            "Some scopes required by Splash are missing, synchronization will be partial"
+        required:           "Required by Splash"
+        missing:            "Missing on your account"
+        none:               "No missing scope"
+
+    accounting:
+        title:              "Accounting Settings"
+        id:                 "Id"
+        code:               "Code"
+        name:               "Name"
+        rate:               "Rate"
+        empty:              "Nothing here yet, please reconnect your account"
+        methods:
+            title:          "Payment Methods"
+        taxes:
+            title:          "Vat Rates"
+
     webhooks:
+        title:              "Webhooks"
+        valid:              "All the webhooks required by Splash are installed on your Sellsy account"
+        invalid:            "Some webhooks are missing, changes made on Sellsy may not reach Splash"
+        name:               "Name"
+        endpoint:           "Endpoint"
+        empty:              "No webhook installed yet"
         setup:
-            title:  "Webhooks Configuration"
-            ok:     "Webhooks Setup Done"
-            fail:   "Webhooks Setup fail, please try again or contact your administrator"
+            title:          "Webhooks Configuration"
+            ok:             "Webhooks Setup Done"
+            fail:           "Webhooks Setup fail, please try again or contact your administrator"

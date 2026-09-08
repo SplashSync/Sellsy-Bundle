@@ -32,7 +32,7 @@ trait DatesTrait
         Assert\NotNull,
         Assert\Type("date"),
         Serializer\SerializedName("date"),
-        Serializer\Context(array(DateTimeNormalizer::FORMAT_KEY => "Y-m-d")),
+        Serializer\Context(normalizationContext: array(DateTimeNormalizer::FORMAT_KEY => "Y-m-d")),
         Serializer\Groups(array(SplGroups::READ, SplGroups::WRITE, SplGroups::LIST, SplGroups::REQUIRED)),
         SPL\Template(InvoiceFields::DATE),
         SPL\IsRequired,
@@ -48,7 +48,7 @@ trait DatesTrait
     #[
         Assert\Type("date"),
         Serializer\SerializedName("due_date"),
-        Serializer\Context(array(DateTimeNormalizer::FORMAT_KEY => "Y-m-d")),
+        Serializer\Context(normalizationContext: array(DateTimeNormalizer::FORMAT_KEY => "Y-m-d")),
         Serializer\Groups(array(SplGroups::READ, SplGroups::WRITE)),
         SPL\Template(InvoiceFields::DATE_DUE),
     ]

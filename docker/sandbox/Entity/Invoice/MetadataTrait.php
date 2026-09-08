@@ -42,7 +42,8 @@ trait MetadataTrait
     #[
         Assert\Type("datetime"),
         ORM\Column(type: Types::DATE_MUTABLE, nullable: true),
-        Serializer\Groups("read")
+        Serializer\Groups("read"),
+        Serializer\Context(array('datetime_format' => DatesHelper::DATE_CAST)),
     ]
     public ?DateTime $dueDate = null;
 

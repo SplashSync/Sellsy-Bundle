@@ -165,6 +165,7 @@ class AddressDelivery extends Address
             desc: "[Geocode] Address Latitude",
             group: "Delivery"
         ),
+        SPL\IsReadOnly,
     ]
     protected ?float $latitude = null;
 
@@ -177,6 +178,7 @@ class AddressDelivery extends Address
             desc: "[Geocode] Address Longitude",
             group: "Delivery"
         ),
+        SPL\IsReadOnly,
     ]
     protected ?float $longitude = null;
 }

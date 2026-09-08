@@ -15,19 +15,26 @@
 
 namespace Splash\Connectors\Sellsy\Test\Controller;
 
+use Splash\Bundle\Phpunit\Assertions\ConnectorValidator;
+use Splash\Bundle\Phpunit\ConnectorTestCase;
 use Splash\Connectors\Sellsy\Connector\SellsyConnector;
 use Splash\Connectors\Sellsy\Dictionary\WebhookArgs;
-use Splash\Tests\Tools\TestCase;
+use Splash\Core\Dictionary\SplOperations;
+use Splash\Validator\Assertions\Objects\CommitValidator;
 
 /**
  * Test of Sellsy Connector WebHook Controller
  */
-class S01WebHookTest extends TestCase
+class S01WebHookTest extends ConnectorTestCase
 {
+    const CONNECTOR = "ThisIsSandBoxWsId";
+
     const PING_RESPONSE = '{"success":true}';
-    const MEMBER = "ThirdParty";
-    const FAKE_EMAIL = "fake@exemple.com";
-    const METHOD = "JSON";
+
+    /**
+     * User Agent Sellsy sends with its notifications
+     */
+    const USER_AGENT = "Sellsy Tester";
 
     /**
      * Test WebHook For Ping
@@ -36,24 +43,19 @@ class S01WebHookTest extends TestCase
     {
         //====================================================================//
         // Load Connector
-        $connector = $this->getConnector("ThisIsSandBoxWsId");
+        $connector = $this->getConnector(self::CONNECTOR);
         $this->assertInstanceOf(SellsyConnector::class, $connector);
 
         //====================================================================//
         // Ping Action -> GET -> OK
-        $this->assertPublicActionWorks($connector, null, array(), "GET");
-        $this->assertEquals(self::PING_RESPONSE, $this->getResponseContents());
+        ConnectorValidator::assertPublicActionWorks($connector, null, array(), "GET");
+        $this->assertEquals(self::PING_RESPONSE, ConnectorValidator::getResponseContents());
 
         //====================================================================//
-        // Ping Action -> POST -> KO
-        $this->assertPublicActionFail($connector, null, array(), "POST");
-        $this->assertPublicActionFail($connector, null, array(), self::METHOD);
-        //====================================================================//
-        // Ping Action -> PUT -> KO
-        $this->assertPublicActionFail($connector, null, array(), "PUT");
-        //====================================================================//
-        // Ping Action -> DELETE -> KO
-        $this->assertPublicActionFail($connector, null, array(), "DELETE");
+        // Any other Method without Notification -> KO
+        foreach (array("POST", "PUT", "DELETE") as $method) {
+            ConnectorValidator::assertPublicActionFail($connector, null, array(), $method);
+        }
     }
 
     /**
@@ -76,63 +78,107 @@ class S01WebHookTest extends TestCase
     ): void {
         //====================================================================//
         // Load Connector
-        $connector = $this->getConnector("ThisIsSandBoxWsId");
+        $connector = $this->getConnector(self::CONNECTOR);
         $this->assertInstanceOf(SellsyConnector::class, $connector);
         //====================================================================//
         // Setup Client
-        $this->configure($connector);
+        $this->configure();
         //====================================================================//
         // POST MODE
-        $this->assertPublicActionWorks(
+        ConnectorValidator::assertPublicActionWorks(
             $connector,
             null,
             array(WebhookArgs::INDEX => json_encode($data)),
             "POST"
         );
-        $this->assertEquals(self::PING_RESPONSE, $this->getResponseContents());
-        $this->assertIsLastCommitted($action, $objectType, $objectId);
+        $this->assertEquals(self::PING_RESPONSE, ConnectorValidator::getResponseContents());
+        CommitValidator::assertIsLastCommitted($action, $objectType, $objectId);
+    }
+
+    /**
+     * Test WebHook Requests Sellsy did not send
+     *
+     * @return void
+     */
+    public function testWebhookRejectsUnknownSenders(): void
+    {
+        //====================================================================//
+        // Load Connector
+        $connector = $this->getConnector(self::CONNECTOR);
+        $this->assertInstanceOf(SellsyConnector::class, $connector);
+        //====================================================================//
+        // Setup Client with a Foreign User Agent
+        self::getTestClient()->setServerParameter("HTTP_user-agent", "Not Sellsy");
+        //====================================================================//
+        // Valid Notification, Wrong Sender => KO
+        ConnectorValidator::assertPublicActionFail(
+            $connector,
+            null,
+            array(WebhookArgs::INDEX => json_encode(array(
+                WebhookArgs::ACTION => WebhookArgs::UPDATED,
+                WebhookArgs::OBJECT_ID => uniqid(),
+                WebhookArgs::OBJECT_TYPE => "client",
+            ))),
+            "POST"
+        );
+        //====================================================================//
+        // Sellsy Sender, but no Notification => KO
+        $this->configure();
+        ConnectorValidator::assertPublicActionFail($connector, null, array(), "POST");
+        //====================================================================//
+        // Sellsy Sender, but Malformed Notification => KO
+        ConnectorValidator::assertPublicActionFail(
+            $connector,
+            null,
+            array(WebhookArgs::INDEX => "This is not a json notification"),
+            "POST"
+        );
     }
 
     /**
      * Generate Fake Inputs for WebHook Requests
+     *
+     * One notification per Sellsy object type & event, so that every mapping
+     * of the Webhook Configs is walked through.
      *
      * @return array
      */
     public function webHooksInputsProvider(): array
     {
         $hooks = array();
-
-        for ($i = 0; $i < 5; $i++) {
-            //====================================================================//
-            // Add ThirdParty WebHook Test
-            $hooks["CUST-CREATED"] = self::getThirdPartyWebHook(SPL_A_CREATE, WebhookArgs::CREATED, uniqid());
-            $hooks["CUST-UPDATED"] = self::getThirdPartyWebHook(SPL_A_UPDATE, WebhookArgs::UPDATED, uniqid());
-            $hooks["CUST-ANYTHING"] = self::getThirdPartyWebHook(SPL_A_UPDATE, WebhookArgs::ANYTHING, uniqid());
-            $hooks["CUST-DELETED"] = self::getThirdPartyWebHook(SPL_A_DELETE, WebhookArgs::DELETED, uniqid());
-
-            //====================================================================//
-            // Add Address WebHook Test
-            $hooks["ADD-CREATED"] = self::getAddressWebHook(SPL_A_CREATE, WebhookArgs::CREATED, uniqid());
-            $hooks["ADD-UPDATED"] = self::getAddressWebHook(SPL_A_UPDATE, WebhookArgs::UPDATED, uniqid());
-            $hooks["ADD-ANYTHING"] = self::getAddressWebHook(SPL_A_UPDATE, WebhookArgs::ANYTHING, uniqid());
-            $hooks["ADD-DELETED"] = self::getAddressWebHook(SPL_A_DELETE, WebhookArgs::DELETED, uniqid());
-
-            //====================================================================//
-            // Add Product WebHook Test
-            $hooks["PRD-CREATED"] = self::getProductWebHook(SPL_A_CREATE, WebhookArgs::CREATED, uniqid());
-            $hooks["PRD-UPDATED"] = self::getProductWebHook(SPL_A_UPDATE, WebhookArgs::UPDATED, uniqid());
-            $hooks["PRD-ANYTHING"] = self::getProductWebHook(SPL_A_UPDATE, WebhookArgs::ANYTHING, uniqid());
-            $hooks["PRD-DELETED"] = self::getProductWebHook(SPL_A_DELETE, WebhookArgs::DELETED, uniqid());
-            //
-            //            //====================================================================//
-            //            // Add Order & Invoices WebHook Test
-            //            $hooks[] = self::getInvoiceWebHook(SPL_A_CREATE, "orders/create", uniqid());
-            //            $hooks[] = self::getInvoiceWebHook(SPL_A_UPDATE, "orders/cancelled", uniqid());
-            //            $hooks[] = self::getInvoiceWebHook(SPL_A_UPDATE, "orders/fulfilled", uniqid());
-            //            $hooks[] = self::getInvoiceWebHook(SPL_A_UPDATE, "orders/paid", uniqid());
-            //            $hooks[] = self::getInvoiceWebHook(SPL_A_UPDATE, "orders/partially_fulfilled", uniqid());
-            //            $hooks[] = self::getInvoiceWebHook(SPL_A_UPDATE, "orders/updated", uniqid());
-            //            $hooks[] = self::getInvoiceWebHook(SPL_A_DELETE, "orders/delete", uniqid());
+        //====================================================================//
+        // Sellsy Events, with the Splash Action they trigger
+        $events = array(
+            "CREATED" => array(WebhookArgs::CREATED, SplOperations::CREATE),
+            "UPDATED" => array(WebhookArgs::UPDATED, SplOperations::UPDATE),
+            "ANYTHING" => array(WebhookArgs::ANYTHING, SplOperations::UPDATE),
+            "DELETED" => array(WebhookArgs::DELETED, SplOperations::DELETE),
+        );
+        //====================================================================//
+        // Sellsy Related Types, with the Splash Object they feed
+        $objects = array(
+            "CUST" => array("client", "ThirdParty"),
+            "ADD" => array("people", "Address"),
+            "PRD" => array("item", "Product"),
+        );
+        //====================================================================//
+        // Walk on Objects & Events
+        foreach ($objects as $prefix => $object) {
+            list($relatedType, $objectType) = $object;
+            foreach ($events as $code => $event) {
+                list($eventName, $action) = $event;
+                $objectId = uniqid();
+                $hooks[sprintf("%s-%s", $prefix, $code)] = array(
+                    array(
+                        WebhookArgs::ACTION => $eventName,
+                        WebhookArgs::OBJECT_ID => $objectId,
+                        WebhookArgs::OBJECT_TYPE => $relatedType,
+                    ),
+                    $objectType,
+                    $action,
+                    $objectId,
+                );
+            }
         }
 
         return $hooks;
@@ -141,107 +187,8 @@ class S01WebHookTest extends TestCase
     /**
      * Configure Client Headers for Sellsy Requests
      */
-    private function configure(SellsyConnector $connector): void
+    private function configure(): void
     {
-        $wsHost = $connector->getParameter("WsHost");
-        $this->assertIsString($wsHost);
-        $this->getTestClient()->setServerParameter("HTTP_user-agent", "Sellsy Tester");
+        self::getTestClient()->setServerParameter("HTTP_user-agent", self::USER_AGENT);
     }
-
-    /**
-     * Generate Fake ThirdParty Inputs for WebHook Request
-     *
-     * @param string $action
-     * @param string $eventName
-     * @param string $objectId
-     *
-     * @return array
-     */
-    private static function getThirdPartyWebHook(
-        string $action,
-        string $eventName,
-        string $objectId,
-    ) : array {
-        return array(
-            array(
-                WebhookArgs::ACTION => $eventName,
-                WebhookArgs::OBJECT_ID => $objectId,
-                WebhookArgs::OBJECT_TYPE => "client",
-            ),
-            "ThirdParty",
-            $action,
-            $objectId
-        );
-    }
-
-    /**
-     * Generate Fake Address Inputs for WebHook Request
-     *
-     * @param string $action
-     * @param string $eventName
-     * @param string $objectId
-     *
-     * @return array
-     */
-    private static function getAddressWebHook(
-        string $action,
-        string $eventName,
-        string $objectId,
-    ) : array {
-        return array(
-            array(
-                WebhookArgs::ACTION => $eventName,
-                WebhookArgs::OBJECT_ID => $objectId,
-                WebhookArgs::OBJECT_TYPE => "people",
-            ),
-            "Address",
-            $action,
-            $objectId
-        );
-    }
-
-    /**
-     * Generate Fake Product Inputs for WebHook Request
-     *
-     * @param string $action
-     * @param string $eventName
-     * @param string $objectId
-     *
-     * @return array
-     */
-    private static function getProductWebHook(string $action, string $eventName, string $objectId) : array
-    {
-        return array(
-            array(
-                WebhookArgs::ACTION => $eventName,
-                WebhookArgs::OBJECT_ID => $objectId,
-                WebhookArgs::OBJECT_TYPE => "item",
-            ),
-            "Product",
-            $action,
-            $objectId
-        );
-    }
-
-    //    /**
-    //     * Generate Fake Order & Invoice Inputs for WebHook Request
-    //     *
-    //     * @param string $action
-    //     * @param string $eventName
-    //     * @param string $invoice
-    //     *
-    //     * @return array
-    //     */
-    //    private static function getInvoiceWebHook(string $action, string $eventName, string $invoice) : array
-    //    {
-    //        return array(
-    //            $eventName,
-    //            array(
-    //                "id" => $invoice,
-    //            ),
-    //            "Invoice",
-    //            $action,
-    //            $invoice,
-    //        );
-    //    }
 }

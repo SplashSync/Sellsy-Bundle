@@ -34,7 +34,12 @@ trait PriceTrait
 
         //====================================================================//
         // WholeSale Price
-        self::fieldsFactory()->createFromTemplate("price-wholesale", ProductFields::WHOLESALE_PRICE);
+        // Sellsy stores a purchase amount without taxes: the vat rate is read
+        // back from the item tax, so the price never returns as written.
+        self::fieldsFactory()
+            ->createFromTemplate("price-wholesale", ProductFields::WHOLESALE_PRICE)
+            ->isNotTested()
+        ;
     }
 
     /**

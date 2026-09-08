@@ -165,6 +165,7 @@ class AddressInvoicing extends Address
             desc: "[Geocode] Address Latitude",
             group: "Billing"
         ),
+        SPL\IsReadOnly,
     ]
     protected ?float $latitude = null;
 
@@ -177,6 +178,7 @@ class AddressInvoicing extends Address
             desc: "[Geocode] Address Longitude",
             group: "Billing"
         ),
+        SPL\IsReadOnly,
     ]
     protected ?float $longitude = null;
 }

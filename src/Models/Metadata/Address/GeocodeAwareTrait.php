@@ -50,6 +50,7 @@ trait GeocodeAwareTrait
             desc: "[Geocode] Address Latitude",
             group: "Address"
         ),
+        SPL\IsReadOnly,
     ]
     protected ?float $latitude = null;
 
@@ -63,6 +64,7 @@ trait GeocodeAwareTrait
             desc: "[Geocode] Address Longitude",
             group: "Address"
         ),
+        SPL\IsReadOnly,
     ]
     protected ?float $longitude = null;
 

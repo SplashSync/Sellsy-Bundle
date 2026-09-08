@@ -36,7 +36,7 @@ trait ExtraInfosTrait
         SPL\Field(type: SplFields::INT, desc: "Unit id", group: "Meta"),
         SPL\IsReadOnly(),
     ]
-    public int $unitId = 0;
+    public ?int $unitId = null;
 
     /**
      * Product's category id.
@@ -48,7 +48,7 @@ trait ExtraInfosTrait
         SPL\Field(type: SplFields::INT, desc: "Category id", group: "Meta"),
         SPL\IsReadOnly(),
     ]
-    public int $categoryId = 0;
+    public ?int $categoryId = null;
 
     /**
      * Product's accounting code id.
@@ -56,11 +56,11 @@ trait ExtraInfosTrait
     #[
         Assert\Type("integer"),
         Serializer\SerializedName("accounting_code_id"),
-        Serializer\Groups(SplGroups::DEFAULT),
+        Serializer\Groups(array(SplGroups::READ)),
         SPL\Field(type: SplFields::VARCHAR, desc: "Product's accounting code id", group: "Meta"),
         SPL\IsReadOnly()
     ]
-    public int $accountingCodeId = 0;
+    public ?int $accountingCodeId = null;
 
     /**
      * Product's accounting purchase code id.
@@ -68,9 +68,9 @@ trait ExtraInfosTrait
     #[
         Assert\Type("integer"),
         Serializer\SerializedName("accounting_purchase_code_id"),
-        Serializer\Groups(SplGroups::DEFAULT),
+        Serializer\Groups(array(SplGroups::READ)),
         SPL\Field(type: SplFields::VARCHAR, desc: "Product's accounting purchase code id", group: "Meta"),
         SPL\IsReadOnly()
     ]
-    public int $accountingPurchaseCodeId = 0;
+    public ?int $accountingPurchaseCodeId = null;
 }

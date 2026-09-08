@@ -91,7 +91,7 @@ trait PriceTrait
         SPL\Field(type: SplFields::INT, desc: "Tax ID", group: "Meta"),
         SPL\IsReadOnly,
     ]
-    public int $taxId = 0;
+    public ?int $taxId = null;
 
     /**
      * Product's Currency code.

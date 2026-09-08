@@ -15,6 +15,7 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata;
 
+use Splash\Connectors\Sellsy\Dictionary\ItemTypes;
 use Splash\Metadata\Attributes as SPL;
 use Splash\OpenApi\Attributes\Rest\RestResource;
 use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
@@ -54,13 +55,8 @@ class Item
         Serializer\Groups(array(SplGroups::READ, SplGroups::LIST, SplGroups::REQUIRED)),
         SPL\Field(desc: "Product type"),
         SPL\Flags(listed: true),
-        SPL\Choices(array(
-            "product" => "Product",
-            "service" => "Service",
-            "shipping" => "Shipping",
-            "packaging" => "Packaging"
-        )),
+        SPL\Choices(ItemTypes::CHOICES),
         SPL\IsNotTested
     ]
-    public string $type = "product";
+    public string $type = ItemTypes::PRODUCT;
 }

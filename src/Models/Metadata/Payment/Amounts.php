@@ -15,7 +15,8 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata\Payment;
 
-use JMS\Serializer\Annotation as JMS;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -29,8 +30,8 @@ class Amounts
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("total"),
-        JMS\Type("string"),
+        Serializer\SerializedName("total"),
+        Serializer\Groups(SplGroups::DEFAULT),
     ]
     public string $total = "";
 
@@ -40,8 +41,8 @@ class Amounts
     #[
         Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("total"),
-        JMS\Type("string"),
+        Serializer\SerializedName("total"),
+        Serializer\Groups(SplGroups::DEFAULT),
     ]
     public string $remaining = "";
 }

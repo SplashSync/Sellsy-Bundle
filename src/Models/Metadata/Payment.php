@@ -16,9 +16,14 @@
 namespace Splash\Connectors\Sellsy\Models\Metadata;
 
 use DateTime;
-use JMS\Serializer\Annotation as JMS;
+use Splash\Connectors\Sellsy\Dictionary\PaymentTypes;
 use Splash\Connectors\Sellsy\Models\Metadata\Payment\Amount;
+use Splash\Core\Dictionary\SplFields;
+use Splash\Core\Dictionary\SplOperations;
 use Splash\Metadata\Attributes as SPL;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Splash\Templates\Accounting\AccountingPaymentsFields;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -27,41 +32,51 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Payment
 {
     #[
-        Assert\NotNull,
         Assert\Type("string"),
-        JMS\SerializedName("id"),
-        JMS\Groups(array("Read")),
-        JMS\Type("string"),
+        Serializer\SerializedName("id"),
+        Serializer\Groups(array(SplGroups::READ)),
     ]
-    public string $id;
+    //====================================================================//
+    // Nullable on purpose: a payment being created has no id yet.
+    public ?string $id = null;
+
+    /**
+     * Payment Type.
+     *
+     * Sellsy books what a customer pays as a credit: Splash never registers
+     * anything else on a sale document.
+     */
+    #[
+        Assert\Type("string"),
+        Serializer\SerializedName("type"),
+        Serializer\Groups(array(SplGroups::READ, SplGroups::WRITE)),
+    ]
+    public string $type = PaymentTypes::CREDIT;
 
     #[
         Assert\Type("string"),
-        JMS\SerializedName("number"),
-        JMS\Type("string"),
-        SPL\Field(desc: "Transaction Number"),
-        SPL\Microdata("http://schema.org/Invoice", "paymentMethodId"),
+        Serializer\SerializedName("number"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Template(AccountingPaymentsFields::PAYMENT_NUMBER),
         SPL\Associations(array("number@payments", "amount@payments", "paidAt@payments")),
     ]
     public ?string $number = null;
 
     #[
         Assert\Type("array"),
-        JMS\SerializedName("amount"),
-        JMS\Type(Amount::class),
-        SPL\Field(type: SPL_T_DOUBLE, desc: "Payment Amount"),
-        SPL\Microdata("http://schema.org/PaymentChargeSpecification", "price"),
+        Serializer\SerializedName("amount"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Template(AccountingPaymentsFields::PAYMENT_AMOUNT),
+        SPL\Accessor(getter: "getSplashAmount", setter: "setSplashAmount"),
         SPL\Associations(array("number@payments", "amount@payments", "paidAt@payments")),
     ]
     public ?Amount $amount = null;
 
     #[
         Assert\Type("datetime"),
-        JMS\SerializedName("paid_at"),
-        JMS\Type("DateTime"),
-        JMS\Groups(array("Read")),
-        SPL\Field(type: SPL_T_DATE, desc: "Payment date (ISO 8601)"),
-        SPL\Microdata("http://schema.org/PaymentChargeSpecification", "validFrom"),
+        Serializer\SerializedName("paid_at"),
+        Serializer\Groups(array(SplGroups::READ, SplGroups::WRITE)),
+        SPL\Template(AccountingPaymentsFields::PAYMENT_DATE),
         SPL\Associations(array("number@payments", "amount@payments", "paidAt@payments")),
     ]
     public DateTime $paidAt;
@@ -69,10 +84,10 @@ class Payment
     #[
         Assert\NotNull,
         Assert\Type("integer"),
-        JMS\SerializedName("payment_method_id"),
-        JMS\Type("integer"),
+        Serializer\SerializedName("payment_method_id"),
+        Serializer\Groups(SplGroups::DEFAULT),
         SPL\Field(
-            type: SPL_T_VARCHAR,
+            type: SplFields::VARCHAR,
             name: "Method ID",
             desc: "Sellsy Payment Method Id"
         ),
@@ -81,13 +96,8 @@ class Payment
     public ?int $paymentMethodId = null;
 
     #[
-        JMS\Exclude(),
-        SPL\Field(
-            type: SPL_T_VARCHAR,
-            name: "Method",
-            desc: "Payment Method Code / Name"
-        ),
-        SPL\Microdata("http://schema.org/Invoice", "PaymentMethod"),
+        Serializer\Ignore,
+        SPL\Template(AccountingPaymentsFields::PAYMENT_MODE),
         SPL\IsNotTested
     ]
     public ?string $method = null;
@@ -96,11 +106,8 @@ class Payment
      * Payment currency.
      */
     #[
-        Assert\NotNull,
-        Assert\Type("string"),
-        JMS\SerializedName("currency"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_CURRENCY, desc: "Payment Currency Code"),
+        Serializer\Ignore,
+        SPL\Field(type: SplFields::CURRENCY, desc: "Payment Currency Code"),
         SPL\IsNotTested
     ]
     public ?string $currency = "EUR";
@@ -111,8 +118,8 @@ class Payment
 
     #[
         Assert\Type("string"),
-        JMS\SerializedName("status"),
-        JMS\Type("string"),
+        Serializer\SerializedName("status"),
+        Serializer\Groups(array(SplGroups::READ)),
         SPL\Field(desc: "Payment status"),
         SPL\IsReadOnly,
     ]
@@ -123,9 +130,9 @@ class Payment
      */
     #[
         Assert\Type("string"),
-        JMS\SerializedName("note"),
-        JMS\Type("string"),
-        SPL\Field(type: SPL_T_TEXT, desc: "Invoice Note"),
+        Serializer\SerializedName("note"),
+        Serializer\Groups(SplGroups::DEFAULT),
+        SPL\Field(type: SplFields::TEXT, desc: "Invoice Note"),
         SPL\IsReadOnly
     ]
     public ?string $note = null;
@@ -139,7 +146,6 @@ class Payment
     // State Checkers
     //====================================================================//
 
-    #[JMS\PostDeserialize]
     public function postDeserialize(): void
     {
         $this->updated = false;
@@ -164,7 +170,7 @@ class Payment
             // Payment was Updated
             (!empty($this->id) && $this->updated)
             // Payment needs to be Deleted
-            || (SPL_A_DELETE == $this->status)
+            || (SplOperations::DELETE == $this->status)
         ;
     }
 
@@ -200,8 +206,11 @@ class Payment
 
     /**
      * Extract Payment Amount from Amount Object
+     *
+     * Named apart from the property: Symfony Serializer would use it to
+     * normalize the amount, where Sellsy expects the whole object.
      */
-    public function getAmount(): float
+    public function getSplashAmount(): float
     {
         return $this->amount ? (float) $this->amount->value : 0.0;
     }
@@ -209,9 +218,9 @@ class Payment
     /**
      * Update Amount object with Payment Amount
      */
-    public function setAmount(float $amount): static
+    public function setSplashAmount(float $amount): static
     {
-        if (abs($amount - $this->getAmount()) > 1E-3) {
+        if (abs($amount - $this->getSplashAmount()) > 1E-3) {
             $this->amount ??= new Amount();
             $this->amount->value = (string) $amount;
             $this->updated = true;
@@ -225,7 +234,11 @@ class Payment
      */
     public function setPaidAt(?DateTime $paidAt): static
     {
-        if ($paidAt && ($paidAt != ($this->paidAt ?? null))) {
+        //====================================================================//
+        // Sellsy stores a date time, Splash a day: comparing the raw objects
+        // would mark every payment as updated on each sync.
+        $current = isset($this->paidAt) ? $this->paidAt->format("Y-m-d") : null;
+        if ($paidAt && ($paidAt->format("Y-m-d") !== $current)) {
             $this->paidAt = $paidAt;
             $this->updated = true;
         }

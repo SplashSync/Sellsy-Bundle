@@ -15,6 +15,7 @@
 
 namespace Splash\Connectors\Sellsy\Models\Metadata;
 
+use Splash\Connectors\Sellsy\Dictionary\EmbedQueries;
 use Splash\Metadata\Attributes as SPL;
 use Splash\OpenApi\Attributes\Rest\RestResource;
 use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
@@ -28,7 +29,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[RestResource(
     collectionUri: "/companies",
-    itemUri: "/companies/{id}".Company\CompanyEmbed::URI_QUERY,
+    itemUri: "/companies/{id}".EmbedQueries::ADDRESSES,
 )]
 #[SPL\SplashObject(
     name: "Company",
@@ -58,8 +59,8 @@ class Company
         Assert\NotNull,
         Assert\Type("string"),
         Serializer\SerializedName("type"),
-        // Type is writable: Splash declares it so, and Sellsy PUT needs it back
-        Serializer\Groups(array(SplGroups::READ, SplGroups::WRITE, SplGroups::LIST, SplGroups::REQUIRED)),
+        // Type is writable only on create.
+        Serializer\Groups(array(SplGroups::READ, SplGroups::LIST, SplGroups::REQUIRED)),
         SPL\Field(desc: "Company type"),
         SPL\Flags(listed: true),
         SPL\Choices(array(

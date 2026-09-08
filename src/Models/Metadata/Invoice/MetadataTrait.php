@@ -16,8 +16,11 @@
 namespace Splash\Connectors\Sellsy\Models\Metadata\Invoice;
 
 use DateTime;
-use JMS\Serializer\Annotation as JMS;
+use Splash\Core\Dictionary\SplFields;
 use Splash\Metadata\Attributes as SPL;
+use Splash\OpenApi\Dictionary\SerializerGroups as SplGroups;
+use Splash\Templates\Common\CommonFields;
+use Symfony\Component\Serializer\Attribute as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -27,10 +30,9 @@ trait MetadataTrait
 {
     #[
         Assert\Type("datetime"),
-        JMS\SerializedName("created"),
-        JMS\Type("DateTime"),
-        JMS\Groups(array("Read")),
-        SPL\Field(type: SPL_T_DATETIME, desc: "Company creation date", group: "Meta"),
+        Serializer\SerializedName("created"),
+        Serializer\Groups(array(SplGroups::READ)),
+        SPL\Template(CommonFields::DATE_CREATED),
         SPL\IsReadOnly,
     ]
     public DateTime $created;
@@ -41,9 +43,13 @@ trait MetadataTrait
     #[
         Assert\NotNull,
         Assert\Type("bool"),
-        JMS\SerializedName("isDeposit"),
-        JMS\Type("bool"),
-        SPL\Field(type: SPL_T_BOOL, desc: "Is a Deposit Invoice ?", group: "Meta"),
+        Serializer\SerializedName("is_deposit"),
+        Serializer\Groups(array(SplGroups::READ)),
+        SPL\Field(
+            type: SplFields::BOOL,
+            desc: "Is a Deposit Invoice ?",
+            group: "Meta"
+        ),
         SPL\IsReadOnly,
     ]
     public bool $isDeposit = false;
@@ -54,9 +60,13 @@ trait MetadataTrait
     #[
         Assert\NotNull,
         Assert\Type("bool"),
-        JMS\SerializedName("is_sent_to_accounting"),
-        JMS\Type("bool"),
-        SPL\Field(type: SPL_T_BOOL, desc: "Is Invoice Sent to Accounting ?", group: "Meta"),
+        Serializer\SerializedName("is_sent_to_accounting"),
+        Serializer\Groups(array(SplGroups::READ)),
+        SPL\Field(
+            type: SplFields::BOOL,
+            desc: "Is Invoice Sent to Accounting ?",
+            group: "Meta"
+        ),
         SPL\IsReadOnly,
     ]
     public bool $isSentToAccounting = false;

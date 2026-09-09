@@ -49,7 +49,7 @@ sandbox:	## Rebuild the Sellsy Api Sandbox Image
 
 .PHONY: bridge
 bridge:		## Build the Sellsy Splx Bridge in dist/
-	php -d phar.readonly=0 vendor/bin/bridge-builder --native
+	php -d phar.readonly=0 vendor/bin/bridge-builder
 
 .PHONY: bridge-dev
 bridge-dev:	## Build the Sellsy Bridge as a debuggable build dir

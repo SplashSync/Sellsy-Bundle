@@ -30,6 +30,9 @@ trait MainTrait
 {
     /**
      * Invoice's currency.
+     *
+     * Sellsy has no per row currency: rows prices are always read with the
+     * document currency, so writing both at once is inconsistent by design.
      */
     #[
         Assert\NotNull,
@@ -37,6 +40,7 @@ trait MainTrait
         Serializer\SerializedName("currency"),
         Serializer\Groups(SplGroups::DEFAULT),
         SPL\Template(InvoiceFields::CURRENCY),
+        SPL\IsNotTested(),
     ]
     public string $currency = "EUR";
 

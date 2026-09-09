@@ -16,6 +16,8 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata as API;
+use App\Controller\CreateCompanyPayment;
+use App\Controller\LinkInvoicePayment;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -27,6 +29,15 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[ORM\Entity]
 #[API\ApiResource(
+    uriTemplate: '/payments/{id}',
+    operations: array(
+        //====================================================================//
+        // Id must be numeric: /payments/methods is another resource
+        new API\Get(requirements: array('id' => '\d+')),
+        new API\Delete(requirements: array('id' => '\d+')),
+    ),
+)]
+#[API\ApiResource(
     uriTemplate: '/invoices/{id}/payments',
     operations: array(
         new API\GetCollection(),
@@ -34,6 +45,28 @@ use Symfony\Component\Validator\Constraints as Assert;
     ),
     uriVariables: array(
         'id' => new API\Link(fromProperty: 'payments', fromClass: Invoice::class),
+    ),
+)]
+#[API\ApiResource(
+    uriTemplate: '/companies/{id}/payments',
+    operations: array(
+        new API\Post(
+            controller: CreateCompanyPayment::class
+        ),
+    ),
+)]
+#[API\ApiResource(
+    uriTemplate: '/invoices/{documentId}/payments/{paymentId}',
+    operations: array(
+        new API\Post(
+            controller: LinkInvoicePayment::class,
+            read: false,
+            deserialize: false,
+        ),
+        new API\Delete(
+            controller: LinkInvoicePayment::class,
+            read: false,
+        ),
     ),
 )]
 class Payment extends AbstractSellsyObject
@@ -50,11 +83,18 @@ class Payment extends AbstractSellsyObject
     public int $id;
 
     /**
-     * Link to Parent Invoice
+     * Link to Owner Company
+     */
+    #[ORM\ManyToOne(targetEntity: Company::class)]
+    #[Serializer\Ignore()]
+    public ?Company $company = null;
+
+    /**
+     * Link to Settled Invoice
      */
     #[ORM\ManyToOne(targetEntity: Invoice::class, inversedBy: 'payments')]
     #[Serializer\Ignore()]
-    public ?Invoice $invoice;
+    public ?Invoice $invoice = null;
 
     #[
         Assert\Type("string"),

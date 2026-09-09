@@ -181,6 +181,7 @@ final class ApiNormalizer implements NormalizerInterface, DenormalizerInterface,
             "limit" => $paginator->getItemsPerPage(),
             "count" => $paginator->count(),
             "total" => $paginator->getTotalItems(),
+            "offset" => ($paginator->getCurrentPage() - 1) * $paginator->getItemsPerPage(),
         );
     }
 }

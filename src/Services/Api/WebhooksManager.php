@@ -28,6 +28,11 @@ class WebhooksManager implements SellsyConnectorAwareInterface
     use SellsyConnectorAwareTrait;
 
     /**
+     * Number of Webhooks read at once
+     */
+    const PAGE_SIZE = 100;
+
+    /**
      * @param RouterInterface $router
      */
     public function __construct(
@@ -83,19 +88,40 @@ class WebhooksManager implements SellsyConnectorAwareInterface
     /**
      * Get List of Installed Webhooks
      *
-     * @return array<string, string[]>
+     * @return array<int, array>
      */
     public function getInstalledWebhooks(): array
     {
+        $webHooks = array();
         //====================================================================//
         // Create Object Class
-        $webHook = new Webhook($this->connector);
-        $webHook->configure("Webhook", $this->connector->getWebserviceId(), $this->connector->getConfiguration());
+        $webHookObject = new Webhook($this->connector);
+        $webHookObject->configure(
+            "Webhook",
+            $this->connector->getWebserviceId(),
+            $this->connector->getConfiguration()
+        );
         //====================================================================//
-        // Get List Of WebHooks for this List
-        $webHooks = $webHook->objectsList();
-        if (isset($webHooks["meta"])) {
-            unset($webHooks["meta"]);
+        // Walk on Webhooks Pages: an account may hold more webhooks than a page
+        for ($offset = 0;; $offset += self::PAGE_SIZE) {
+            $results = $webHookObject->objectsList(null, array(
+                "max" => self::PAGE_SIZE,
+                "offset" => $offset,
+            ));
+            $total = (int) ($results["meta"]["total"] ?? 0);
+            unset($results["meta"]);
+            //====================================================================//
+            // Collect Page Results
+            foreach ($results as $result) {
+                if (is_array($result)) {
+                    $webHooks[] = $result;
+                }
+            }
+            //====================================================================//
+            // Last Page Reached
+            if (empty($results) || (count($webHooks) >= $total)) {
+                break;
+            }
         }
 
         return $webHooks;
@@ -124,7 +150,7 @@ class WebhooksManager implements SellsyConnectorAwareInterface
             if ($channel == $webHook["default_channel"]) {
                 //====================================================================//
                 // Update WebHook
-                return (false !== $this->connector->setObject(
+                return !empty($this->connector->setObject(
                     "Webhook",
                     $webHook["id"],
                     $webhookConfig->getConfiguration($this->connector, $webhookUrl)
@@ -134,7 +160,7 @@ class WebhooksManager implements SellsyConnectorAwareInterface
 
         //====================================================================//
         // Add Splash WebHooks
-        return (false !== $this->connector->setObject(
+        return !empty($this->connector->setObject(
             "Webhook",
             null,
             $webhookConfig->getConfiguration($this->connector, $webhookUrl)

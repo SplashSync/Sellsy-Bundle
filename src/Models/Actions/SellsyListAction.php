@@ -86,8 +86,9 @@ class SellsyListAction extends AbstractListAction
         //====================================================================//
         // Build Query Parameters
         $queryParams = array("filters" => array());
-        if ($filter) {
-            $queryParams["filters"][$this->getOption(ActionOptions::FILTER_KEY)] = $filter;
+        $filterKey = $this->getOption(ActionOptions::FILTER_KEY);
+        if ($filter && is_string($filterKey)) {
+            $queryParams["filters"][$filterKey] = $filter;
         }
 
         //====================================================================//

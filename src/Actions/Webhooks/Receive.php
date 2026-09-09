@@ -95,7 +95,7 @@ class Receive extends AbstractController
         //====================================================================//
         // Verify WebHook Comes from Sellsy
         $userAgent = $request->headers->get("user-agent");
-        if (empty($userAgent) || !is_string($userAgent) || !str_starts_with($userAgent, "Sellsy")) {
+        if (empty($userAgent) || !str_starts_with($userAgent, "Sellsy")) {
             throw new BadRequestHttpException('Malformed or missing data');
         }
         //====================================================================//

@@ -47,6 +47,9 @@ class ContactCompaniesManager implements SellsyConnectorAwareInterface
         //====================================================================//
         // Populate Contact Companies
         foreach ($compagnies['data'] as $company) {
+            if (!is_array($company)) {
+                continue;
+            }
             $contact->companiesLinks[] = new CompanyLink($contact, $company);
         }
 

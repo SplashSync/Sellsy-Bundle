@@ -251,7 +251,7 @@ class Payment
      */
     public function getCurrency(): string
     {
-        return $this->amount?->currency ?? "EUR";
+        return $this->amount->currency ?? "EUR";
     }
 
     /**

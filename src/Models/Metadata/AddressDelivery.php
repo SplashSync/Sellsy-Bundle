@@ -138,6 +138,7 @@ class AddressDelivery extends Address
             desc: "Is address invoicing address ?",
             group: "Delivery"
         ),
+        SPL\IsNotTested(),
     ]
     public bool $isInvoicingAddress = false;
 
@@ -153,6 +154,9 @@ class AddressDelivery extends Address
             desc: "Is address delivery address ?",
             group: "Delivery"
         ),
+        //====================================================================//
+        // Always forced by the connector on a delivery address
+        SPL\IsReadOnly(),
     ]
     public bool $isDeliveryAddress = false;
 

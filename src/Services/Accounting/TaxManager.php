@@ -64,13 +64,13 @@ class TaxManager implements SellsyConnectorAwareInterface
             return false;
         }
         //====================================================================//
-        // Reformat results
-        $taxes = array_combine(
-            array_map(static function (array $taxItem) {
-                return $taxItem["id"];
-            }, $rawTaxes),
-            $rawTaxes
-        );
+        // Index Taxes by Sellsy Id
+        $taxes = array();
+        foreach ($rawTaxes as $rawTax) {
+            if (is_array($rawTax) && is_scalar($rawTax["id"] ?? null)) {
+                $taxes[(string) $rawTax["id"]] = $rawTax;
+            }
+        }
         //====================================================================//
         // Store in Connector Settings
         $this->connector->setParameter("Taxes", $taxes);

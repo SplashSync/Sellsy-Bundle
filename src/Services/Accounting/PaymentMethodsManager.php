@@ -31,7 +31,7 @@ class PaymentMethodsManager implements SellsyConnectorAwareInterface
     /**
      * List of Sellsy Payment Methods
      *
-     * @var array<string, array>
+     * @var array<array-key, array>
      */
     private array $methods = array();
 
@@ -56,11 +56,12 @@ class PaymentMethodsManager implements SellsyConnectorAwareInterface
     {
         $this->connector = $connector;
         $methods = $connector->getParameter("PaymentMethods", array());
-        $this->methods = is_array($methods) ? $methods : array();
+        $this->methods = array_filter(is_array($methods) ? $methods : array(), "is_array");
         $default = $connector->getParameter("PaymentMethodDefault");
         $this->default = is_integer($default) ? $default : null;
-        $associations = $connector->getParameter("PaymentMethodsAssociations", array());
-        $this->associations = is_array($associations) ? $associations : array();
+        $this->associations = self::toAssociations(
+            $connector->getParameter("PaymentMethodsAssociations", array())
+        );
 
         return $this;
     }
@@ -81,13 +82,13 @@ class PaymentMethodsManager implements SellsyConnectorAwareInterface
             return false;
         }
         //====================================================================//
-        // Reformat results
-        $methods = array_combine(
-            array_map(static function (array $taxItem) {
-                return $taxItem["id"];
-            }, $response['data']),
-            $response['data']
-        );
+        // Index Payment Methods by Sellsy Id
+        $methods = array();
+        foreach ($response['data'] as $rawMethod) {
+            if (is_array($rawMethod) && is_scalar($rawMethod["id"] ?? null)) {
+                $methods[(string) $rawMethod["id"]] = $rawMethod;
+            }
+        }
         //====================================================================//
         // Store in Connector Settings
         $this->connector->setParameter("PaymentMethods", $methods);
@@ -217,5 +218,22 @@ class PaymentMethodsManager implements SellsyConnectorAwareInterface
     private function getDefaultMethodId(): ?int
     {
         return $this->default;
+    }
+
+    /**
+     * Filter Raw Connector Parameter to keep only valid Methods Associations
+     *
+     * @return array<string, int>
+     */
+    private static function toAssociations(mixed $rawAssociations): array
+    {
+        $associations = array();
+        foreach (is_array($rawAssociations) ? $rawAssociations : array() as $index => $methodId) {
+            if (is_string($index) && is_int($methodId)) {
+                $associations[$index] = $methodId;
+            }
+        }
+
+        return $associations;
     }
 }

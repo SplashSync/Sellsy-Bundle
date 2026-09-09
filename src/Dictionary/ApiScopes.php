@@ -33,7 +33,7 @@ class ApiScopes
         "contacts.read", "contacts.write",
         //====================================================================//
         // Catalog
-        "catalog", "items.read", "items.write",
+        "items.read", "items.write",
         //====================================================================//
         // Sales Documents
         "invoices.read", "invoices.write",

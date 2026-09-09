@@ -136,6 +136,27 @@ class S01WebHookTest extends ConnectorTestCase
     }
 
     /**
+     * Test Setup & Verification of Account WebHooks
+     */
+    public function testWebhooksSetup(): void
+    {
+        //====================================================================//
+        // Load Connector
+        $connector = $this->getConnector(self::CONNECTOR);
+        $this->assertInstanceOf(SellsyConnector::class, $connector);
+        $webhooksManager = $connector->getLocator()->getWebhooksManager();
+        //====================================================================//
+        // Install Required WebHooks on the Account
+        $this->assertTrue($webhooksManager->updateWebHooks());
+        $this->assertTrue($webhooksManager->verifyWebHooks());
+        //====================================================================//
+        // Setup is Idempotent: no duplicated WebHook on a second run
+        $installed = count($webhooksManager->getInstalledWebhooks());
+        $this->assertTrue($webhooksManager->updateWebHooks());
+        $this->assertCount($installed, $webhooksManager->getInstalledWebhooks());
+    }
+
+    /**
      * Generate Fake Inputs for WebHook Requests
      *
      * One notification per Sellsy object type & event, so that every mapping

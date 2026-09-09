@@ -47,6 +47,14 @@ sandbox:	## Rebuild the Sellsy Api Sandbox Image
 	docker compose build sandbox
 	docker compose up -d sandbox
 
+.PHONY: bridge
+bridge:		## Build the Sellsy Splx Bridge in dist/
+	php -d phar.readonly=0 vendor/bin/bridge-builder --native
+
+.PHONY: bridge-dev
+bridge-dev:	## Build the Sellsy Bridge as a debuggable build dir
+	php -d phar.readonly=0 vendor/bin/bridge-builder --native --dev
+
 .PHONY: connect
 connect:	## Run Connect Test against the Sellsy Sandbox
 	docker compose exec toolkit bin/console splash:server:connect --ws=ThisIsSandBoxWsId

@@ -1,5 +1,6 @@
 /.env
 /vendor/
+/dist/
 /.gh-pages/
 /public/
 /.php-cs-fixer.cache

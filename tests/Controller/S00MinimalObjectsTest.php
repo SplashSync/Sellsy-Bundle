@@ -65,6 +65,27 @@ class S00MinimalObjectsTest extends ConnectorTestCase
     }
 
     /**
+     * Connection loads the Account Settings the Connector relies on
+     *
+     * @throws Exception
+     */
+    public function testConnectorAccountSettings(): void
+    {
+        $connector = self::getConnector(self::CONNECTOR);
+        Assert::assertInstanceOf(SellsyConnector::class, $connector);
+        Assert::assertTrue($connector->connect());
+        //====================================================================//
+        // Api Access Scopes
+        $scopesManager = $connector->getLocator()->getScopesManager();
+        Assert::assertEmpty($scopesManager->getMissingScopes());
+        Assert::assertTrue($scopesManager->hasRequiredScopes());
+        //====================================================================//
+        // Vat Rates & Payment Methods
+        Assert::assertNotEmpty($connector->getLocator()->getTaxManager()->getTaxes());
+        Assert::assertNotEmpty($connector->getLocator()->getPaymentMethodsManager()->getMethods());
+    }
+
+    /**
      * All expected Object Types are exposed
      *
      * @throws Exception

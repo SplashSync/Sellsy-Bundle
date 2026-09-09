@@ -49,6 +49,9 @@ COPY sellsy.yaml /app/config/packages/sellsy.yaml
 
 ################################################################################
 # Regenerate autoloader to include new classes, then rebuild cache
-RUN rm -rf /app/var/cache/*
-RUN composer dump-autoload --no-dev --optimize
-RUN php bin/console cache:clear --no-debug
+#
+# Kept as a single layer: the CI builder patches this RUN with the
+# `--security=insecure` entitlement, see gitlab/docker.yaml.
+RUN rm -rf /app/var/cache/* \
+    && composer dump-autoload --no-dev --optimize \
+    && php bin/console cache:clear --no-debug

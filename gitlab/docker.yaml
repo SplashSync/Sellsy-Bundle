@@ -34,14 +34,25 @@ docker:sandbox:
         DOCKER_TAG:     $CI_COMMIT_REF_SLUG
     before_script:
         - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+        # Spin up a buildx builder with the `security.insecure` entitlement
+        # enabled. The host runner's runc rejects the default `/proc/acpi`
+        # tmpfs mask on every RUN — enabling this entitlement lets the
+        # Dockerfile opt into `RUN --security=insecure`, which drops that
+        # mask and lets the build proceed. Only the layer-build step
+        # (autoloader & cache) needs it, the runtime image stays clean.
+        - docker buildx create --use --name sellsy-builder --driver docker-container --buildkitd-flags '--allow-insecure-entitlement security.insecure'
     script:
-        # Build Docker Image
-        - docker build -t $CI_REGISTRY_IMAGE:$DOCKER_TAG docker/sandbox/
-        # Push to Registry
-        - docker push $CI_REGISTRY_IMAGE:$DOCKER_TAG
+        # Patch the layer-build RUN with the security.insecure entitlement
+        # only in CI — local dev keeps the plain form so `docker compose
+        # build sandbox` (which uses the default builder that doesn't
+        # know about `--security=`) keeps working.
+        - sed -i 's|^RUN rm -rf /app/var/cache|RUN --security=insecure rm -rf /app/var/cache|' docker/sandbox/Dockerfile
+        # Build + push in one shot — buildx --push uploads straight from the
+        # builder, no `docker push` needed afterwards. `--allow` mirrors the
+        # entitlement declared on the builder above.
+        - docker buildx build --allow security.insecure --push -t $CI_REGISTRY_IMAGE:$DOCKER_TAG docker/sandbox/
         # Push latest only if on default branch
         - |
             if [ "$CI_COMMIT_BRANCH" = "$CI_DEFAULT_BRANCH" ]; then
-                docker tag $CI_REGISTRY_IMAGE:$DOCKER_TAG $CI_REGISTRY_IMAGE:latest
-                docker push $CI_REGISTRY_IMAGE:latest
+                docker buildx build --allow security.insecure --push -t $CI_REGISTRY_IMAGE:latest docker/sandbox/
             fi
